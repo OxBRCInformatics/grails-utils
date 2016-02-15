@@ -5,15 +5,7 @@ buildscript {
 
     }
     dependencies {
-        //        classpath "org.grails:grails-gradle-plugin:$grailsVersion"
-
-        //        classpath "org.grails.plugins:hibernate4:$gormVersion"
-        //        classpath "org.grails.plugins:views-gradle:1.0.0"
-        //
-        //        classpath "com.bertramlabs.plugins:asset-pipeline-gradle:$assetPipelineGradleVersion"
-        //        classpath 'org.springframework.build.gradle:propdeps-plugin:+'
-
-        classpath 'com.github.ben-manes:gradle-versions-plugin:+'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
 
     }
 }

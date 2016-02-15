@@ -4,18 +4,4 @@ dependencies {
 
     compile "org.grails:grails-datastore-rest-client:${gormVersion}.RELEASE"
     compile "org.grails:grails-plugin-testing:$grailsVersion"
-
-    /*compile "org.grails.plugins:geb:1.0.1"
-
-    compile "org.grails:grails-plugin-converters:$grailsVersion"
-    compile "org.grails:grails-web:$grailsVersion"
-
-    runtime "net.sourceforge.htmlunit:htmlunit:2.18"
-
-    ["firefox", "chrome", "ie", "htmlunit"].each {driver ->
-        runtime "org.seleniumhq.selenium:selenium-$driver-driver:$seleniumVersion"
-    }
-
-    runtime "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
-    */
 }
