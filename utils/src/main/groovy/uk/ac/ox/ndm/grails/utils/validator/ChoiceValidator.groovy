@@ -27,7 +27,7 @@ class ChoiceValidator extends AtLeastOneValidator {
         }
 
         if (!optional) {
-            return Object.isValid(value)
+            return super.isValid(value)
         }
         true
     }
