@@ -18,11 +18,13 @@ class StandardNamingStrategy extends ImprovedNamingStrategy {
 
     private static final Logger logger = LoggerFactory.getLogger(StandardNamingStrategy)
 
-    public static final Pattern DOMAIN_VERSION_PATTERN = Pattern
-            .compile(/(\w+\.)*endpoint\.(?<endpoint>\w+)\.(?<version>v\d+(_\d+){0,2})\.*/);
+    Pattern getDomainVersionPattern(){
+        Pattern.compile(/(uk\.ac\.ox\.ndm)(\.\w+)*(\.endpoint)?\.(?<endpoint>\w+)\.(?<version>v\d+(_\d+){0,2})\.*/);
+    }
 
-    public static final Pattern PACKAGE_PATTERN = Pattern
-            .compile(/(\w+\.)*endpoint\.(?<endpoint>\w+)\.(?<package>\w+)\.*/);
+    Pattern getPackagePattern(){
+        Pattern.compile(/(uk\.ac\.ox\.ndm)(\.\w+)*(\.endpoint)?\.(?<endpoint>\w+)\.(?<package>\w+)\.*/)
+    }
 
     public static final StandardNamingStrategy INSTANCE = new StandardNamingStrategy()
 
@@ -75,7 +77,7 @@ class StandardNamingStrategy extends ImprovedNamingStrategy {
     }
 
     String adjustTableName(Class clazz, String tableName, String packageName) {
-        def matcher = PACKAGE_PATTERN.matcher(packageName);
+        def matcher = getPackagePattern().matcher(packageName);
         if (!packageName.contains('datatype') && matcher.find()) {
             tableName = "${matcher.group('package')}_$tableName"
         }
@@ -89,7 +91,7 @@ class StandardNamingStrategy extends ImprovedNamingStrategy {
     String canonicalNameToSchemaName(String canonicalName) {
         String schemaName = 'public'
 
-        def matcher = DOMAIN_VERSION_PATTERN.matcher(canonicalName);
+        def matcher = getDomainVersionPattern().matcher(canonicalName);
         if (matcher.find()) {
             schemaName = matcher.group('version')
         }
