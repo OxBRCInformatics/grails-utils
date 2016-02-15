@@ -1,5 +1,13 @@
 # Grails Utils
 
+[![Build Status](https://travis-ci.org/olliefreeman/grails-utils.svg?branch=develop)](https://travis-ci.org/olliefreeman/grails-utils)
+[![Snapshot](http://img.shields.io/badge/current-1.0--SNAPSHOT-blue.svg)](https://github.com/olliefreeman/grails-utils/tree/develop)
+[![License](http://img.shields.io/badge/license-Apache_License_v2-lightgrey.svg)](#copyright-and-license)
+
+
+## Contributors
+* [Ollie Freeman](https://github.com/olliefreeman)
+
 ## Usage
 
 This is designed to be used inside a Grails application/plugin adding extra support for redefining different aspects of default
