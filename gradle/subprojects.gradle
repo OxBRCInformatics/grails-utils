@@ -8,12 +8,14 @@ subprojects {
             "Specification-Title"   : "$rootProject.name $project.name Classes",
             "Specification-Version" : version,
             "Implementation-Title"  : "${project.group.toLowerCase()}.${project.name.toLowerCase()}",
-            "Implementation-Version": "${version}.dev",
+            "Implementation-Version": "${version}",
             "Implementation-Vendor" : "Oxford University",
     ]
 
     apply plugin: 'java'
     apply plugin: 'jacoco'
+    apply plugin: 'maven'
+    apply plugin: 'com.jfrog.bintray'
 
     jacoco {
         toolVersion = '+'
@@ -121,6 +123,29 @@ subprojects {
     artifacts {
         archives sourcesJar
         archives javadocJar
+    }
+
+    bintray {
+        user = System.getenv('BINTRAY_USER')
+        key = System.getenv('BINTRAY_KEY')
+        pkg {
+            repo = 'maven'
+            name = project.name
+            userOrg = 'Oxford University'
+            licenses = ['Apache-2.0']
+            websiteUrl = 'https://github.com/olliefreeman/grails-utils'
+            vcsUrl = 'https://github.com/olliefreeman/grails-utils.git'
+            githubRepo = 'olliefreeman/grails-utils'
+            githubReleaseNotesFile = 'README.md'
+            version {
+                name = version
+                desc = "Grails Utils - ${project.name} ${version}"
+                released = new Date()
+            }
+        }
+        configurations = ['archives']
+        dryRun = true //Whether to run this as dry-run, without deploying
+        publish = false //If version should be auto published after an upload
     }
 
     afterEvaluate {
