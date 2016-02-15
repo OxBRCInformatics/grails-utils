@@ -1,0 +1,4 @@
+rootProject.name = 'grails-utils'
+
+include 'utils'
+include 'utils-test'
