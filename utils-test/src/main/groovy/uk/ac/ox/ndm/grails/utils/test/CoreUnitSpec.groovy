@@ -12,7 +12,7 @@ abstract class CoreUnitSpec extends CoreSpec {
 
         File appFile = new File(config."user.dir" as String, (config.'grails.project.base.dir' as String) +
                                                              '/grails-app/conf/application.groovy')
-        if (!appFile.exists()) throw new IllegalStateException('We need the application groovy config to be able to test')
+        if (!appFile.exists()) return
 
         URL applicationGroovyUrl = appFile.toURI().toURL()
         if (!applicationGroovyUrl) throw new IllegalStateException('We need the application groovy config to be able to test')
@@ -24,7 +24,7 @@ abstract class CoreUnitSpec extends CoreSpec {
 
         File resourcesFile = new File(config."user.dir" as String, (config.'grails.project.base.dir' as String) +
                                                                    '/grails-app/conf/spring/resources.groovy')
-        if (!resourcesFile.exists()) throw new IllegalStateException('We need the application groovy config to be able to test')
+        if (!resourcesFile.exists()) return
 
         URL resourcesGroovyUrl = resourcesFile.toURI().toURL()
         if (!resourcesGroovyUrl) throw new IllegalStateException('We need the spring resources groovy config to be able to test')

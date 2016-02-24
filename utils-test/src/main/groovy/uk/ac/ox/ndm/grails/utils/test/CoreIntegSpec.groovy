@@ -24,14 +24,9 @@ abstract class CoreIntegSpec extends CoreSpec {
     @Shared
     String baseUrl = 'http://localhost:8080'
 
-    @Shared
-    String pid1Xml
-    @Shared
-    String pid2Xml
-    @Shared
-    String pid3Xml
-
-    abstract String getAcceptVersion()
+    String getAcceptVersion() {
+        null
+    }
 
     def setup() {
         logger.warn("--- ${specificationContext.currentIteration.name} ---")
@@ -51,7 +46,7 @@ abstract class CoreIntegSpec extends CoreSpec {
                 customizer.resolveStrategy = resolveStrategy
                 customizer.call()
             }
-            header('Accept-Version', acceptVersion)
+            if (acceptVersion) header('Accept-Version', acceptVersion)
         }
     }
 
@@ -62,7 +57,7 @@ abstract class CoreIntegSpec extends CoreSpec {
                 customizer.resolveStrategy = resolveStrategy
                 customizer.call()
             }
-            header('Accept-Version', acceptVersion)
+            if (acceptVersion) header('Accept-Version', acceptVersion)
         }
     }
 
@@ -73,7 +68,7 @@ abstract class CoreIntegSpec extends CoreSpec {
                 customizer.resolveStrategy = resolveStrategy
                 customizer.call()
             }
-            header('Accept-Version', acceptVersion)
+            if (acceptVersion) header('Accept-Version', acceptVersion)
         }
     }
 
@@ -84,7 +79,7 @@ abstract class CoreIntegSpec extends CoreSpec {
                 customizer.resolveStrategy = resolveStrategy
                 customizer.call()
             }
-            header('Accept-Version', acceptVersion)
+            if (acceptVersion) header('Accept-Version', acceptVersion)
         }
     }
 

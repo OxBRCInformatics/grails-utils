@@ -2,43 +2,14 @@ package uk.ac.ox.ndm.grails.utils.test
 
 import org.spockframework.util.Assert
 import org.springframework.context.MessageSource
-import spock.lang.Shared
 import spock.lang.Specification
 import uk.ac.ox.ndm.grails.utils.BaseBootstrapUtils
 import uk.ac.ox.ndm.grails.utils.domain.DataType
-
-import java.time.LocalDate
 
 /**
  * @since 15/09/2015
  */
 abstract class CoreSpec extends Specification implements BaseBootstrapUtils {
-
-    @Shared
-    Map pid1Map = [
-            nhsNumber    : '1297358368',
-            forenames    : 'Test',
-            surname      : 'User 1',
-            dateOfBirth  : LocalDate.of(1980, 02, 03),
-            participantId: 'id1'
-    ]
-
-    @Shared
-    Map pid2Map = [
-            nhsNumber    : '1440618771',
-            forenames    : 'Test',
-            surname      : 'User 2',
-            dateOfBirth  : LocalDate.of(1984, 11, 23),
-            participantId: 'id2'
-    ]
-
-    @Shared
-    Map testEventDetailMap = [
-            organisationId  : 'test_org',
-            eventReference  : 'test_ref',
-            primaryDiagnosis: 'test_diag',
-            eventDate       : LocalDate.of(2015, 8, 20)
-    ]
 
     def outputDomainErrors(def domainObj) {
         outputDomainErrors(domainObj, messageSource)
