@@ -17,6 +17,7 @@ import org.grails.web.databinding.bindingsource.DefaultDataBindingSourceCreator
 import org.grails.web.databinding.bindingsource.InvalidRequestBodyException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.xml.sax.SAXParseException
 import uk.ac.ox.ndm.grails.utils.Utils
@@ -37,10 +38,48 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
 
     private static final Logger logger = LoggerFactory.getLogger(CaseAdjustingXmlDataBindingSourceCreator)
 
+    @Autowired
+    ApplicationContext applicationContext
+
+    private Collection<XmlDataBindingSourceCreatorHelper> postProcessors
+
     @Override
     MimeType[] getMimeTypes() {
         [MimeType.XML, MimeType.TEXT_XML] as MimeType[]
     }
+
+    private boolean initialised
+
+    CaseAdjustingXmlDataBindingSourceCreator() {
+        initialised = false
+        postProcessors = []
+    }
+
+    CaseAdjustingXmlDataBindingSourceCreator(ApplicationContext applicationContext) {
+        this()
+        this.applicationContext = applicationContext
+        initialise()
+    }
+
+    CaseAdjustingXmlDataBindingSourceCreator(Collection<XmlDataBindingSourceCreatorHelper> postProcessors) {
+        this()
+        initialise postProcessors
+    }
+
+    void initialise() {
+        if (!applicationContext) applicationContext = Holders.getApplicationContext()
+        initialise applicationContext.getBeansOfType(XmlDataBindingSourceCreatorHelper).values()
+    }
+
+    void initialise(XmlDataBindingSourceCreatorHelper postProcessor) {
+        initialise([postProcessor])
+    }
+
+    void initialise(Collection<XmlDataBindingSourceCreatorHelper> postProcessors) {
+        this.postProcessors = postProcessors
+        initialised = true
+    }
+
 
     // Collection value data binding processing
 
@@ -91,6 +130,10 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
     @Override
     DataBindingSource createDataBindingSource(MimeType mimeType, Class bindingTargetType, Object bindingSource) {
         try {
+            if (bindingSource instanceof String) {
+                GPathResult result = new XmlSlurper().parseText(new String(bindingSource))
+                return createDataBindingSource(result, bindingTargetType)
+            }
             if (bindingSource instanceof GPathResult) {
                 return createDataBindingSource(bindingSource, bindingTargetType)
             }
@@ -248,12 +291,9 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
         }
     }
 
-    static Object checkProcessDataBindingMap(Map<String, ?> processDataBindingMap, Class bindingTargetType) {
+    Object checkProcessDataBindingMap(Map<String, ?> processDataBindingMap, Class bindingTargetType) {
 
-        ApplicationContext context = Holders.applicationContext
-        Map<String, XmlDataBindingSourceCreatorHelper> beanMap = context.getBeansOfType(XmlDataBindingSourceCreatorHelper)
-
-        Collection<XmlDataBindingSourceCreatorHelper> postProcessors = beanMap.values()
+        if (!initialised) initialise()
 
         for (XmlDataBindingSourceCreatorHelper postProcessor : postProcessors) {
             def obj = postProcessor.checkDataBindingSourceMap(processDataBindingMap, bindingTargetType)
