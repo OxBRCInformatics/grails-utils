@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/olliefreeman/grails-utils.svg?branch=develop)](https://travis-ci.org/olliefreeman/grails-utils)
 [![Master](http://img.shields.io/badge/master-1.0-green.svg)](https://github.com/olliefreeman/grails-utils/tree/master)
-[![Snapshot](http://img.shields.io/badge/current-1.0-blue.svg)](https://github.com/olliefreeman/grails-utils/tree/develop)
+[![Snapshot](http://img.shields.io/badge/current-1.1--SNAPSHOT-blue.svg)](https://github.com/olliefreeman/grails-utils/tree/develop)
 [![License](http://img.shields.io/badge/license-Apache_License_v2-lightgrey.svg)](#copyright-and-license)
 
 
