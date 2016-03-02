@@ -14,7 +14,10 @@ class ResourceResolver implements LSResourceResolver {
 
     ResourceResolver(String assetFilename) {
         AssetResolver resolver = AssetPipelineConfigHolder.resolvers.find {it.getAsset(assetFilename)}
-        schemaCache = resolver.scanForFiles([], ['*.xsd']).collectEntries {[it.name, new String(it.inputStream.bytes)]}
+        schemaCache = resolver.scanForFiles(['.*'],
+                                            ['*.xsd', '*.xml']).collectEntries {
+            [it.name, new String(it.inputStream.bytes)]
+        }
     }
 
     @Override

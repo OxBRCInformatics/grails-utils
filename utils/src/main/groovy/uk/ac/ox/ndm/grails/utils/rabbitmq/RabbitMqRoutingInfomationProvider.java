@@ -15,7 +15,7 @@ public interface RabbitMqRoutingInfomationProvider {
 
     void setExchange(String exchange);
 
-    Map getExchangeConfiguration();
+    Map<String, Map> getExchangeConfiguration();
 
     String getRoutingKey();
 

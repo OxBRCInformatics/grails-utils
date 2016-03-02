@@ -49,6 +49,7 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
     AbstractRabbitMqXmlValidationService(String mainXsdFilename, List<String> ignoredSchemas = [], boolean deferred = true) {
         this.mainXsdFilename = mainXsdFilename
         this.ignoredSchemas = ignoredSchemas
+        this.schemas = [:]
         initialised = false
         if (!deferred) initialise()
     }
@@ -71,11 +72,11 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
     }
 
     String getApplicationName() {
-        applicationName ?: defaultApplicationName
+        applicationName && applicationName != '@info.app.name@' ? applicationName : defaultApplicationName
     }
 
     String getRoutingKey() {
-        routingKey && routingKey != '@info.app.name@' ? routingKey : defaultRoutingKey
+        routingKey ?: defaultRoutingKey
     }
 
     @Override
@@ -97,5 +98,57 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
     String validatesXml(GPathResult xml) {
         if (!xml) return null
         validatesXml(XmlUtil.serialize(xml))
+    }
+
+    @Override
+    Map<String, Map> getExchangeConfiguration() {
+        [
+                ('exchange_' + getExchange()):
+                        [
+                                type      : 'topic',
+                                durable   : true,
+                                autoDelete: true,
+                                queues    : schemas.collectEntries {name, schema ->
+                                    [('queue_' + getExchange().toLowerCase() + '-' + name.toLowerCase()),
+                                     [
+                                             durable   : true,
+                                             autoDelete: true,
+                                             binding   : getRoutingKey() + '.' + name.toLowerCase(),
+                                     ]
+                                    ]
+                                }
+                        ]
+        ]
+    }
+
+    Map updateRabbitConfig(Object rabbitConfig) {
+
+        if (!rabbitConfig || !rabbitConfig instanceof Map) throw new IllegalStateException('There must be a defined RabbitMq Map configuration')
+        if (!(rabbitConfig.connection || rabbitConfig.connections))
+            throw new IllegalStateException('There must be a defined RabbitMq connection or connections configuration')
+
+        Map queuesConfig = rabbitConfig.queues ?: [:]
+        Map<String, Map> addExcConfig = exchangeConfiguration
+
+        addExcConfig.each {exchange, config ->
+            if (queuesConfig[exchange]) {
+                Map existingExchange = queuesConfig[exchange] as Map
+                if (existingExchange.queues) {
+                    config.queues.each {k, v ->
+                        existingExchange.queues[k] = v
+                    }
+                }
+                else existingExchange.queues = config.queues
+                queuesConfig[exchange] = existingExchange
+
+                config.findAll {((String) it).startsWith('bind-to_')}.each {
+                    existingExchange[it.key] = it.value
+                }
+            }
+            else queuesConfig[exchange] = config
+
+        }
+        rabbitConfig.queues = queuesConfig
+        rabbitConfig
     }
 }
