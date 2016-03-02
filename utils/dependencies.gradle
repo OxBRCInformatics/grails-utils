@@ -24,6 +24,8 @@ dependencies {
     compile "org.grails:grails-plugin-rest:$grailsVersion"
     compile 'javax.servlet:javax.servlet-api:3.1.0'
 
+    compile "org.grails.plugins:asset-pipeline:$assetPipelineVersion"
+
     // JAXB Support
     compile group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.6.0'
 
