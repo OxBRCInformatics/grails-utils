@@ -33,8 +33,7 @@ abstract class CoreUnitSpec extends CoreSpec {
     }
 
     def setup() {
-        logger.warn("--- ${specificationContext.currentIteration.name} ---")
-        logger.info "Setting up core spec"
+        logger.info "Setting up core unit spec"
 
         registerConstraints()
 
