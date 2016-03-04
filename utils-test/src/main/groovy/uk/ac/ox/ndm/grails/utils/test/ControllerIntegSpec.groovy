@@ -12,7 +12,7 @@ import javax.annotation.Resource
 /**
  * @since 15/09/2015
  */
-abstract class CoreIntegSpec extends CoreSpec {
+abstract class ControllerIntegSpec extends CoreSpec {
 
     @Resource
     MessageSource messageSource
@@ -29,8 +29,7 @@ abstract class CoreIntegSpec extends CoreSpec {
     }
 
     def setup() {
-        logger.warn("--- ${specificationContext.currentIteration.name} ---")
-        logger.info "Setting up core spec"
+        logger.info "Setting up core integ spec"
 
         rest = new RestBuilder()
     }

@@ -11,6 +11,10 @@ import uk.ac.ox.ndm.grails.utils.domain.DataType
  */
 abstract class CoreSpec extends Specification implements BaseBootstrapUtils {
 
+    def setup() {
+        logger.warn("--- ${specificationContext.currentIteration.name} ---")
+    }
+
     def outputDomainErrors(def domainObj) {
         outputDomainErrors(domainObj, messageSource)
     }
