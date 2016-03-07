@@ -1,5 +1,6 @@
 package uk.ac.ox.ndm.grails.utils.marshalling
 
+import grails.converters.JSON
 import grails.converters.XML
 
 import javax.annotation.PostConstruct
@@ -10,7 +11,7 @@ import java.time.OffsetDateTime
 /**
  * @since 22/09/2015
  */
-class XmlMarshallerRegistrar {
+class MarshallerRegistrar {
 
     @PostConstruct
     def registerJavaCoreMarshallers() {
@@ -30,6 +31,18 @@ class XmlMarshallerRegistrar {
             GregorianCalendar calendar = new GregorianCalendar()
             calendar.setTime(dt)
             DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar).toString()
+        }
+
+        JSON.registerObjectMarshaller(LocalDate) {
+            it?.toString()
+        }
+
+        JSON.registerObjectMarshaller(OffsetDateTime) {
+            it?.toString()
+        }
+
+        JSON.registerObjectMarshaller(UUID) {
+            it?.toString()
         }
     }
 
