@@ -60,7 +60,9 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
         factory.setResourceResolver(resourceResolver)
 
-        schemas = resourceResolver.schemaCache.findAll {!(it.key in ignoredSchemas)}.collectEntries {filename, contents ->
+        schemas = resourceResolver.schemaCache.findAll {
+            !(it.key in ignoredSchemas) && it.key =~ getSchemaPattern()
+        }.collectEntries {filename, contents ->
             def schema = factory.newSchema(new StreamSource(new StringReader(contents), filename))
             [filename.replaceFirst(getSchemaPattern(), ''), schema]
         }
@@ -139,11 +141,12 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
                     }
                 }
                 else existingExchange.queues = config.queues
-                queuesConfig[exchange] = existingExchange
 
                 config.findAll {((String) it).startsWith('bind-to_')}.each {
                     existingExchange[it.key] = it.value
                 }
+
+                queuesConfig[exchange] = existingExchange
             }
             else queuesConfig[exchange] = config
 
