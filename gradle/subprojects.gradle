@@ -130,7 +130,7 @@ subprojects {
         key = System.getenv('BINTRAY_KEY')
         pkg {
             repo = 'maven'
-            name = project.name
+            name = "grails-${project.name}"
             userOrg = 'olliefreeman'
             licenses = ['Apache-2.0']
             websiteUrl = 'https://github.com/olliefreeman/grails-utils'
@@ -146,7 +146,7 @@ subprojects {
         }
         configurations = ['archives']
         dryRun = false //Whether to run this as dry-run, without deploying
-        publish = false //If version should be auto published after an upload
+        publish = true //If version should be auto published after an upload
     }
 
     afterEvaluate {
