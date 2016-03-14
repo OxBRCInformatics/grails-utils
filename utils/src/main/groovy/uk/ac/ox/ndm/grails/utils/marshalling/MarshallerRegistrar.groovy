@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct
 import javax.xml.datatype.DatatypeFactory
 import java.time.LocalDate
 import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 
 /**
  * @since 22/09/2015
@@ -16,11 +17,11 @@ class MarshallerRegistrar {
     @PostConstruct
     def registerJavaCoreMarshallers() {
         XML.registerObjectMarshaller(LocalDate) {
-            it?.toString()
+            it?.format(DateTimeFormatter.ISO_DATE)
         }
 
         XML.registerObjectMarshaller(OffsetDateTime) {
-            it?.toString()
+            it?.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
         }
 
         XML.registerObjectMarshaller(UUID) {
