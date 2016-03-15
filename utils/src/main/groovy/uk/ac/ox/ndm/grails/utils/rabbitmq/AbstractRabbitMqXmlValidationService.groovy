@@ -4,7 +4,6 @@ import groovy.util.slurpersupport.GPathResult
 import groovy.xml.XmlUtil
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 import org.xml.sax.SAXException
 import uk.ac.ox.ndm.grails.utils.xml.XmlValidator
 import uk.ac.ox.ndm.grails.utils.xml.resource.ResourceResolver
@@ -32,7 +31,6 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
 
     abstract String getDefaultApplicationName()
 
-    @Value('${info.app.name}')
     String applicationName
 
     String routingKey
@@ -74,7 +72,7 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
     }
 
     String getApplicationName() {
-        applicationName && applicationName != '@info.app.name@' ? applicationName : defaultApplicationName
+        applicationName ?: defaultApplicationName
     }
 
     String getRoutingKey() {
