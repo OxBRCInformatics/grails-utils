@@ -62,9 +62,19 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
             !(it.key in ignoredSchemas) && it.key =~ getSchemaPattern()
         }.collectEntries {filename, contents ->
             def schema = factory.newSchema(new StreamSource(new StringReader(contents), filename))
-            [filename.replaceFirst(getSchemaPattern(), ''), schema]
+            [convertFilenameToSchemaKeyName(filename), schema]
         }
         initialised = true
+    }
+
+    /**
+     * Convert the name (which is a filename) to the schema key name.
+     * This will also be used as the queue name suffix.
+     *
+     * If overriding then call this super method then alter the returned string.
+     */
+    String convertFilenameToSchemaKeyName(String filename) {
+        filename.replaceFirst(getSchemaPattern(), '')
     }
 
     String getExchange() {
