@@ -131,11 +131,11 @@ subprojects {
         pkg {
             repo = 'maven'
             name = "grails-${project.name}"
-            userOrg = 'olliefreeman'
+            userOrg = 'oxbrcinformatics'
             licenses = ['Apache-2.0']
-            websiteUrl = 'https://github.com/olliefreeman/grails-utils'
-            vcsUrl = 'https://github.com/olliefreeman/grails-utils.git'
-            githubRepo = 'olliefreeman/grails-utils'
+            websiteUrl = 'https://github.com/oxbrcinformatics/grails-utils'
+            vcsUrl = 'https://github.com/oxbrcinformatics/grails-utils.git'
+            githubRepo = 'oxbrcinformatics/grails-utils'
             githubReleaseNotesFile = 'README.md'
             version {
                 name = project.version
