@@ -5,9 +5,11 @@ import grails.databinding.CollectionDataBindingSource
 import grails.databinding.DataBindingSource
 import grails.databinding.SimpleMapDataBindingSource
 import grails.util.Holders
-import grails.util.Pair
 import grails.web.mime.MimeType
 import grails.web.servlet.mvc.GrailsParameterMap
+import groovy.transform.CompileStatic
+import groovy.transform.TypeChecked
+import groovy.transform.TypeCheckingMode
 import groovy.util.slurpersupport.GPathResult
 import org.grails.databinding.bindingsource.DataBindingSourceCreationException
 import org.grails.databinding.xml.GPathResultCollectionDataBindingSource
@@ -34,6 +36,7 @@ import java.lang.reflect.ParameterizedType
 /**
  * @since 02/09/2015
  */
+@CompileStatic
 class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceCreator implements Utils {
 
     private static final Logger logger = LoggerFactory.getLogger(CaseAdjustingXmlDataBindingSourceCreator)
@@ -48,7 +51,7 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
         [MimeType.XML, MimeType.TEXT_XML] as MimeType[]
     }
 
-    private boolean initialised
+    protected boolean initialised
 
     CaseAdjustingXmlDataBindingSourceCreator() {
         initialised = false
@@ -97,16 +100,16 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
                     return createCollectionBindingSource(is, req.getCharacterEncoding())
                 }
                 if (bindingSource instanceof HttpServletRequest) {
-                    def req = (HttpServletRequest) bindingSource
+                    def req = bindingSource as HttpServletRequest
                     def is = req.getInputStream()
                     return createCollectionBindingSource(is, req.getCharacterEncoding())
                 }
                 if (bindingSource instanceof InputStream) {
-                    def is = (InputStream) bindingSource
+                    def is = bindingSource as InputStream
                     return createCollectionBindingSource(is, "UTF-8")
                 }
                 if (bindingSource instanceof Reader) {
-                    def is = (Reader) bindingSource
+                    def is = bindingSource as Reader
                     return createCollectionBindingSource(is)
                 }
 
@@ -138,16 +141,16 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
                 return createDataBindingSource(bindingSource, bindingTargetType)
             }
             if (bindingSource instanceof HttpServletRequest) {
-                def req = (HttpServletRequest) bindingSource
+                def req = bindingSource as HttpServletRequest
                 def is = req.getInputStream()
                 return createDataBindingSource(is, req.getCharacterEncoding(), bindingTargetType)
             }
             if (bindingSource instanceof InputStream) {
-                def is = (InputStream) bindingSource
+                def is = bindingSource as InputStream
                 return createDataBindingSource(is, "UTF-8", bindingTargetType)
             }
             if (bindingSource instanceof Reader) {
-                def is = (Reader) bindingSource
+                def is = bindingSource as Reader
                 return createDataBindingSource(is, bindingTargetType)
             }
             return super.createDataBindingSource(mimeType, bindingTargetType, bindingSource)
@@ -169,10 +172,10 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
     }
 
     DataBindingSource createDataBindingSource(Map<String, ?> input, Class bindingTargetType) {
-        Map<String, Object> preprocessed = preProcessDataBindingMap(input)
+        Map<String, ?> preprocessed = preProcessDataBindingMap(input)
         Object processed = processDataBindingMap(preprocessed, bindingTargetType)
         if (processed instanceof Map) return new SimpleMapDataBindingSource(processed)
-        if (processed instanceof DataBindingSource) return processed
+        if (processed instanceof DataBindingSource) return processed as DataBindingSource
 
         throw new InvalidClassException('Processed value class ' + processed.class.canonicalName +
                                         ' is not Map or DataBindingSource')
@@ -185,19 +188,24 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
 
         Map<String, Object> keyMappings = extractNameMappings(mappings?.nameMappings())
 
-        Map<String, ?> processedDataBindingMap = [:]
+        Map<String, Object> processedDataBindingMap = [:]
 
         // Convert the input map into a valid databinding map
         input.each {k, v ->
-            def key = createValidKey(k, keyMappings)
-            def value = v
-            if (key instanceof Map) {
-                Pair<String, Object> keyValue = extractKeyValuePairFromKeyMapping(key, value)
-                key = keyValue.aValue
-                value = keyValue.bValue
+            Object validKey = createValidKey(k, keyMappings)
+            if (validKey instanceof Map) {
+                Map<String, ?> keyValue = extractKeyValuePairFromKeyMapping(validKey as Map<String, String>, v)
+
+                keyValue.each {mappedKey, mappedValue ->
+                    Object value = convertValue(mappedValue, mappedKey, bindingTargetType, processedDataBindingMap)
+                    processedDataBindingMap.put(mappedKey, value)
+                }
             }
-            value = convertValue(value, key, bindingTargetType, processedDataBindingMap)
-            processedDataBindingMap.put(key, value)
+            else {
+                Object value = convertValue(v, validKey as String, bindingTargetType, processedDataBindingMap)
+                processedDataBindingMap.put(validKey as String, value)
+            }
+
         }
 
         checkProcessDataBindingMap(processedDataBindingMap, bindingTargetType)
@@ -205,12 +213,12 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
     }
 
 
-    Object convertValue(Object v, String key, Class bindingTargetType, Map converted) {
+    Object convertValue(Object v, String key, Class bindingTargetType, Map<String, ?> converted) {
         def value = v
         if (v instanceof List) {
             value = converted.getOrDefault(key, [])
             v.each {
-                value = convertAndAddToList(key, it, bindingTargetType, value)
+                value = convertAndAddToList(key, it, bindingTargetType, value as List)
             }
         }
         else {
@@ -222,9 +230,9 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
                 }
 
                 if (Collection.isAssignableFrom(bindingType)) {
-                    return convertAndAddToList(key, value, bindingTargetType, converted.getOrDefault(key, []))
+                    return convertAndAddToList(key, value, bindingTargetType, converted.getOrDefault(key, []) as List)
                 }
-                value = processDataBindingMap(value, bindingType)
+                value = processDataBindingMap(value as Map<String, ?>, bindingType)
             }
             else if (bindingType && DataType.isAssignableFrom(bindingType)) {
                 value = new DataTypeDataBindingSource([key: value], bindingType)
@@ -233,8 +241,9 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
         value
     }
 
+    @TypeChecked(TypeCheckingMode.SKIP)
     Class determineBindingType(Class bindingTargetType, String key) {
-        def metaProperty = bindingTargetType.metaClass.getMetaProperty(key)
+        MetaProperty metaProperty = bindingTargetType.metaClass.getMetaProperty(key)
         if (!metaProperty && bindingTargetType.superclass != Object) {
             return determineBindingType(bindingTargetType.superclass, key)
         }
@@ -244,7 +253,7 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
             return determineBindingType(bindingTargetType.superclass, key)
         }
         if (bindingType == Object) {
-            String methodSetterName = "set${CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, key)}"
+            String methodSetterName = "set${CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, key)}".toString()
             Method setter = bindingTargetType.methods.find {it.name == methodSetterName}
             if (setter) return setter.parameterTypes[0]
         }
@@ -267,28 +276,31 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
         listValue
     }
 
-    static Pair<String, Object> extractKeyValuePairFromKeyMapping(Map keys, def value) {
+    static Map<String, ?> extractKeyValuePairFromKeyMapping(Map<String, String> keys, Object value) {
 
-        def potentialKey = null
+        if (!value) return [:]
+        Map<String, ?> result = [:]
 
-        for (Map.Entry entry : keys.entrySet()) {
+        keys.each {key, mapping ->
 
-            def key = entry.key
-            def mapping = entry.value
-            potentialKey = key
-            if (value && value[key]) {
-                if (mapping instanceof Map) return extractKeyValuePairFromKeyMapping(mapping, value."$key")
-                return new Pair(mapping, value[key])
+            if (value[key]) {
+                if (mapping instanceof Map) {
+                    result.putAll(extractKeyValuePairFromKeyMapping(mapping as Map<String, String>, value[key]))
+
+                }
+                else result[mapping] = value[key]
             }
+
         }
-        new Pair<String, Object>(potentialKey, null)
+
+        result
     }
 
     static Map<String, ?> preProcessDataBindingMap(Map<String, ?> map) {
         if (map == null) throw new IllegalArgumentException('null map is not permitted for pre processing')
         map.collectEntries {k, v ->
             [(createValidKey(k, [:])): (preProcessDataBindingValue(v))]
-        }
+        } as Map<String, ?>
     }
 
     Object checkProcessDataBindingMap(Map<String, ?> processDataBindingMap, Class bindingTargetType) {
@@ -313,7 +325,7 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
     static Object createValidKey(String k, Map keyMappings) {
         String key = k.contains('-') ? CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_CAMEL, k) :
                      CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, k)
-        keyMappings ? (key in keyMappings.keySet() ? keyMappings."$key" : key) : key
+        keyMappings ? (key in keyMappings.keySet() ? keyMappings[key] : key) : key
     }
 
     static Class<?> getReferencedTypeForCollectionInClass(String propertyName, Class clazz) {
@@ -321,7 +333,7 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
         if (field) {
             def genericType = field.genericType
             if (genericType instanceof ParameterizedType) {
-                return Map.isAssignableFrom(genericType.getRawType()) ?
+                return Map.isAssignableFrom(genericType.getRawType() as Class<?>) ?
                        genericType.getActualTypeArguments()[1] : genericType.getActualTypeArguments()[0]
             }
         }

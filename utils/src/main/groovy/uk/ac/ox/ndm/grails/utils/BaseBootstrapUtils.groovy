@@ -45,6 +45,7 @@ trait BaseBootstrapUtils {
     }
 
     boolean check(def domainObj, MessageSource messageSource) {
+        if (!domainObj) return true
 
         boolean valid = domainObj.validate()
 
@@ -56,6 +57,7 @@ trait BaseBootstrapUtils {
     }
 
     boolean checkAndSave(def domainObj, MessageSource messageSource) {
+        if (!domainObj) return false
         if (!check(domainObj, messageSource)) return false
         domainObj.save(failOnError: true) ? true : false
     }
