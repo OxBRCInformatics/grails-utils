@@ -21,21 +21,6 @@ subprojects {
         toolVersion = '+'
     }
 
-    configurations.all {
-        // check for updates every build
-        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-        resolutionStrategy {
-            //    failOnVersionConflict()
-
-            eachDependency {DependencyResolveDetails details ->
-                if (details.requested.group == 'org.springframework') {
-                    details.useVersion springframeworkVersion
-                }
-
-            }
-        }
-    }
-
     apply from: "$rootDir/dependencies.gradle"
     apply from: "dependencies.gradle"
 
@@ -150,6 +135,16 @@ subprojects {
     }
 
     afterEvaluate {
+
+        configurations.all {
+            // check for updates every build
+            resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+            resolutionStrategy.eachDependency {DependencyResolveDetails details ->
+                if (details.requested.group == 'org.springframework') {
+                    details.useVersion springframeworkVersion
+                }
+            }
+        }
 
         /*
          * Set up compile tasks to use default encoding and other compile options.
