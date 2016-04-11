@@ -1,14 +1,11 @@
 package uk.ac.ox.ndm.grails.utils.validator
 
-import grails.test.mixin.TestMixin
-import grails.test.mixin.support.GrailsUnitTestMixin
 import grails.util.Pair
 import spock.lang.Specification
 
 /**
  * @since 28/08/2015
  */
-@TestMixin(GrailsUnitTestMixin)
 class ChoiceValidatorTest extends Specification {
 
     ChoiceValidator validator

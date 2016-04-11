@@ -1,5 +1,11 @@
 dependencies {
 
+
+    compile "org.grails:grails-databinding:$grailsVersion"
+    compile "org.grails:grails-web-databinding:$grailsVersion"
+    compile "org.grails:grails-plugin-rest:$grailsVersion"
+    compile "org.grails.plugins:asset-pipeline:$assetPipelineVersion"
+
     /**
      * GORM and Hibernate
      */
@@ -21,13 +27,11 @@ dependencies {
     compile group: 'com.googlecode.libphonenumber', name: 'libphonenumber', version: '7.0.4'
     compile group: 'net.sf.oval', name: 'oval', version: '1.85'
 
-    compile "org.grails:grails-plugin-rest:$grailsVersion"
     compile 'javax.servlet:javax.servlet-api:3.1.0'
-
-    compile "org.grails.plugins:asset-pipeline:$assetPipelineVersion"
 
     // JAXB Support
     compile group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.6.0'
-
+/*
     testCompile "org.grails:grails-plugin-testing:$grailsVersion"
+ */
 }
