@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct
 import javax.xml.datatype.DatatypeFactory
 import java.time.LocalDate
 import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 /**
@@ -20,8 +21,8 @@ class MarshallerRegistrar {
             it?.format(DateTimeFormatter.ISO_DATE)
         }
 
-        XML.registerObjectMarshaller(OffsetDateTime) {
-            it?.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+        XML.registerObjectMarshaller(OffsetDateTime) {OffsetDateTime odt ->
+            odt.withOffsetSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
         }
 
         XML.registerObjectMarshaller(UUID) {
