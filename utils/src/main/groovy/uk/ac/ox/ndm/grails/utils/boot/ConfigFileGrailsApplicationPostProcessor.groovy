@@ -42,43 +42,46 @@ public class ConfigFileGrailsApplicationPostProcessor extends GrailsApplicationP
         MutablePropertySources propertySources = config.getPropertySources()
         SimpleCommandLinePropertySource commandLine = propertySources.get(COMMAND_LINE_ARGS_PROPERTY_SOURCE)
 
-        if (commandLine.containsProperty('configFile') || commandLine.containsProperty('c')) {
+        if (commandLine) {
 
-            Path path = Paths.get(commandLine.getProperty('configFile') ?: commandLine.getProperty('c'))
+            if (commandLine.containsProperty('configFile') || commandLine.containsProperty('c')) {
 
-            if (Files.exists(path)) {
+                Path path = Paths.get(commandLine.getProperty('configFile') ?: commandLine.getProperty('c'))
 
-                String ext = com.google.common.io.Files.getFileExtension(path.fileName);
-                Resource resource = new FileSystemResource(path.toFile())
-                PropertySourceLoader propertySourceLoader
-                try {
-                    switch (ext) {
-                        case 'yml': case 'yaml':
-                            propertySourceLoader = new YamlPropertySourceLoader()
-                            break
-                        case 'groovy':
-                            propertySourceLoader = new GroovyConfigPropertySourceLoader()
-                            break
-                        case 'properties': case 'xml':
-                            propertySourceLoader = new PropertiesPropertySourceLoader()
-                            break
-                        default:
-                            logger.warn("Specified configuration file {} is not one of ['yml','yaml','groovy','properties','xml']", path)
+                if (Files.exists(path)) {
+
+                    String ext = com.google.common.io.Files.getFileExtension(path.fileName);
+                    Resource resource = new FileSystemResource(path.toFile())
+                    PropertySourceLoader propertySourceLoader
+                    try {
+                        switch (ext) {
+                            case 'yml': case 'yaml':
+                                propertySourceLoader = new YamlPropertySourceLoader()
+                                break
+                            case 'groovy':
+                                propertySourceLoader = new GroovyConfigPropertySourceLoader()
+                                break
+                            case 'properties': case 'xml':
+                                propertySourceLoader = new PropertiesPropertySourceLoader()
+                                break
+                            default:
+                                logger.warn("Specified configuration file {} is not one of ['yml','yaml','groovy','properties','xml']", path)
+                        }
+
+                        if (propertySourceLoader) {
+                            PropertySource<?> propertySource = propertySourceLoader.load(CONFIG_FILE_PROPERTY_SOURCE, resource, null)
+                            propertySources.addAfter COMMAND_LINE_ARGS_PROPERTY_SOURCE, propertySource
+                            config.refresh()
+                            logger.info('Updated property sources to include properties from configuration file {}', path)
+                        }
+
+                    } catch (IOException e) {
+                        logger.warn("Error loading configuration file '$path': ${e.getMessage()}", e);
                     }
-
-                    if (propertySourceLoader) {
-                        PropertySource<?> propertySource = propertySourceLoader.load(CONFIG_FILE_PROPERTY_SOURCE, resource, null)
-                        propertySources.addAfter COMMAND_LINE_ARGS_PROPERTY_SOURCE, propertySource
-                        config.refresh()
-                        logger.info('Updated property sources to include properties from configuration file {}', path)
-                    }
-
-                } catch (IOException e) {
-                    logger.warn("Error loading configuration file '$path': ${e.getMessage()}", e);
                 }
+                else
+                    logger.warn("Specified configuration file {} cannot be found", path)
             }
-            else
-                logger.warn("Specified configuration file {} cannot be found", path)
         }
 
     }
