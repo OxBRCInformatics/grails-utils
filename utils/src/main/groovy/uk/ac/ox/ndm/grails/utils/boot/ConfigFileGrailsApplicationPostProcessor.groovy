@@ -50,7 +50,7 @@ public class ConfigFileGrailsApplicationPostProcessor extends GrailsApplicationP
 
                 if (Files.exists(path)) {
 
-                    String ext = com.google.common.io.Files.getFileExtension(path.fileName);
+                    String ext = com.google.common.io.Files.getFileExtension(path.fileName.toString());
                     Resource resource = new FileSystemResource(path.toFile())
                     PropertySourceLoader propertySourceLoader
                     try {
