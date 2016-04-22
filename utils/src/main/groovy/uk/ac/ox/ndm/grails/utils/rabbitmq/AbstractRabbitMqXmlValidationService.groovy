@@ -1,5 +1,8 @@
 package uk.ac.ox.ndm.grails.utils.rabbitmq
 
+import groovy.transform.CompileStatic
+import groovy.transform.TypeChecked
+import groovy.transform.TypeCheckingMode
 import groovy.util.slurpersupport.GPathResult
 import groovy.xml.XmlUtil
 import org.slf4j.Logger
@@ -17,6 +20,7 @@ import java.util.regex.Pattern
 /**
  * @since 01/03/2016
  */
+@CompileStatic
 abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, RabbitMqRoutingInfomationProvider {
 
     Logger getLogger() {
@@ -24,6 +28,8 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
     }
 
     abstract Pattern getSchemaPattern()
+
+    abstract Pattern getSchemaSuffix()
 
     abstract String getDefaultExchange()
 
@@ -36,16 +42,19 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
     String routingKey
     String exchange
 
-    ResourceResolver resourceResolver
     Map<String, Schema> schemas
 
-    protected String mainXsdFilename
+    protected List<String> mainXsdFilenames
     protected List<String> ignoredSchemas
 
     private boolean initialised
 
     AbstractRabbitMqXmlValidationService(String mainXsdFilename, List<String> ignoredSchemas = [], boolean deferred = true) {
-        this.mainXsdFilename = mainXsdFilename
+        this([mainXsdFilename], ignoredSchemas, deferred)
+    }
+
+    AbstractRabbitMqXmlValidationService(List<String> mainXsdFilenames, List<String> ignoredSchemas = [], boolean deferred = true) {
+        this.mainXsdFilenames = mainXsdFilenames
         this.ignoredSchemas = ignoredSchemas
         this.schemas = [:]
         initialised = false
@@ -54,15 +63,18 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
 
     void initialise() {
         if (initialised) return
-        resourceResolver = new ResourceResolver(mainXsdFilename)
-        SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-        factory.setResourceResolver(resourceResolver)
 
-        schemas = resourceResolver.schemaCache.findAll {
-            !(it.key in ignoredSchemas) && it.key =~ getSchemaPattern()
-        }.collectEntries {filename, contents ->
-            def schema = factory.newSchema(new StreamSource(new StringReader(contents), filename))
-            [convertFilenameToSchemaKeyName(filename), schema]
+        mainXsdFilenames.each {mainXsdFilename ->
+            ResourceResolver resourceResolver = new ResourceResolver(mainXsdFilename)
+            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+            factory.setResourceResolver(resourceResolver)
+
+            schemas = resourceResolver.schemaCache.findAll {
+                !(it.key in ignoredSchemas) && it.key =~ getSchemaPattern()
+            }.collectEntries {filename, contents ->
+                def schema = factory.newSchema(new StreamSource(new StringReader(contents), filename))
+                [convertFilenameToSchemaKeyName(filename), schema]
+            } as Map<String, Schema>
         }
         initialised = true
     }
@@ -74,7 +86,7 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
      * If overriding then call this super method then alter the returned string.
      */
     String convertFilenameToSchemaKeyName(String filename) {
-        filename.replaceFirst(getSchemaPattern(), '')
+        filename.replaceFirst(getSchemaSuffix(), '')
     }
 
     String getExchange() {
@@ -128,16 +140,17 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
                                     ]
                                 }
                         ]
-        ]
+        ] as Map<String, Map>
     }
 
-    Map updateRabbitConfig(Object rabbitConfig) {
+    @TypeChecked(value = TypeCheckingMode.SKIP)
+    Map updateRabbitConfig(Map rabbitConfig) {
 
         if (!rabbitConfig || !rabbitConfig instanceof Map) throw new IllegalStateException('There must be a defined RabbitMq Map configuration')
         if (!(rabbitConfig.connection || rabbitConfig.connections))
             throw new IllegalStateException('There must be a defined RabbitMq connection or connections configuration')
 
-        Map queuesConfig = rabbitConfig.queues ?: [:]
+        Map<String, Map> queuesConfig = rabbitConfig.queues ?: [:]
         Map<String, Map> addExcConfig = exchangeConfiguration
 
         addExcConfig.each {exchange, config ->
@@ -150,7 +163,7 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
                 }
                 else existingExchange.queues = config.queues
 
-                config.findAll {((String) it).startsWith('bind-to_')}.each {
+                config.findAll {((String) it.key).startsWith('bind-to_')}.each {
                     existingExchange[it.key] = it.value
                 }
 
