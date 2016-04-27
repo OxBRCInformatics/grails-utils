@@ -14,7 +14,7 @@ public interface XmlValidator {
      *
      * @return schema name of XSD xml validates against or null
      */
-    String validatesXml(String xml);
+    String validatesXml(String referenceId, String xml);
 
     /**
      * Does this helper validate the provided XML
@@ -23,7 +23,7 @@ public interface XmlValidator {
      *
      * @return schema name of XSD xml validates against or null
      */
-    String validatesXml(GPathResult xml);
+    String validatesXml(String referenceId, GPathResult xml);
 
 
 }

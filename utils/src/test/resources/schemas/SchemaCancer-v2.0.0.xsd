@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+           targetNamespace="https://genomicsengland.co.uk/xsd/cancer/2.0.0" xmlns="https://genomicsengland.co.uk/xsd/cancer/2.0.0"
+           elementFormDefault="qualified" vc:minVersion="1.1">
+
+  <xs:include schemaLocation="CarePlansCancer-v2.0.0.xsd"/>
+  <xs:include schemaLocation="ConsentUpdatesCancer-v2.0.0.xsd"/>
+  <xs:include schemaLocation="DeathsCancer-v2.0.0.xsd"/>
+  <xs:include schemaLocation="DiagnosesCancer-v2.0.0.xsd"/>
+  <xs:include schemaLocation="DiseaseInformationUpdatesCancer-v2.0.0.xsd"/>
+  <xs:include schemaLocation="InterventionsCancer-v2.0.0.xsd"/>
+  <xs:include schemaLocation="InvestigationsCancer-v2.0.0.xsd"/>
+  <xs:include schemaLocation="ReferralsCancer-v2.0.0.xsd"/>
+  <xs:include schemaLocation="RegistrationAndConsentsCancer-v2.0.0.xsd"/>
+  <xs:include schemaLocation="RiskFactorAssessmentsCancer-v2.0.0.xsd"/>
+  <xs:include schemaLocation="WithdrawalsCancer-v2.0.0.xsd"/>
+
+</xs:schema>
