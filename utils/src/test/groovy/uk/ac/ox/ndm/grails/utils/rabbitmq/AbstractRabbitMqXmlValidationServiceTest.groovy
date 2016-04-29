@@ -9,6 +9,7 @@ import spock.lang.Specification
 import javax.xml.validation.Schema
 import java.nio.charset.Charset
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.regex.Pattern
 
@@ -96,9 +97,9 @@ class AbstractRabbitMqXmlValidationServiceTest extends Specification {
     }
 
     byte[] readFileAsBytes(String filename) {
-        byte[] bytes = Files.readAllBytes(Paths.get('src/test/resources/xml', filename).toAbsolutePath())
-        if (!bytes) bytes = Files.readAllBytes(Paths.get('utils/src/test/resources/xml', filename).toAbsolutePath())
-        bytes
+        Path p = Paths.get('src/test/resources/xml', filename).toAbsolutePath()
+        if(!Files.exists(p)) p = Paths.get('utils/src/test/resources/xml', filename).toAbsolutePath()
+        Files.readAllBytes(p)
     }
 
     String readFileAsString(String filename) {
