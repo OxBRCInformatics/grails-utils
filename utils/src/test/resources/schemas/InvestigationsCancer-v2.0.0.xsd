@@ -1,0 +1,1600 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+           xmlns="https://genomicsengland.co.uk/xsd/cancer/2.0.0"
+           targetNamespace="https://genomicsengland.co.uk/xsd/cancer/2.0.0" vc:minVersion="1.1" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:documentation>
+      <h1>InvestigationsCancer</h1>
+      <p>Version:2.0.0</p>
+      <p>Description:Main Programme Cancer Investigation Schema</p>
+      <p>Generated: 2016-01-25T16:48:06.825+0000</p>
+    </xs:documentation>
+  </xs:annotation>
+  <xs:include schemaLocation="DataTypesCancer-v2.0.0.xsd"/>
+  <xs:element name="investigations">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="metadata" type="metadata" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="subject" type="subject-29939.2" minOccurs="1" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="subject-29939.2">
+    <xs:sequence>
+      <xs:element name="participant-identifiers" type="participant-identifiers-29330.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="imaging" type="imaging-29942.2" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="sample-pathology" type="sample-pathology-29943.2" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="genetic-results" type="genetic-results-29948.2" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="next-generation-sequencing" type="next-generation-sequencing-29949.2" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="circulating-tumour-markers" type="circulating-tumour-markers-29951.2" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="investigation-report-other" type="investigation-report-other-36552.1" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="imaging-29942.2">
+    <xs:sequence>
+      <xs:element name="event-details" type="event-details-29940.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="related-cancer-diagnoses" type="related-cancer-diagnoses-37037.1" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="imaging-code" type="imaging-code-36547.1" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="imaging-modality" type="cancerimagingmodality-13034.1" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>*IMAGING CODE (NICIP) and/or *IMAGING CODE (SNOMED CT) and/or *CANCER IMAGING MODALITY and IMAGING ANATOMICAL SITE and ANATOMICAL SIDE
+              (IMAGING) is required. The type of imaging procedure used during an Imaging or Radiodiagnostic Event for a Cancer Care Spell. NB: PET
+              Scan also includes PET-CT Scan.
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="anatomical-site" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>*IMAGING CODE (NICIP) and/or *IMAGING CODE (SNOMED CT) and/or *CANCER IMAGING MODALITY and IMAGING ANATOMICAL SITE and ANATOMICAL SIDE
+              (IMAGING) is required. A classification of the part of the body that is the subject of an Imaging Or Radiodiagnostic Event.
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="anatomical-side" type="anatomicalsideimaging-13039.1" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The side of the body that is the subject of an Imaging or Radiodiagnostic Event.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="imaging-report-reference" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>This is an internal reference that will allow your centre to retrieve the imaging report associated with this imaging event</p>
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="image-file-reference" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>
+            <p>If not possible to submit Image File, please supply Image File local reference, according to local imaging guidance.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="imaging-code-36547.1">
+    <xs:choice>
+      <xs:element name="imaging-code-snomedct" type="imagingcodesnomed-ct-12756.1" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>*IMAGING CODE (NICIP) and/or *IMAGING CODE (SNOMED CT) and/or *CANCER IMAGING MODALITY and IMAGING ANATOMICAL SITE and ANATOMICAL SIDE
+              (IMAGING) is required. IMAGING CODE (NICIP) is the National Interim Clinical Imaging Procedure Code Set code which is used to identify
+              both the test modality and body site of the test
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="imaging-code-nicip" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>*IMAGING CODE (NICIP) and/or *IMAGING CODE (SNOMED CT) and/or *CANCER IMAGING MODALITY and IMAGING ANATOMICAL SITE and ANATOMICAL SIDE
+              (IMAGING) is required. IMAGING CODE (NICIP) is the National Interim Clinical Imaging Procedure Code Set code which is used to identify
+              both the test modality and body site of the test.
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="sample-pathology-29943.2">
+    <xs:sequence>
+      <xs:element name="event-details" type="event-details-29940.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="related-cancer-diagnoses" type="related-cancer-diagnoses-37037.1" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="sample-details" type="sample-details-29958.2" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="morphology" type="morphology-36548.1" minOccurs="1" maxOccurs="unbounded"/>
+      <xs:element name="topography" type="topography-36549.1" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="disease-specific-markers" type="disease-specific-markers-29944.2" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="cancer-specific-grading" type="cancer-specific-grading-36550.1" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="pathology-investigation-type" type="pathologyinvestigationtype-13210.1" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The type of pathology investigation carried out.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="excision-margin" type="excisionmargin-13223.1" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>An indication of whether the excision margin was clear of the tumour and if so, by how much. Where there is more than one measurement,
+              record the closest or closest relevant margin. Where actual measurements are not taken use options 01, 05 or 06 as applicable.
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="grade-of-differentiation" type="gradeofdifferentiationpathological-13217.1" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>GRADE OF DIFFERENTIATION (PATHOLOGICAL) is the definitive grade of the Tumour based on the evidence from a pathological examination.
+              Applicable to Colorectal Grading (well, moderate, poor, not assessable, Mucinous Tumour Grade Gynaecology - Ovarian (well, moderate,
+              poor, not assessable), Clear Cell Tumour Grade Gynaecology - Ovarian (poor, not assessable) and Serous Carcinoma Tumour Grade
+              Gynaecology - Ovarian (well, moderate, poor, not assessable)
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="pathology-report" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The full text from the pathology report (uploaded copy of pathology report)</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="number-of-nodes-examined" type="xs:integer" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Number of nodes examined, where applicable</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="tnm-version" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The UICC edition number used for Tumour, Node and Metastasis (TNM) staging for cancer diagnosis.</p>
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="pt" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>T CATEGORY (PATHOLOGICAL) is the Union for International Cancer Control (UICC) code which classifies the size and extent of the primary
+              Tumour based on the evidence from a pathological examination.
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="pn" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>N CATEGORY (PATHOLOGICAL) is the Union for International Cancer Control (UICC) code which classifies the absence or presence and extent
+              of regional lymph node metastases based on the evidence from a pathological examination.
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="pm" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>M CATEGORY (PATHOLOGICAL) is the Union for International Cancer Control (UICC) code which classifies the absence or presence of distant
+              metastases based on the evidence from a pathological examination.
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="pathology-image-file-reference" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Image of the section from block submitted to GEL</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="tumour-type" type="tumourtype-14720.1" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The type of tumour i.e. metastatic, recurrence etc.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="distance-to-margin" type="xs:double" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Distance to closest relevant margin (mm). Distance to nearest margin whether invasive or non invasive.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="pre-operative-therapy" type="yesnounk-11161.2" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Has the patient received pre-operative therapy?</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="sample-details-29958.2">
+    <xs:sequence>
+      <xs:element name="source-sample-id" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The local identifier for the source sample</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="sample-taken-date" type="xs:dateTime" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The date upon which the sample was taken</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="sample-receipt-date" type="xs:dateTime" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The date upon which the sample was received at the laboratory</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="disease-specific-markers-29944.2">
+    <xs:choice>
+      <xs:element name="colorectal-tumour-markers" type="colorectal-tumour-markers-29945.1" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="ovarian-tumour-markers" type="ovarian-tumour-markers-29946.1" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="breast-tumour-markers" type="breast-tumour-markers-29947.2" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="colorectal-tumour-markers-29945.1">
+    <xs:sequence>
+      <xs:element name="mlh1-ihc" type="biomarkerpresent-14921.1" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Indication of biomarkers presence</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="msh6-ihc" type="biomarkerpresent-14921.1" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Indication of biomarkers presence</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="msh2-ihc" type="biomarkerpresent-14921.1" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Indication of biomarkers presence</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="pms2-ihc" type="biomarkerpresent-14921.1" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Indication of biomarkers presence</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ovarian-tumour-markers-29946.1">
+    <xs:sequence>
+      <xs:element name="wt1-ihc" type="biomarkerpresent-14921.1" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Indication of biomarkers presence</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="breast-tumour-markers-29947.2">
+    <xs:sequence>
+      <xs:element name="er" type="xs:integer" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Oestrogen Receptor (ER) Status</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="pr" type="xs:integer" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Progesterone Receptor Status. Record the PR status if ER status is negative</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="her2-status" type="her2status-31256.1" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Human epidermal growth factor receptor 2</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="her2-ish-status" type="her2ishstatus-13331.1" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Record the result of the ISH (in-situ hybridization) test. This is only required if the initial HER2 status is
+              &amp;quot;Borderline&amp;quot;.
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="genetic-results-29948.2">
+    <xs:sequence>
+      <xs:element name="event-details" type="event-details-29940.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="related-cancer-diagnoses" type="related-cancer-diagnoses-37037.1" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="sample-details" type="sample-details-29958.2" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="genetic-result" type="genetic-result-29969.2" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="genetic-result-29969.2">
+    <xs:sequence>
+      <xs:element name="genetic-test-laboratory" type="genetictestlaboratory-15152.2" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Was this test performed in a diagnostic or research laboratory?</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="test-scope" type="genescope-12770.2" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The gene coded according to HGNC. Enter ‘genomewide’ if genomewide, e.g. karyotype or aCGH.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="scope-qualifiers" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>If whole locus or coding sequence of gene not covered, give details of regions covered, e.g. ‘exons 3 and 8’</p>
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="method-of-test" type="genetictestmethod-33996.1" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The method used to investigate the gene(s). If copy number analysis has been performed for a subset of genes, please enter separately
+              from sequencing results
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="test-result" type="genetictestresult-14899.2" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>(for molecular results) If no defect was observed please report &amp;apos;normal&amp;apos;; if a mutation is detected that is
+              considered pathogenically or clinically important record &amp;apos;mutation detected&amp;apos;; if no reliable result could be
+              determined please report &amp;apos;fail&amp;apos;.
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="abnormal-molecular-result" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Record the details of the abnormal genotype using Genomic Coordinates</p>
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="genome-build" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Record the relevant human genome build if an abnormal genotype is specified if applicable</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="abnormal-cytogenetic-result" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Record the details of the cytogenetic abnormality using IGCN standards</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="next-generation-sequencing-29949.2">
+    <xs:sequence>
+      <xs:element name="event-details" type="event-details-29940.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="related-cancer-diagnoses" type="related-cancer-diagnoses-37037.1" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="sample-details" type="sample-details-29958.2" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="sequence-report" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Reference to uploaded copy of test report</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="sequence-file" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Local sequence file reference or uploaded copy of VCF</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="comments" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Follow-up comments</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="circulating-tumour-markers-29951.2">
+    <xs:sequence>
+      <xs:element name="event-details" type="event-details-29940.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="related-cancer-diagnoses" type="related-cancer-diagnoses-37037.1" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="sample-details" type="sample-details-29958.2" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="circulating-tumour-markers-details" type="circulating-tumour-markers-details-37092.1" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="circulating-tumour-markers-details-37092.1">
+    <xs:choice>
+      <xs:element name="circulating-prostate-tumour-markers" type="circulating-prostate-tumour-markers-29952.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="circulating-ovarian-tumour-markers" type="circulating-ovarian-tumour-markers-29953.2" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="circulating-prostate-tumour-markers-29952.2">
+    <xs:sequence>
+      <xs:element name="psa" type="xs:double" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Prostate-Specific Antigen Level</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="circulating-ovarian-tumour-markers-29953.2">
+    <xs:sequence>
+      <xs:element name="ca125" type="xs:double" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Protein level</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="investigation-report-other-36552.1">
+    <xs:sequence>
+      <xs:element name="event-details" type="event-details-29940.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="related-cancer-diagnoses" type="related-cancer-diagnoses-37037.1" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="report-attribute" type="report-attribute-33095.1" minOccurs="1" maxOccurs="unbounded"/>
+      <xs:element name="report-name" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>If the investigation is part of a standardised report / panel of tests, please populate the name that identifies the type of report
+              i.e. Renal Biopsy
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="report-code" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>If the investigation is part of a standardised report / panel of tests, please populate the code that identifies the type of report -
+              if available
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="reporting-standard" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The standard (name and version) for the report - if available</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="report-attribute-33095.1">
+    <xs:sequence>
+      <xs:element name="standard" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The name and version of the data standard of the attribute type i.e. SNOMED CT, OPCS-4, COSD</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="code" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Code of the report attribute type - if available i.e. if the attribute name is &amp;quot;POSITIVE PROXIMAL OR DISTAL RESECTION
+              MARGIN&amp;quot; and the standard is COSD then the attribute code would be CO5190
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="name" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Name of the test included in the investigation and/or the name of the metadata associated with the investigation i.e. POSITIVE PROXIMAL
+              OR DISTAL RESECTION MARGIN
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="value" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The result of the investigation i.e. Margin involved</p>
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="datetime" type="xs:dateTime" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Date the attribute value was recorded</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="upper-range" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>For quantitative tests, the upper range associated with the investigation within the lab - if applicable</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="lower-range" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>For quantitative tests, the lower range associated with the investigation within the lab - if applicable</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="report" type="xs:base64Binary" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>File / Report associated with the investigation - if applicable</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="unit-of-measure" type="unitofmeasurement-12749.1" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Unit of measure used to record the investigation result - if applicable</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="anatomicalsideimaging-13039.1" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="L">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Left</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="R">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Right</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="M">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Midline</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="B">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Bilateral</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="8">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Not applicable</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Not Known</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="biomarkerpresent-14921.1" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="present">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>present</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="not_tested">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>no tested</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="equivocal">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>equivocal</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="absent">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>absent</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="cancerimagingmodality-13034.1" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="C01X">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Standard Radiography</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="C01M">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Mammogram</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="C02X">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>CT Scan</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="C02C">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Virtual colonoscopy</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="C03X">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>MRI Scan</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="C04X">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>PET Scan</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="C05X">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Ultrasound Scan</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="C06X">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Nuclear Medicine imaging</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="C08A">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Angiography</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="C08B">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Barium</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="C08U">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Urography (IV and retrograde)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="C09X">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Intervention radiography.</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CXXX">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Other</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="excisionmargin-13223.1" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="01">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Excision margins are clear (distance from margin not stated)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="02">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Excision margins are clear (tumour >5mm from the margin)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="03">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Excision margins are clear (tumour >1mm but less than or equal to 5mm from the margin</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="04">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Tumour is less than or equal to 1mm from excision margin, but does not reach margin</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="05">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Tumour reaches excision margin</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="06">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Uncertain</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="07">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Margin not involved =>1mm</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="08">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Margin not involved &lt;1mm</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="09">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Margin not involved 1-5mm</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="98">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Not applicable</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="99">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Not Known</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="genescope-12770.2" final="restriction">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="genetictestlaboratory-15152.2" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="research_laboratory">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Research laboratory</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="diagnostic_laboratory">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Diagnostic laboratory</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="genetictestmethod-33996.1" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Sequencing">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Sequencing</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Sequencing and targeted copy number analysis">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Sequencing and targeted copy number analysis</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Copy number analysis">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Copy number analysis</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Other SNV analysis e.g. OLA">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Other SNV analysis e.g. OLA</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Targeted copy number analysis e.g. MLPA/qPCR">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Targeted copy number analysis e.g. MLPA/qPCR</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="aCGH">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>aCGH</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="SNP array">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>SNP array</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Karyotype">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Karyotype</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="FISH">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>FISH</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Methylation testing">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Methylation testing</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Microsatellite analysis">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Microsatellite analysis</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Fanconi (MMC/DEB) breakage testing">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Fanconi (MMC/DEB) breakage testing</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Radiation hypersensitivity (AT)">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Radiation hypersensitivity (AT)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="UV hypersensitivity">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>UV hypersensitivity</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Unscheduled DNA synthesis">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Unscheduled DNA synthesis</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Single Gene Sequencing">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Single Gene Sequencing</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Gene Panel">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Gene Panel</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="IHC">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>IHC</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Translocation eg qPCR/sequencing/FISH/IHC">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Translocation eg qPCR/sequencing/FISH/IHC</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Other">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Other</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="genetictestresult-14899.2" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Normal">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Normal (negative)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Fail">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Fail</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="AbnormalityDetected">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Pathogenic abnormality detected</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="VUS">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Variant of unknown significance detected</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="her2ishstatus-13331.1" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="P">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Positive</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="N">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Negative</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="her2status-31256.1" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>negative</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="+1">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>negative</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="+2">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>borderline</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="+3">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>positive - HER2 protein overexpression</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="imagingcodesnomed-ct-12756.1" final="restriction">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="pathologyinvestigationtype-13210.1" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="CY">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Cytology</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="BU">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Biopsy NOS</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="EX">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Excision</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="PE">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Partial Excision</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="RE">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Radical Excision</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="FE">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Further Excision</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CU">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Curettage</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="SB">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Shave Biopsy</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="PB">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Punch Biopsy</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="IB">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Incisional Biopsy</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="99">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Uncertain/other</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tumourtype-14720.1" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Metastatic">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Metastatic</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Primary">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Primary</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Recurrence">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Recurrence</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="unitofmeasurement-12749.1" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="35">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Kilocalories (kcal)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="36">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Millimoles (mmol)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="33">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>International Units per kilogram (IU/kg)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="34">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Grams (g)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="39">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Milligrams per millimole (mg/mmol)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="37">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Millimoles per mole (mmol/mol)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="38">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Picomoles per litre (pmol/L)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="43">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Cubic Millimetres (mm3)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="42">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Millimetres of water (mmH2O)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="41">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Micrograms per millilitre (µg/ml)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="40">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Nanograms per litre (ng/l)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="22">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Celsius (ºC)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="23">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Millimetres (mm)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="24">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Grams per decilitre (g/dl)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="25">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Grams per litre (g/l)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="26">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Milligrams per litre (mg/l)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="27">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Nanograms per millilitre (ng/ml)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="28">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>International Units per litre (IU/L)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="29">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Decilitres (d/l)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="30">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Square Millimetres (mm2)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="32">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Grays (Gy)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="31">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Millilitres (ml) (Retired September 2013)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="19">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Milligrams (mg)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="17">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Beats per minute (bpm)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="18">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Centimetres (cm)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="15">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Millimetres of mercury (mmHg)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="16">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Litres (l)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="13">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Square Metres (m2)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="14">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Millilitres per Minute (ml/min)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="11">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Metres (m)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="12">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Picograms (pg)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="21">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Minutes</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="20">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Millilitres (ml)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="49">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Kilopascals (KPa)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="48">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Grams per kilogram per day (g/kg/day)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="08">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Number (Retired September 2013)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="45">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Millilitres per Minute divided by 1.73 Square Metres (ml/min/1.73m2)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="09">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Percentage (%)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="44">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Litres per week per 1.73 metres squared (l/week/1.73²)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="47">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>5 Millimetres Squared</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="46">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>number times ten raised to the power of nine per litre (x109/l)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="04">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Micrograms per millimole (µg/mmol)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="05">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Microgram albumin per hour (µg/ml/hr)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="06">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Microgram albumin per minute (µg/min)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="07">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Microgram albumin per 24 hours (µg/24hr)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="01">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Millimoles per litre (mmol/L)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="02">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Micromoles per litre (µmol/L)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="03">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Micrograms per litre (µg/L)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="10">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Kilograms (kg)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="51">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Megavolts</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="52">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>5 Millimetres Squared</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="50">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Femtolitres (fl)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

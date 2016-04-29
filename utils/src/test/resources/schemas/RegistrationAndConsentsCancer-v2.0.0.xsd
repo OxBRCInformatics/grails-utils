@@ -1,0 +1,1376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+           xmlns="https://genomicsengland.co.uk/xsd/cancer/2.0.0"
+           targetNamespace="https://genomicsengland.co.uk/xsd/cancer/2.0.0" vc:minVersion="1.1" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:documentation>
+      <h1>RegistrationAndConsentsCancer</h1>
+      <p>Version:2.0.0</p>
+      <p>Description:Main Programme Registration and Consent Schema for Cancer</p>
+      <p>Generated: 2016-01-25T16:46:13.838+0000</p>
+    </xs:documentation>
+  </xs:annotation>
+  <xs:include schemaLocation="DataTypesCancer-v2.0.0.xsd"/>
+  <xs:element name="registration-and-consents">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="metadata" type="metadata" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="subject" type="subject-29260.2" minOccurs="1" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="subject-29260.2">
+    <xs:sequence>
+      <xs:element name="participant-identifiers" type="participant-identifiers-29330.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="registration" type="registration-29329.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="referral" type="referral-29918.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="consent" type="consent-15009.4" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="registration-29329.2">
+    <xs:sequence>
+      <xs:element name="event-details" type="event-details-29940.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="participant-contact-details" type="participant-contact-details-15008.4" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="family-history" type="family-history-29917.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="disease-information-tumour-sample" type="disease-information-tumour-sample-36460.1" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="surname-at-birth" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The participant&amp;apos;s surname at birth, if available and different from current surname</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="person-stated-gender" type="personstatedgendercode-12999.1" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The participant&amp;apos;s current gender</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="person-phenotypic-sex" type="personphenotypicsexclassification-12524.1" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The participant&amp;apos;s phenotypic sex classification at birth</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ethnicity" type="ethniccategory-11250.2" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The ethnicity of a PERSON, as specified by the PERSON. The 16+1 ethnic data categories defined in the 2001 census is the national
+              mandatory standard for the collection and analysis of ethnicity.
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="genomic-medicine-centre-id" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>ODS code of the NHS trust responsible for the patient (the main GMC trust, or the local delivery partner)</p>
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="participant-contact-details-15008.4">
+    <xs:sequence>
+      <xs:element name="participant-email-address" type="emailaddress-12636.1" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Email address of participant</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="participant-home-telephone" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>If available, the participant&amp;apos;s home telephone number</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="participant-mobile-telephone" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>If available, the participant&amp;apos;s mobile telephone number</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="address-line-1" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Premises ID and/or house name, e.g. &amp;apos;Flat 1&amp;apos;, &amp;apos;The Old Schoolhouse&amp;apos;</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="address-line-2" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>House number, dependent thoroughfare name and descriptor without commas, e.g. &amp;apos;23 Mill Lane&amp;apos;</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="address-line-3" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Dependent locality/village, e.g. &amp;apos;Boxgrove&amp;apos;</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="address-line-4" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Post town, e.g. &amp;apos;Leeds&amp;apos;</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="address-line-5" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>County (if present), e.g. &amp;apos;Hampshire&amp;apos;, &amp;apos;Hants&amp;apos;</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="postcode" type="postcode-12820.1" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The UK format Postcode, 8 character string, as per BS7666. The 8 characters field allows a space to be inserted to differentiate
+              between the inward and outward segments of the code, enabling full use to be made of Royal Mail postcode functionality.
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="family-history-29917.2">
+    <xs:sequence>
+      <xs:element name="mothers-ethnic-origin" type="ethniccategory-11250.2" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The ethnic origin of the participant&amp;apos;s father, against supplied enumeration. If no origin supplied please use Z</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="mothers-ethnic-origin-other" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Ethnic origin, if not in enumeration supplied</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="mothers-other-relevant-ancestry" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Pertinent to clinical findings, additional relevant ancestry such as ashkenazi</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="fathers-ethnic-origin" type="ethniccategory-11250.2" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The ethnic origin of the participant&amp;apos;s father, against supplied enumeration. If no origin supplied please use Z</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="fathers-ethnic-origin-other" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Father&amp;apos;s ethnic origin, if not in enumeration supplied</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="fathers-other-relevant-ancestry" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Pertinent to clinical findings, additional relevant ancestry such as ashkenazi</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maternal-family-history-of-breast-and-or-ovarian-cancer" type="yesnounk-11161.2" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>If available, maternal first or second degree relative with history of Breast and/or Ovarian Cancer, if unknown please choose
+              unknown.
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maternal-family-history-of-colorectal-cancer" type="yesnounk-11161.2" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>If available, maternal first or second degree relative with history of Colorectal Cancer, if unknown please choose unknown.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maternal-family-history-of-ischaemic-heart-disease-or-stroke" type="yesnounk-11161.2" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>If available, maternal first or second degree relative with history of Ischaemic Heart Disease or Stroke, if unknown please choose
+              unknown.
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maternal-family-history-of-endocrine-tumours" type="yesnounk-11161.2" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>If available, maternal first or second degree relative with history of Endocrine Tumours, if unknown please choose unknown.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="other-relevant-maternal-family-history" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Other relevant history</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="paternal-family-history-of-breast-and-or-ovarian-cancer" type="yesnounk-11161.2" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>If available, paternal first or second degree relative with history of Breast and/or Ovarian Cancer if unknown please choose
+              unknown.
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="paternal-family-history-of-colorectal-cancer" type="yesnounk-11161.2" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>If available, paternal first or second degree relative with history of Colorectal Cancer, if unknown please choose unknown.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="paternal-family-history-of-ischaemic-heart-disease-or-stroke" type="yesnounk-11161.2" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>If available, paternal first or second degree relative with history of Ischaemic Heart Disease or Stroke, if unknown please choose
+              unknown.
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="paternal-family-history-of-endocrine-tumours" type="yesnounk-11161.2" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>If available, paternal first or second degree relative with history of Endocrine Tumours, if unknown please choose unknown.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="other-relevant-paternal-family-history" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Other Relevant Paternal Family History</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="disease-information-tumour-sample-36460.1">
+    <xs:sequence>
+      <xs:element name="disease-type-registration" type="cancertypessolidtumourregistration-12840.3" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The cancer type of the tumour sample submitted to Genomics England. If this is unknown at registration, it can be updated as part of
+              the patient information in the core data submissions.
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="disease-subtype-registration" type="cancersubtypes-12842.3" minOccurs="1" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The subtype of the cancer in question, recorded against a limited set of supplied enumerations. This is to enable high-level grouping
+              and analysis of the tumour type&amp;quot;. It is understood that this may not be available at Registration or may change between
+              Registration and submission of Core data.
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="cancersubtypes-12842.3" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="acral_lentiginous">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Acral lentiginous</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="adamantinoma_of_bone">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Adamantinoma of bone</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="adenocarcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Adenocarcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="alveolar_soft_part_sarcoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Alveolar soft part sarcoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="anaplastic_astrocytoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Anaplastic astrocytoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="anaplastic_oligoastrocytoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Anaplastic oligoastrocytoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="anaplastic_oligodendroglioma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Anaplastic oligodendroglioma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="angiomatoid_fibrous_histiocytoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Angiomatoid fibrous histiocytoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="anorectal_mucosal_melanoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Anorectal mucosal melanoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="atypical_teratoid_rhabdoid_tumours">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Atypical Teratoid Rhabdoid Tumours</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="carcinosarcoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Carcinosarcoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="childhood_chordoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Childhood chordoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="childhood_other">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Childhood other</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="cholangiocarcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Cholangiocarcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="choriocarcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Choriocarcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="chromophobe">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Chromophobe</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="classical_seminoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Classical seminoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="clear_cell">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Clear Cell</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="clear_cell_adenocarcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Clear cell adenocarcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="clear_cell_carcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Clear cell carcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="cns_pnets">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>CNS PNETs</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="collecting_duct">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Collecting duct</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="conjunctival_melanoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Conjunctival melanoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="dermal_sarcoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Dermal sarcoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="desmoplastic_melanoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Desmoplastic melanoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="desmoplastic_round_cell_sarcoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Desmoplastic round cell sarcoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="diffuse_astrocytoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Diffuse astrocytoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ductal">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Ductal</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="embryonal_carcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Embryonal carcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="embryonal_tumor_with_multilayered_rosettes">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Embryonal tumor with multilayered rosettes</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="endometrioid_adenocarcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Endometrioid Adenocarcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="endometrioid_carcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Endometrioid carcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="extraskeletal_chondrosarcoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Extraskeletal chondrosarcoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="extraskeletal_chordoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Extraskeletal chordoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="fibrillary_astrocytoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Fibrillary astrocytoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="fibrohistiocytic_lipomatous">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>fibrohistiocytic lipomatous (PHAT)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="gastric_adenocarcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Gastric adenocarcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="gemistocytic_astrocytoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Gemistocytic astrocytoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="genital_mucosal_melanoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Genital mucosal melanoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="germ_cell_tumour">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Germ cell tumour</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="giant_cell_glioblastoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Giant cell glioblastoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="glioblastoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Glioblastoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="gliomatosis_cerebri">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Gliomatosis cerebri</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="gliosarcoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Gliosarcoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="hepatocellular_carcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Hepatocellular carcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="high_grade_serous_carcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>High grade serous carcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="intimal_sarcoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Intimal sarcoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="large_cell">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Large cell</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="leiomyosarcoma_from_all_sites">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Leiomyosarcoma from all sites</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="lentigo_maligna">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Lentigo maligna</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="lobular">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Lobular</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="low_grade_fibromyxoid_sarcoma_sclerosing_epithelioid_fibrosarcoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Low grade fibromyxoid sarcoma / sclerosing epithelioid fibrosarcoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="low_grade_serous_adenocarcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Low grade Serous Adenocarcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="malignant_rhabdoid_tumour">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Malignant rhabdoid tumour</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="medullary">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Medullary</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="medulloblastoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Medulloblastoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="mesenchymal">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Mesenchymal</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="mixed_tumour_type">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Mixed tumour type</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="mucinous_adenocarcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Mucinous adenocarcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="mucinous_carcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Mucinous carcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="myoepithelioma_malignant_myoepithelioma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Myoepithelioma / Malignant myoepithelioma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="myxofibrosarcoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Myxofibrosarcoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="myxoid_liposarcoma_pre_radiotherapy">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Myxoid liposarcoma pre-radiotherapy</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="myxoinflammatory_fibroblastic_sarcoma_haemsiderotic">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Myxoinflammatory fibroblastic sarcoma / haemsiderotic</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="neuroblastoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Neuroblastoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="neuroendocrine">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Neuroendocrine</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="neuroendocrine_carcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Neuroendocrine carcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="neuroendocrine_tumour">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Neuroendocrine tumour</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="nodular">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Nodular</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="non_specified_renal_carcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Non specified renal carcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="oligodendroglioma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Oligodendroglioma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="oligoastrocytoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Oligoastrocytoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="oncocytic">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Oncocytic</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="oromucosal_melanoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Oromucosal melanoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ossifying_fibromyxoid_tumour">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Ossifying fibromyxoid tumour</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="paedetriac_malignant_glioma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Paedetriac Malignant Glioma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="pancreatic_adenocarcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Pancreatic adenocarcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="papillary">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Papillary</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="papillary_type_1">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Papillary Type 1</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="papillary_type_2">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Papillary Type 2</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="papillary_urothelial_carcinoma_in_situ">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Papillary urothelial carcinoma in situ</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="pilocytic_astrocytoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Pilocytic astrocytoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="pilomyxoid_astrocytoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Pilomyxoid astrocytoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="pleomorphic_xanthoastrocytoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Pleomorphic xanthoastrocytoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="protoplasmic_astrocytoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Protoplasmic astrocytoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="pseudomyogenic_haemangioemdothelioma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Pseudomyogenic haemangioemdothelioma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="rare_sarcoma_entities">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Rare sarcoma entities</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="sarcomatoid_carcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Sarcomatoid carcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="serous_carcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Serous carcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="signet_ring_cell_type_gastric_adenocarcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Signet ring cell type gastric adenocarcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="small_cell">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Small cell</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="small_cell_carcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Small cell carcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="squamous_cell">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Squamous Cell</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="stromal_tumour">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Stromal Tumour</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="subependymal_giant_cell_astrocytoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Subependymal giant cell astrocytoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="superficial_spreading">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Superficial spreading</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="squamous_cell _carcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Squamous cell carcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="synovial_sarcoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Synovial sarcoma - monophasic and biphasic</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="teratoma_differentiated">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Teratoma differentiated</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="teratoma_undifferentiated">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Teratoma undifferentiated</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="transitional_cell_carcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Transitional cell carcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="tubular_cribform">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Tubular / Cribform</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="urothelial_carcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Urothelial carcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="undifferentiated_carcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Undifferentiated carcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="uveal_melanoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Uveal melanoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="yolk_sac_tumour">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Yolk sac tumour</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="other">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Other</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="unknown">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Unknown</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="cancertypessolidtumourregistration-12840.3" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Adult Glioma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Adult Glioma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Bladder">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Bladder</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Breast">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Breast</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Carcinoma of Unknown Primary">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Carcinoma of Unknown Primary</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Childhood">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Childhood</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Colorectal">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Colorectal</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Endometrial Carcinoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Endometrial Carcinoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Germ cell tumour">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Germ cell tumour</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Hepatopancreatobiliary">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Hepatopancreatobiliary</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Lung">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Lung</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Malignant Melanoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Malignant Melanoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Ovarian">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Ovarian</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Prostate">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Prostate</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Renal">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Renal</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Sarcoma">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Sarcoma</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Testicular Germ Cell Tumours">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Testicular Germ Cell Tumours</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Upper Gastrointestinal">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Upper Gastrointestinal</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Unknown">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Unknown at present</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="emailaddress-12636.1" final="restriction">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[\w\.]+@([\w]+\.)+[\w]{2,4}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ethniccategory-11250.2" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="D">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Mixed: White and Black Caribbean</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="E">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Mixed: White and Black African</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="F">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Mixed: White and Asian</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="G">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Mixed: Any other mixed background</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="A">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>White: British</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="B">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>White: Irish</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="C">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>White: Any other White background</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="L">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Asian or Asian British: Any other Asian background</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="M">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Black or Black British: Caribbean</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="N">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Black or Black British: African</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="H">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Asian or Asian British: Indian</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="J">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Asian or Asian British: Pakistani</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="K">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Asian or Asian British: Bangladeshi</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="P">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Black or Black British: Any other Black background</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="S">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Other Ethnic Groups: Any other ethnic group</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="R">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Other Ethnic Groups: Chinese</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Z">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Not stated</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="personphenotypicsexclassification-12524.1" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="2">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Female</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Male</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Indeterminate</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="personstatedgendercode-12999.1" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="2">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Female</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Male</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Not Specified (Unable to be classified as either male or female)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="X">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Not Known (PERSON STATED GENDER CODE not recorded)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="postcode-12820.1" final="restriction">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="(GIR ?0AA|[A-PR-UWYZ]([0-9]{1,2}|([A-HK-Y][0-9]([0-9ABEHMNPRV-Y])?)|[0-9][A-HJKPS-UW]) ?[0-9][ABD-HJLNP-UW-Z]{2})"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

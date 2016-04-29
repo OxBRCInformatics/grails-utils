@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+           xmlns="https://genomicsengland.co.uk/xsd/cancer/2.0.0"
+           targetNamespace="https://genomicsengland.co.uk/xsd/cancer/2.0.0" vc:minVersion="1.1" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:documentation>
+      <h1>InterventionsCancer</h1>
+      <p>Version:2.0.0</p>
+      <p>Description:Main Programme Cancer Interventions Schemas</p>
+      <p>Generated: 2016-01-25T16:49:04.594+0000</p>
+    </xs:documentation>
+  </xs:annotation>
+  <xs:include schemaLocation="DataTypesCancer-v2.0.0.xsd"/>
+  <xs:element name="interventions">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="metadata" type="metadata" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="subject" type="subject-29955.2" minOccurs="1" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="subject-29955.2">
+    <xs:sequence>
+      <xs:element name="participant-identifiers" type="participant-identifiers-29330.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="surgery" type="surgery-29956.2" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="systemic-anti-cancer-therapy" type="systemic-anti-cancer-therapy-29957.2" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="radiotherapy" type="radiotherapy-29959.2" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="surgery-29956.2">
+    <xs:sequence>
+      <xs:element name="event-details" type="event-details-29940.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="related-cancer-diagnoses" type="related-cancer-diagnoses-37037.1" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="main-specialty-code" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The main specialty code of the consultant performing the intervention</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="primary-procedure" type="primaryprocedureopcs-13155.1" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>OPCS code for the primary procedure. Primary procedure is the main procedure carried out.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="other-procedures" type="procedureopcs-13160.1" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>
+            <p>OPCS codes for other procedures. This is a procedure other than the PRIMARY PROCEDURE (OPCS), carried out and recorded for CDS or
+              Hospital Episode Statistics purposes. (This may occur more than once).
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="systemic-anti-cancer-therapy-29957.2">
+    <xs:sequence>
+      <xs:element name="event-details" type="event-details-29940.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="related-cancer-diagnoses" type="related-cancer-diagnoses-37037.1" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="drug-treatment-intent" type="drugtreatmentintent-14409.1" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Treatment intent.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="drug-regimen" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The drug regimen prescribed. To be consistent with the National Regimen List.</p>
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="main-specialty-code" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The main specialty code of the consultant performing the intervention</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="radiotherapy-29959.2">
+    <xs:sequence>
+      <xs:element name="event-details" type="event-details-29940.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="related-cancer-diagnoses" type="related-cancer-diagnoses-37037.1" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="radiotherapy-details" type="radiotherapy-details-29970.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="radiotherapy-site" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>OPCS code for site. A classification of part of the body to which the RADIOTHERAPY ACTUAL DOSE is administered.</p>
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="dose" type="xs:double" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The total prescribed absorbed radiation dose, measured in Grays, given to the ICRU Reference Point for the whole prescription.
+              http://www.icru.org/home/reports/prescribing-recording-and-reporting-photon-beam-therapy-report-62
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="prescription" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Reference to uploaded copy of prescription document</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="plan" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Reference to uploaded copy of radiotherapy plan</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="radiotherapy-intent" type="radiotherapyintent-14401.1" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Intent of radiotherapy</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="main-specialty-code" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The main specialty code of the consultant performing the intervention</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="radiotherapy-details-29970.2">
+    <xs:choice>
+      <xs:element name="brachytherapy" type="brachytherapy-29971.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="external-beam" type="external-beam-29972.2" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="brachytherapy-29971.2">
+    <xs:sequence>
+      <xs:element name="brachytherapy-type" type="brachytherapytype-13171.1" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The type of Brachytherapy Treatment Course being used, if applicable.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="external-beam-29972.2">
+    <xs:sequence>
+      <xs:element name="external-beam-type" type="externalbeamtype-14980.1" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Type of external beam, if applicable. The prescribed type of beam for a Teletherapy Treatment/ Exposure</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="fractions" type="xs:integer" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Dose fractions, if external beam therapy. The total number of Fractions or hyperfraction delivered as part of a RADIOTHERAPY
+              PRESCRIPTION.
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="brachytherapytype-13171.1" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="BI">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Interstitial</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="BC">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Intra-cavity</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="BT">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Not otherwise specified</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="US">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Unsealed Source</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="drugtreatmentintent-14409.1" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="D">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Disease Modification</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="P">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Palliative</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="A">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Adjuvant</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="C">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Curative</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="N">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Neoadjuvant</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="externalbeamtype-14980.1" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="particle_therapy">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>particle_therapy</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="IMRT">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>IMRT</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="stereotactic">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>stereotactic</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2DXRT">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>2DXRT</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="primaryprocedureopcs-13155.1" final="restriction">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="procedureopcs-13160.1" final="restriction">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="radiotherapyintent-14401.1" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="01">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Anti-cancer</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="02">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Other</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="03">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Palliative</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

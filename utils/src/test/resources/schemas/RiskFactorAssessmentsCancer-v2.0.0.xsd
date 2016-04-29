@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+           xmlns="https://genomicsengland.co.uk/xsd/cancer/2.0.0"
+           targetNamespace="https://genomicsengland.co.uk/xsd/cancer/2.0.0" vc:minVersion="1.1" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:documentation>
+      <h1>RiskFactorAssessmentsCancer</h1>
+      <p>Version:2.0.0</p>
+      <p>Description:Main Programme Risk Factors Schema</p>
+      <p>Generated: 2016-01-25T16:47:58.686+0000</p>
+    </xs:documentation>
+  </xs:annotation>
+  <xs:include schemaLocation="DataTypesCancer-v2.0.0.xsd"/>
+  <xs:element name="risk-factor-assessments">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="metadata" type="metadata" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="subject" type="subject-29931.2" minOccurs="1" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="subject-29931.2">
+    <xs:sequence>
+      <xs:element name="participant-identifiers" type="participant-identifiers-29330.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="general-risk-factors" type="general-risk-factors-29932.2" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="cancer-specific-risk-factors" type="cancer-specific-risk-factors-36504.1" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="general-risk-factors-29932.2">
+    <xs:sequence>
+      <xs:element name="event-details" type="event-details-29940.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="smoking" type="smokingstatus-13979.1" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Specify the current smoking status of the patient</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="alcohol-consumption" type="xs:integer" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The ALCOHOL WEEKLY UNITS reported by the patient.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="height" type="xs:double" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Person height / length in metres to 2 decimal places. Height and weight to be used to calculate BMI as an indicator of the patient
+              being overweight or
+              obese. Provide the most relevant information that will inform this.
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="weight" type="xs:double" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Weight in kg. Height and weight to be used to calculate BMI as an indicator of the patient being overweight or
+              obese. Provide the most relevant information that will inform this.
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="cancer-specific-risk-factors-36504.1">
+    <xs:sequence>
+      <xs:element name="event-details" type="event-details-29940.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="risk-factors" type="risk-factors-29933.2" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="risk-factors-29933.2">
+    <xs:choice>
+      <xs:element name="risk-factors-ovarian-cancer" type="risk-factors-ovarian-cancer-29936.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="risk-factors-breast-cancer" type="risk-factors-breast-cancer-29937.2" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="risk-factors-ovarian-cancer-29936.2">
+    <xs:sequence>
+      <xs:element name="age-of-menarche" type="xs:integer" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The age of the first menstrual period.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="age-of-menopause" type="xs:integer" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The age at which menstruation ceased.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="duration-of-ocp" type="xs:integer" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The duration of oral contraceptive use, in years.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="duration-of-hrt" type="xs:integer" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The duration of hormone replacement therapy, in years.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="number-of-pregnancies" type="xs:integer" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The total number of pregnancies (including live births, still births and TOPs)</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="number-of-births" type="xs:integer" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>This is the number of registrable live births by the mother</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="endometriosis" type="positivenegativeunknown-14894.2" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Medical diagnosis of endometriosis made.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="previous-tubal-ligation" type="yesnounk-11161.2" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Previous Tubal Ligation</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="use-of-iud" type="yesnounk-11161.2" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Intrauterine Device (IUD) ever used for duration of &amp;gt;1 month</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="use-of-non-steroidal-anti-inflammatory-drugs" type="yesnounk-11161.2" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Any episode of chronic use= NSAIDS used more than half the days of the week, more than half the weeks of the year for &amp;gt;1 year
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="number-of-children-breastfed" type="xs:positiveInteger" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Number of Children Breastfed &amp;gt; 3 months duration</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="number-cycles-ivf" type="xs:positiveInteger" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Number of cycles of IVF</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="risk-factors-breast-cancer-29937.2">
+    <xs:sequence>
+      <xs:element name="age-of-menarche" type="xs:integer" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The age of the first menstrual period.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="age-of-menopause" type="xs:integer" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The age at which menstruation ceased.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="duration-of-ocp" type="xs:integer" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The duration of oral contraceptive use, in years.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="duration-of-hrt" type="xs:integer" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The duration of hormone replacement therapy, in years.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="number-of-pregnancies" type="xs:integer" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>The total number of pregnancies (including live births, still births and TOPs)</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="number-of-children-breastfed" type="xs:positiveInteger" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Number of Children Breastfed &amp;gt; 3 months duration</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="number-cycles-ivf" type="xs:positiveInteger" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Number of cycles of IVF</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="breast-density" type="breastdensity-29107.2" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Breast density at most recent available pre-surgical mammogram: based on percentage of fibroglandular tissue relative to total area on
+              the two view mammogram.
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="breastdensity-29107.2" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="BIRADS_0">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>additional imaging evaluation and/or comparison to prior mammogram is needed</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="BIRADS_1">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>glandular tissue is less than 25%</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="BIRADS_2">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>scattered fibroglandular densities (25-50%)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="BIRADS_3">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>heterogeneously dense (50-75%)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="BIRADS_4">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>extremely dense breast (75-100%)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="positivenegativeunknown-14894.2" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="unknown">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Unknown</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="negative">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Negative</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="positive">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Positive</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="smokingstatus-13979.1" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Current smoker</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Ex smoker</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="3">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Non-smoker - history unknown</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="4">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Never smoked</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Z">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Not Stated (PERSON asked but declined to provide a response)</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Unknown</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

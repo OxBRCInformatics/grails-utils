@@ -8,6 +8,7 @@ import groovy.xml.XmlUtil
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.xml.sax.SAXException
+import org.xml.sax.SAXParseException
 import uk.ac.ox.ndm.grails.utils.xml.XmlValidator
 import uk.ac.ox.ndm.grails.utils.xml.resource.ResourceResolver
 
@@ -37,10 +38,14 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
 
     abstract String getDefaultApplicationName()
 
+    abstract boolean handleValidationFailure(String referenceId, String schemaName, Schema schema, SAXException exception)
+
     String applicationName
 
     String routingKey
     String exchange
+
+    Integer priority
 
     Map<String, Schema> schemas
 
@@ -49,14 +54,19 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
 
     private boolean initialised
 
-    AbstractRabbitMqXmlValidationService(String mainXsdFilename, List<String> ignoredSchemas = [], boolean deferred = true) {
-        this([mainXsdFilename], ignoredSchemas, deferred)
+    public static final Integer DEFAULT_PRIORITY = Integer.MAX_VALUE
+
+    AbstractRabbitMqXmlValidationService(String mainXsdFilename, List<String> ignoredSchemas = [], int priority = DEFAULT_PRIORITY,
+                                         boolean deferred = true) {
+        this([mainXsdFilename], ignoredSchemas, priority, deferred)
     }
 
-    AbstractRabbitMqXmlValidationService(List<String> mainXsdFilenames, List<String> ignoredSchemas = [], boolean deferred = true) {
+    AbstractRabbitMqXmlValidationService(List<String> mainXsdFilenames, List<String> ignoredSchemas = [], int priority = DEFAULT_PRIORITY,
+                                         boolean deferred = true) {
         this.mainXsdFilenames = mainXsdFilenames
         this.ignoredSchemas = ignoredSchemas
         this.schemas = [:]
+        this.priority = priority
         initialised = false
         if (!deferred) initialise()
     }
@@ -102,24 +112,33 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
     }
 
     @Override
-    String validatesXml(String xml) {
+    String validatesXml(String referenceId, String xml) {
         if (!xml) return null
 
         schemas.find {name, schema ->
             try {
-                schema.newValidator().validate(new StreamSource(new StringReader(xml)))
-            } catch (SAXException ignored) {
-                logger.debug('{} does not validate because {}', name, ignored.message)
-                return false
+                schema.newValidator().validate(new StreamSource(new ByteArrayInputStream(xml.bytes)))
+            } catch (SAXException ex) {
+                if (ex.message.contains('cvc-elt.1')) {
+                    logger.debug("{} does not describe submitted XML", name)
+                    return false
+                }
+                if (ex instanceof SAXParseException) {
+                    logger.warn('{} does not validate because of {}', name, saxParseExceptionToString(ex as SAXParseException))
+                }
+                else {
+                    logger.debug('{} does not validate because {}', name, ex.toString())
+                }
+                return handleValidationFailure(referenceId, name, schema, ex)
             }
             true
         }?.key
     }
 
     @Override
-    String validatesXml(GPathResult xml) {
+    String validatesXml(String referenceId, GPathResult xml) {
         if (!xml) return null
-        validatesXml(XmlUtil.serialize(xml))
+        validatesXml(referenceId, XmlUtil.serialize(xml))
     }
 
     @Override
@@ -174,5 +193,16 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
         }
         rabbitConfig.queues = queuesConfig
         rabbitConfig
+    }
+
+    String saxParseExceptionToString(SAXParseException ex) {
+        StringBuilder buf = new StringBuilder();
+        String message = ex.getLocalizedMessage();
+        if (ex.lineNumber != -1) buf.append("lineNumber: ").append(ex.lineNumber);
+        if (ex.columnNumber != -1) buf.append(" & columnNumber: ").append(ex.columnNumber);
+
+        //append the exception message at the end
+        if (message != null) buf.append(" - ").append(message);
+        return buf.toString();
     }
 }

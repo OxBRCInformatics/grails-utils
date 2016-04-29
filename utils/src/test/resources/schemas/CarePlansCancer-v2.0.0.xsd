@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+           xmlns="https://genomicsengland.co.uk/xsd/cancer/2.0.0"
+           targetNamespace="https://genomicsengland.co.uk/xsd/cancer/2.0.0" vc:minVersion="1.1" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:documentation>
+      <h1>CarePlansCancer</h1>
+      <p>Version:2.0.0</p>
+      <p>Description:Main Programme Cancer Care Plan Schema</p>
+      <p>Generated: 2016-01-25T16:48:56.037+0000</p>
+    </xs:documentation>
+  </xs:annotation>
+  <xs:include schemaLocation="DataTypesCancer-v2.0.0.xsd"/>
+  <xs:element name="cancer-care-plans">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="metadata" type="metadata" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="subject" type="subject-29924.2" minOccurs="1" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="subject-29924.2">
+    <xs:sequence>
+      <xs:element name="participant-identifiers" type="participant-identifiers-29330.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="cancer-care-plan" type="cancer-care-plan-29925.2" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="cancer-care-plan-29925.2">
+    <xs:sequence>
+      <xs:element name="event-details" type="event-details-29940.2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="related-cancer-diagnoses" type="related-cancer-diagnoses-37037.1" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="start-date" type="xs:date" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Start date for the proposed treatment. This may or may not be known at the time of care planning, and therefore is optional.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="treatment-intent" type="cancercareplanintent-13093.1" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Intent of the proposed treatment. The intention of a Cancer Care Plan developed within a Cancer Care Spell.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="no-cancer-treatment-reason" type="nocancertreatmentreason-13099.1" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Code for decision not to treat. The main reason why no active cancer treatment is specified within a Cancer Care Plan.</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="performance-status" type="performancestatusadult-13105.1" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Performance status of the participant. A World Health Organisation classification indicating a PERSON&amp;apos;s status relating to
+              activity / disability.
+            </p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="outcome-of-mdt" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+            <p>Freetext report on the outcome of MDT discussions</p>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="cancercareplanintent-13093.1" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="C">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Curative</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Z">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Non Curative</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="X">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>No active treatment</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Not Known</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="nocancertreatmentreason-13099.1" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="01">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Patient declined treatment</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="02">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Unfit: poor performance status</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="03">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Unfit: significant co-morbidity</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="04">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Unfit: advanced stage cancer</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="05">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Unknown primary site</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="06">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Died before treatment</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="07">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>No active treatment available</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="08">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Other</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="10">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Monitoring only</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="99">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Not Known</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="performancestatusadult-13105.1" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Able to carry out all normal activity without restriction</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="1">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Restricted in physically strenuous activity, but able to walk and do light work</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Able to walk and capable of all self care, but unable to carry out any work. Up and about more than 50% of waking
+              hours
+            </display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="3">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Capable of only limited self care, confined to bed or chair more than 50% of waking hours</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="4">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Completely disabled. Cannot carry on any self care. Totally confined to bed or chair</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9">
+        <xs:annotation>
+          <xs:appinfo>
+            <display-text>Not recorded</display-text>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
