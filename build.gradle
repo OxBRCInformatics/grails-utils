@@ -14,7 +14,7 @@ import org.gradle.logging.ConsoleRenderer
 
 plugins {
     id 'base'
-    id 'build-dashboard'
+//    id 'build-dashboard'
     id 'idea'
     id 'project-report'
 }
@@ -121,7 +121,7 @@ task show() << {
 task test() {
     group 'testing'
     description = 'Runs all the tests'
-    dependsOn 'assemble', 'unitTest'
+    dependsOn 'assemble'
 }
 
 build {
@@ -140,27 +140,6 @@ build {
 
 clean {
     delete 'logs', 'reports', 'deploy'
-}
-
-/**
- * Unit Test task,
- * This task will generate a TestReport in HTML format for the tests which it reports on
- * Any unit tests/test tasks should be set to be reported on and depended on by this task
- */
-task unitTest(type: TestReport) {
-    description = 'Run Unit Tests and compile results into HTML report.'
-    destinationDir file("$rootDir/reports/unitTests")
-    group 'Testing'
-    doLast {
-        logger.info("Test failure count: {}", unitTestFailures)
-        if (unitTestFailures) {
-            String grammer = unitTestFailures == 1 ? 'was 1 unit test failure' : "were $unitTestFailures unit test failures"
-            File indexFile = file("$destinationDir/index.html")
-            String reportUrl = new ConsoleRenderer().asClickableFileUrl(indexFile)
-            logger.quiet("There $grammer. See the report at $reportUrl. (Ctrl+click the URL to open)")
-        }
-    }
-    dependsOn tasks.assemble
 }
 
 apply from: 'gradle/allprojects.gradle'

@@ -39,14 +39,7 @@ subprojects {
         useJUnit()
         systemProperties(['file.encoding': 'UTF-8'])
         workingDir = rootDir
-        maxParallelForks = 20
-        afterSuite {td, tr ->
-            if (!(td.parent)) {
-                rootProject.unitTestFailures = rootProject.unitTestFailures + tr.failedTestCount
-            }
-        }
-        rootProject.tasks.unitTest.dependsOn it
-        rootProject.tasks.unitTest.reportOn it
+       // maxParallelForks = 20
     }
 
     /**
