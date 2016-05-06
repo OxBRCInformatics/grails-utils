@@ -353,7 +353,6 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
         if (e instanceof SAXParseException) {
             return new InvalidRequestBodyException(e)
         }
-        e.printStackTrace()
         return new DataBindingSourceCreationException(e)
     }
 }

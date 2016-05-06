@@ -150,7 +150,7 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
                                 durable   : true,
                                 autoDelete: true,
                                 queues    : schemas.collectEntries {name, schema ->
-                                    [('queue_' + getExchange().toLowerCase() + '-' + name.toLowerCase()),
+                                    [('queue_' + getExchange().toLowerCase() + '-' + name.toLowerCase().replaceAll(/\./, '-')),
                                      [
                                              durable   : true,
                                              autoDelete: true,
