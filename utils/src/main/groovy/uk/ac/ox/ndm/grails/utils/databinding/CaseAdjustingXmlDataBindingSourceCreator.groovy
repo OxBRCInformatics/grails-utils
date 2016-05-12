@@ -5,6 +5,7 @@ import grails.databinding.CollectionDataBindingSource
 import grails.databinding.DataBindingSource
 import grails.databinding.SimpleMapDataBindingSource
 import grails.util.Holders
+import grails.validation.ValidationException
 import grails.web.mime.MimeType
 import grails.web.servlet.mvc.GrailsParameterMap
 import groovy.transform.CompileStatic
@@ -21,6 +22,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
+import org.springframework.context.MessageSource
 import org.xml.sax.SAXParseException
 import uk.ac.ox.ndm.grails.utils.Utils
 import uk.ac.ox.ndm.grails.utils.databinding.bindingsource.DataTypeDataBindingSource
@@ -40,6 +42,9 @@ import java.lang.reflect.ParameterizedType
 class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceCreator implements Utils {
 
     private static final Logger logger = LoggerFactory.getLogger(CaseAdjustingXmlDataBindingSourceCreator)
+
+    @Autowired
+    MessageSource messageSource
 
     @Autowired
     ApplicationContext applicationContext
@@ -348,11 +353,20 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
         }
     }
 
-    static DataBindingSourceCreationException createBindingSourceCreationException(Exception e) {
-        logger.error "Exception while creating databinding source: {}", e.message
+    DataBindingSourceCreationException createBindingSourceCreationException(Exception e) {
+
         if (e instanceof SAXParseException) {
+            logger.error "Exception while creating databinding source: {}", e.message
             return new InvalidRequestBodyException(e)
         }
+        if (e instanceof ValidationException) {
+            StringBuilder sb = new StringBuilder()
+            e.errors.allErrors.each {error ->
+                sb.append(messageSource.getMessage(error, Locale.default)).append('\n')
+            }
+            logger.error "Exception while creating databinding source: {}", sb.toString()
+        }
+        else logger.error "Exception while creating databinding source: " + e.message, e
         return new DataBindingSourceCreationException(e)
     }
 }
