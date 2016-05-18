@@ -120,7 +120,7 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
                 schema.newValidator().validate(new StreamSource(new ByteArrayInputStream(xml.bytes)))
             } catch (SAXException ex) {
                 if (ex.message.contains('cvc-elt.1')) {
-                    logger.debug("{} does not describe submitted XML", name)
+                    logger.trace("{} does not describe submitted XML", name)
                     return false
                 }
                 if (ex instanceof SAXParseException) {
