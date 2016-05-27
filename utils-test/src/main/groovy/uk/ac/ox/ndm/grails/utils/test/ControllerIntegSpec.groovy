@@ -4,6 +4,7 @@ import grails.plugins.rest.client.RequestCustomizer
 import grails.plugins.rest.client.RestBuilder
 import grails.plugins.rest.client.RestResponse
 import groovy.xml.XmlUtil
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
 import spock.lang.Shared
 
@@ -21,8 +22,18 @@ abstract class ControllerIntegSpec extends CoreSpec {
     RestBuilder rest
     @Shared
     RestResponse response
-    @Shared
-    String baseUrl = 'http://localhost:8080'
+
+    @Value('${server.host:localhost}')
+    String host
+
+    @Value('${server.port:8080}')
+    String port
+
+    boolean https = false
+
+    String getBaseUrl() {
+        "http${https ? 's' : ''}://${host}:${port}"
+    }
 
     String getAcceptVersion() {
         null
@@ -39,7 +50,7 @@ abstract class ControllerIntegSpec extends CoreSpec {
     }
 
     def get(String relativeUrl, Map<String, Object> urlVariables, @DelegatesTo(RequestCustomizer) Closure customizer = null) {
-        response = rest.get("$baseUrl/$relativeUrl", urlVariables) {
+        response = rest.get("${getBaseUrl()}/$relativeUrl", urlVariables) {
             if (customizer) {
                 customizer.delegate = delegate
                 customizer.resolveStrategy = resolveStrategy
@@ -50,7 +61,7 @@ abstract class ControllerIntegSpec extends CoreSpec {
     }
 
     def post(String relativeUrl, @DelegatesTo(RequestCustomizer) Closure customizer = null) {
-        response = rest.post("$baseUrl/$relativeUrl") {
+        response = rest.post("${getBaseUrl()}/$relativeUrl") {
             if (customizer) {
                 customizer.delegate = delegate
                 customizer.resolveStrategy = resolveStrategy
@@ -61,7 +72,7 @@ abstract class ControllerIntegSpec extends CoreSpec {
     }
 
     def put(String relativeUrl, @DelegatesTo(RequestCustomizer) Closure customizer = null) {
-        response = rest.put("$baseUrl/$relativeUrl") {
+        response = rest.put("${getBaseUrl()}/$relativeUrl") {
             if (customizer) {
                 customizer.delegate = delegate
                 customizer.resolveStrategy = resolveStrategy
@@ -72,7 +83,7 @@ abstract class ControllerIntegSpec extends CoreSpec {
     }
 
     def delete(String relativeUrl, Map<String, Object> urlVariables, @DelegatesTo(RequestCustomizer) Closure customizer = null) {
-        response = rest.delete("$baseUrl/$relativeUrl", urlVariables) {
+        response = rest.delete("${getBaseUrl()}/$relativeUrl", urlVariables) {
             if (customizer) {
                 customizer.delegate = delegate
                 customizer.resolveStrategy = resolveStrategy
