@@ -26,10 +26,11 @@ public class NhsNumberValidator implements Validator<String> {
                     }
                     checkDigit = (11 - (checkDigit % 11));
                     if (checkDigit == 11) checkDigit = 0;
-                    if (checkDigit != 10) return checkDigit == nhsNumber[9];
+                    if (checkDigit != 10)
+                        return checkDigit == nhsNumber[9] ? true : "validation.nhsnumber.invalid";
                 }
             } catch (NumberFormatException ignored) {
-                // Just ignore this as we will return false
+                return "validation.nhsnumber.not.numeric";
             }
         }
         return "validation.empty";
