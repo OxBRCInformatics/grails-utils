@@ -328,8 +328,8 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
     }
 
     static Object createValidKey(String k, Map keyMappings) {
-        String key = k.contains('-') ? CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_CAMEL, k) :
-                     CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, k)
+        String key = (k.contains('-') ? CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_CAMEL, k) :
+                      CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, k)).replaceAll(/\./, '')
         keyMappings ? (key in keyMappings.keySet() ? keyMappings[key] : key) : key
     }
 
