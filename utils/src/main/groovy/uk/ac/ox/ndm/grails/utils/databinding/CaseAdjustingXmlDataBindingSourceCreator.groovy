@@ -25,6 +25,7 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.MessageSource
 import org.xml.sax.SAXParseException
 import uk.ac.ox.ndm.grails.utils.Utils
+import uk.ac.ox.ndm.grails.utils.databinding.bindingsource.AbstractDomainDataBindingSource
 import uk.ac.ox.ndm.grails.utils.databinding.bindingsource.DataTypeDataBindingSource
 import uk.ac.ox.ndm.grails.utils.domain.DataType
 import uk.ac.ox.ndm.grails.utils.serializer.SerializeMappings
@@ -273,7 +274,8 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
                 throw new IllegalStateException("There must be a binding type in " + bindingTargetType.canonicalName + " for key "
                                                         + key)
             }
-            listValue += processDataBindingMap(value, bindingType)
+            def output = processDataBindingMap(value, bindingType)
+            listValue += output instanceof AbstractDomainDataBindingSource ? output.getDomain() : output
 
         }
         else listValue += value
