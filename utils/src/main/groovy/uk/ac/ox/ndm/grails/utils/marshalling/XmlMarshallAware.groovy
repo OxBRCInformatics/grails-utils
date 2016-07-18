@@ -111,6 +111,7 @@ trait XmlMarshallAware {
         if (childObject) child childObject.key, childObject.value
     }
 
+    @Deprecated
     void childAttribute(String name, String attributeName, Object childObject) {
         if (childObject) {
             xml.startNode name
@@ -118,6 +119,23 @@ trait XmlMarshallAware {
             xml.end()
         }
     }
+
+    void childAttribute(String nodeName, Map attributes, Object childObject) {
+        if (attributes) {
+            xml.startNode nodeName
+            attributes.each{ k,v ->
+                attribute convertToString(k), v
+            }
+            xml.convertAnother childObject
+            xml.end()
+        }
+    }
+
+    void optionalChildAttribute(String name, Map attributes, Object childObject) {
+        if (childObject)
+            childAttribute(name, attributes, childObject )
+    }
+
 
     void attribute(String name, Object childObject) {
         xml.attribute name, convertToString(childObject)
