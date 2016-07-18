@@ -80,7 +80,7 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
             factory.setResourceResolver(resourceResolver)
 
             schemas = resourceResolver.schemaCache.findAll {
-                !(it.key in ignoredSchemas) && it.key =~ getSchemaPattern()
+                !(it.key in ignoredSchemas) && it.key ==~ getSchemaPattern()
             }.collectEntries {filename, contents ->
                 def schema = factory.newSchema(new StreamSource(new StringReader(contents), filename))
                 [convertFilenameToSchemaKeyName(filename), schema]
