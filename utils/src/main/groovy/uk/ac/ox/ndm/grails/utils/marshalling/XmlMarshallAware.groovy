@@ -55,7 +55,11 @@ trait XmlMarshallAware {
     }
 
     void optionalChild(String name, Object childObject) {
-        if (childObject) child name, childObject
+        optionalChild name, childObject, childObject
+    }
+
+    void optionalChild(String name, Object childObject, def exists) {
+        if (exists) child name, childObject
     }
 
     void optionalChild(String name, @DelegatesTo(Builder) Closure closure) {
@@ -144,6 +148,13 @@ trait XmlMarshallAware {
         xml.attribute name, convertToString(childObject)
     }
 
+    void node(String tagName, @DelegatesTo(XmlMarshallAware) Closure closure) {
+        startNode tagName
+        closure.delegate = this
+        closure.run()
+        endNode()
+    }
+
     void startNode(String tagName) {
         xml.startNode tagName
     }
@@ -166,6 +177,10 @@ trait XmlMarshallAware {
         xml.end()
     }
 
+    void expandChild(XmlMarshallAware childObject) {
+        childObject?.marshallObject(xml)
+    }
+
     String convertToString(Object childObject) {
         childObject = config.getProxyHandler().unwrapIfProxy(childObject);
 
@@ -186,7 +201,7 @@ trait XmlMarshallAware {
     Object handleDouble(Object value) {
         if (value instanceof Double || value.getClass() == double.class) {
 
-            DecimalFormat decimalFormat = new DecimalFormat('0', DecimalFormatSymbols.getInstance(Locale.default))
+            DecimalFormat decimalFormat = new DecimalFormat('0.00', DecimalFormatSymbols.getInstance(Locale.default))
             decimalFormat.setMaximumFractionDigits(340)
             return decimalFormat.format(value)
         }
