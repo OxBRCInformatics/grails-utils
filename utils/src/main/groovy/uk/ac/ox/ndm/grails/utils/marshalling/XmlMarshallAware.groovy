@@ -8,6 +8,9 @@ import org.grails.web.converters.configuration.ConverterConfiguration
 import org.grails.web.converters.configuration.ConvertersConfigurationHolder
 import uk.ac.ox.ndm.grails.utils.domain.DataType
 
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+
 /**
  * @since 27/10/2015
  */
@@ -37,7 +40,7 @@ trait XmlMarshallAware {
 
     void child(String name, Object childObject) {
         xml.startNode name
-        xml.convertAnother childObject
+        xml.convertAnother handleDouble(childObject)
         xml.end()
     }
 
@@ -52,7 +55,11 @@ trait XmlMarshallAware {
     }
 
     void optionalChild(String name, Object childObject) {
-        if (childObject) child name, childObject
+        optionalChild name, childObject, childObject
+    }
+
+    void optionalChild(String name, Object childObject, def exists) {
+        if (exists) child name, childObject
     }
 
     void optionalChild(String name, @DelegatesTo(Builder) Closure closure) {
@@ -111,6 +118,7 @@ trait XmlMarshallAware {
         if (childObject) child childObject.key, childObject.value
     }
 
+    @Deprecated
     void childAttribute(String name, String attributeName, Object childObject) {
         if (childObject) {
             xml.startNode name
@@ -119,8 +127,32 @@ trait XmlMarshallAware {
         }
     }
 
+    void childAttribute(String nodeName, Map attributes, Object childObject) {
+        if (attributes) {
+            xml.startNode nodeName
+            attributes.each {k, v ->
+                attribute convertToString(k), v
+            }
+            xml.convertAnother handleDouble(childObject)
+            xml.end()
+        }
+    }
+
+    void optionalChildAttribute(String name, Map attributes, Object childObject) {
+        if (childObject)
+            childAttribute(name, attributes, childObject)
+    }
+
+
     void attribute(String name, Object childObject) {
         xml.attribute name, convertToString(childObject)
+    }
+
+    void node(String tagName, @DelegatesTo(XmlMarshallAware) Closure closure) {
+        startNode tagName
+        closure.delegate = this
+        closure.run()
+        endNode()
     }
 
     void startNode(String tagName) {
@@ -145,6 +177,10 @@ trait XmlMarshallAware {
         xml.end()
     }
 
+    void expandChild(XmlMarshallAware childObject) {
+        childObject?.marshallObject(xml)
+    }
+
     String convertToString(Object childObject) {
         childObject = config.getProxyHandler().unwrapIfProxy(childObject);
 
@@ -152,13 +188,23 @@ trait XmlMarshallAware {
             if (childObject == null) return null
             if (childObject instanceof CharSequence) return childObject.toString()
             if (childObject instanceof Class<?>) return ((Class<?>) childObject).getName()
-            if ((childObject.getClass().isPrimitive() && !childObject.getClass().equals(byte[].class)) ||
-                childObject instanceof Number || childObject instanceof Boolean) return String.valueOf(childObject)
+            if ((childObject.getClass().isPrimitive() && childObject.getClass() != byte[].class) ||
+                childObject instanceof Number || childObject instanceof Boolean) return String.valueOf(handleDouble(childObject))
             if (childObject instanceof DataType) return childObject.id
             return childObject.toString()
         }
         catch (Throwable t) {
             throw ConverterUtil.resolveConverterException(t);
         }
+    }
+
+    Object handleDouble(Object value) {
+        if (value instanceof Double || value.getClass() == double.class) {
+
+            DecimalFormat decimalFormat = new DecimalFormat('0.00', DecimalFormatSymbols.getInstance(Locale.default))
+            decimalFormat.setMaximumFractionDigits(340)
+            return decimalFormat.format(value)
+        }
+        value
     }
 }
