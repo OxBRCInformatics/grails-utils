@@ -118,6 +118,10 @@ trait XmlMarshallAware {
         if (childObject) child childObject.key, childObject.value
     }
 
+    void optionalChoiceChild(String childName, Map<String, Object> optionObjects) {
+        if (optionObjects.any {k, v -> v}) choiceChild childName, optionObjects
+    }
+
     @Deprecated
     void childAttribute(String name, String attributeName, Object childObject) {
         if (childObject) {
