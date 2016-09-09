@@ -6,7 +6,6 @@ import grails.plugins.rest.client.RestResponse
 import groovy.xml.XmlUtil
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
-import spock.lang.Shared
 
 import javax.annotation.Resource
 
@@ -18,21 +17,17 @@ abstract class ControllerIntegSpec extends CoreSpec {
     @Resource
     MessageSource messageSource
 
-    @Shared
     RestBuilder rest
-    @Shared
+
     RestResponse response
 
     @Value('${server.host:localhost}')
     String host
 
-    @Value('${server.port:8080}')
-    String port
-
     boolean https = false
 
     String getBaseUrl() {
-        "http${https ? 's' : ''}://${host}:${port}"
+        "http${https ? 's' : ''}://${host}:${serverPort}"
     }
 
     String getAcceptVersion() {
@@ -107,5 +102,9 @@ abstract class ControllerIntegSpec extends CoreSpec {
         String text = format ? XmlUtil.serialize(new XmlParser().parseText(response.text)) : response.text
         logger."$level" text
         if (level == 'error') System.err.println text
+    }
+
+    void setHost(String host) {
+        this.host = host
     }
 }
