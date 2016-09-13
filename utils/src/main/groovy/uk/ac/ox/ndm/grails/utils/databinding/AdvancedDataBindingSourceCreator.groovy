@@ -1,50 +1,40 @@
 package uk.ac.ox.ndm.grails.utils.databinding
 
 import com.google.common.base.CaseFormat
-import grails.databinding.CollectionDataBindingSource
 import grails.databinding.DataBindingSource
 import grails.databinding.SimpleMapDataBindingSource
 import grails.util.Holders
 import grails.validation.ValidationException
-import grails.web.mime.MimeType
-import grails.web.servlet.mvc.GrailsParameterMap
 import groovy.transform.CompileStatic
 import groovy.transform.TypeChecked
 import groovy.transform.TypeCheckingMode
-import groovy.util.slurpersupport.GPathResult
 import org.grails.databinding.bindingsource.DataBindingSourceCreationException
-import org.grails.databinding.xml.GPathResultCollectionDataBindingSource
-import org.grails.databinding.xml.GPathResultMap
-import org.grails.io.support.SpringIOUtils
 import org.grails.web.databinding.bindingsource.DefaultDataBindingSourceCreator
-import org.grails.web.databinding.bindingsource.InvalidRequestBodyException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.context.MessageSource
-import org.xml.sax.SAXParseException
 import uk.ac.ox.ndm.grails.utils.Utils
 import uk.ac.ox.ndm.grails.utils.databinding.bindingsource.AbstractDomainDataBindingSource
 import uk.ac.ox.ndm.grails.utils.databinding.bindingsource.DataTypeDataBindingSource
 import uk.ac.ox.ndm.grails.utils.domain.DataType
 import uk.ac.ox.ndm.grails.utils.serializer.SerializeMappings
 
-import javax.servlet.http.HttpServletRequest
 import java.lang.annotation.Annotation
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import java.lang.reflect.ParameterizedType
 
 /**
- * @since 02/09/2015
- * @deprecated use {@link uk.ac.ox.ndm.grails.utils.databinding.AdvancedXmlDataBindingSourceCreator} instead
+ * @since 13/09/2016
  */
 @CompileStatic
-@Deprecated
-class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceCreator implements Utils {
+abstract class AdvancedDataBindingSourceCreator extends DefaultDataBindingSourceCreator implements Utils {
 
-    private static final Logger logger = LoggerFactory.getLogger(CaseAdjustingXmlDataBindingSourceCreator)
+    public Logger getLogger() {
+        LoggerFactory.getLogger(getClass())
+    }
 
     @Autowired
     MessageSource messageSource
@@ -52,131 +42,44 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
     @Autowired
     ApplicationContext applicationContext
 
-    private Collection<XmlDataBindingSourceCreatorHelper> postProcessors
+    Collection<DataBindingSourceCreatorHelper> postProcessors
 
-    @Override
-    MimeType[] getMimeTypes() {
-        [MimeType.XML, MimeType.TEXT_XML] as MimeType[]
-    }
+    boolean initialised
 
-    protected boolean initialised
-
-    CaseAdjustingXmlDataBindingSourceCreator() {
+    AdvancedDataBindingSourceCreator() {
         initialised = false
         postProcessors = []
     }
 
-    CaseAdjustingXmlDataBindingSourceCreator(ApplicationContext applicationContext) {
+    AdvancedDataBindingSourceCreator(ApplicationContext applicationContext) {
         this()
         this.applicationContext = applicationContext
         initialise()
     }
 
-    CaseAdjustingXmlDataBindingSourceCreator(Collection<XmlDataBindingSourceCreatorHelper> postProcessors) {
+    AdvancedDataBindingSourceCreator(Collection<DataBindingSourceCreatorHelper> postProcessors) {
         this()
         initialise postProcessors
     }
 
     void initialise() {
         if (!applicationContext) applicationContext = Holders.getApplicationContext()
-        initialise applicationContext.getBeansOfType(XmlDataBindingSourceCreatorHelper).values()
+        initialise applicationContext.getBeansOfType(DataBindingSourceCreatorHelper).values()
     }
 
-    void initialise(XmlDataBindingSourceCreatorHelper postProcessor) {
+    void initialise(DataBindingSourceCreatorHelper postProcessor) {
         initialise([postProcessor])
     }
 
-    void initialise(Collection<XmlDataBindingSourceCreatorHelper> postProcessors) {
+    void initialise(Collection<DataBindingSourceCreatorHelper> postProcessors) {
         this.postProcessors = postProcessors
         initialised = true
     }
 
-
-    // Collection value data binding processing
-
-    @Override
-    CollectionDataBindingSource createCollectionDataBindingSource(MimeType mimeType, Class bindingTargetType,
-                                                                  Object bindingSource) {
-        if (bindingSource instanceof GPathResult) {
-            new GPathResultCollectionDataBindingSource(bindingSource)
-        }
-        else {
-            try {
-                if (bindingSource instanceof GrailsParameterMap) {
-                    def req = bindingSource.getRequest()
-                    def is = req.getInputStream()
-                    return createCollectionBindingSource(is, req.getCharacterEncoding())
-                }
-                if (bindingSource instanceof HttpServletRequest) {
-                    def req = bindingSource as HttpServletRequest
-                    def is = req.getInputStream()
-                    return createCollectionBindingSource(is, req.getCharacterEncoding())
-                }
-                if (bindingSource instanceof InputStream) {
-                    def is = bindingSource as InputStream
-                    return createCollectionBindingSource(is, "UTF-8")
-                }
-                if (bindingSource instanceof Reader) {
-                    def is = bindingSource as Reader
-                    return createCollectionBindingSource(is)
-                }
-
-                return super.createCollectionDataBindingSource(mimeType, bindingTargetType, bindingSource)
-            } catch (Exception e) {
-                throw new DataBindingSourceCreationException(e)
-            }
-        }
-    }
-
-    CollectionDataBindingSource createCollectionBindingSource(InputStream inputStream, String charsetName) {
-        createCollectionBindingSource(new InputStreamReader(inputStream, charsetName ?: 'UTF-8'))
-    }
-
-    CollectionDataBindingSource createCollectionBindingSource(Reader reader) {
-        new GPathResultCollectionDataBindingSource(SpringIOUtils.createXmlSlurper().parse(reader))
-    }
-
-    // Single value data binding processing
-
-    @Override
-    DataBindingSource createDataBindingSource(MimeType mimeType, Class bindingTargetType, Object bindingSource) {
-        try {
-            if (bindingSource instanceof String) {
-                GPathResult result = new XmlSlurper().parseText(new String(bindingSource))
-                return createDataBindingSource(result, bindingTargetType)
-            }
-            if (bindingSource instanceof GPathResult) {
-                return createDataBindingSource(bindingSource, bindingTargetType)
-            }
-            if (bindingSource instanceof HttpServletRequest) {
-                def req = bindingSource as HttpServletRequest
-                def is = req.getInputStream()
-                return createDataBindingSource(is, req.getCharacterEncoding(), bindingTargetType)
-            }
-            if (bindingSource instanceof InputStream) {
-                def is = bindingSource as InputStream
-                return createDataBindingSource(is, "UTF-8", bindingTargetType)
-            }
-            if (bindingSource instanceof Reader) {
-                def is = bindingSource as Reader
-                return createDataBindingSource(is, bindingTargetType)
-            }
-            return super.createDataBindingSource(mimeType, bindingTargetType, bindingSource)
-        } catch (Exception e) {
-            throw createBindingSourceCreationException(e)
-        }
-    }
+    abstract DataBindingSource createDataBindingSource(Reader reader, Class bindingTargetType)
 
     DataBindingSource createDataBindingSource(InputStream inputStream, String charsetName, Class bindingTargetType) {
         createDataBindingSource(new InputStreamReader(inputStream, charsetName ?: 'UTF-8'), bindingTargetType)
-    }
-
-    DataBindingSource createDataBindingSource(Reader reader, Class bindingTargetType) {
-        createDataBindingSource(SpringIOUtils.createXmlSlurper().parse(reader), bindingTargetType)
-    }
-
-    DataBindingSource createDataBindingSource(GPathResult gPathResult, Class bindingTargetType) {
-        createDataBindingSource(new GPathResultMap(gPathResult), bindingTargetType)
     }
 
     DataBindingSource createDataBindingSource(Map<String, ?> input, Class bindingTargetType) {
@@ -217,9 +120,18 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
         }
 
         checkProcessDataBindingMap(processedDataBindingMap, bindingTargetType)
-
     }
 
+    Object checkProcessDataBindingMap(Map<String, ?> processDataBindingMap, Class bindingTargetType) {
+
+        if (!initialised) initialise()
+
+        for (DataBindingSourceCreatorHelper postProcessor : postProcessors) {
+            def obj = postProcessor.checkDataBindingSourceMap(processDataBindingMap, bindingTargetType)
+            if (obj) return obj
+        }
+        processDataBindingMap
+    }
 
     Object convertValue(Object v, String key, Class bindingTargetType, Map<String, ?> converted) {
         def value = v
@@ -249,6 +161,60 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
         value
     }
 
+    Object convertAndAddToList(String key, Object value, Class bindingTargetType, List listValue) {
+
+        if (value instanceof Map) {
+            def bindingType = getReferencedTypeForCollectionInClass(key, bindingTargetType)
+            if (!bindingType) {
+                throw new IllegalStateException("There must be a binding type in " + bindingTargetType.canonicalName + " for key "
+                                                        + key)
+            }
+            def output = processDataBindingMap(value, bindingType)
+            listValue += output instanceof AbstractDomainDataBindingSource ? output.getDomain() : output
+
+        }
+        else listValue += value
+
+        listValue
+    }
+
+    Map<String, ?> extractKeyValuePairFromKeyMapping(Map<String, String> keys, Object value) {
+
+        if (!value) return [:]
+        Map<String, ?> result = [:]
+
+        keys.each {key, mapping ->
+            if (value[key]) {
+                if (mapping instanceof Map) {
+                    result.putAll(extractKeyValuePairFromKeyMapping(mapping as Map<String, String>, value[key]))
+                }
+                else result[mapping] = value[key]
+            }
+        }
+        result
+    }
+
+    Map<String, ?> preProcessDataBindingMap(Map<String, ?> map) {
+        if (map == null) throw new IllegalArgumentException('null map is not permitted for pre processing')
+        map.collectEntries {k, v ->
+            [(createValidKey(k, [:])): (preProcessDataBindingValue(v))]
+        } as Map<String, ?>
+    }
+
+    Object preProcessDataBindingValue(Object obj) {
+        obj instanceof Map ?
+        preProcessDataBindingMap(obj) :
+        obj instanceof Collection ?
+        obj.collect {preProcessDataBindingValue(it)} :
+        obj
+    }
+
+    Object createValidKey(String k, Map keyMappings) {
+        String key = (k.contains('-') ? CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_CAMEL, k) :
+                      CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, k)).replaceAll(/\./, '')
+        keyMappings ? (key in keyMappings.keySet() ? keyMappings[key] : key) : key
+    }
+
     @TypeChecked(TypeCheckingMode.SKIP)
     Class determineBindingType(Class bindingTargetType, String key) {
         MetaProperty metaProperty = bindingTargetType.metaClass.getMetaProperty(key)
@@ -268,76 +234,7 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
         bindingType
     }
 
-    Object convertAndAddToList(String key, Object value, Class bindingTargetType, List listValue) {
-
-        if (value instanceof Map) {
-            def bindingType = getReferencedTypeForCollectionInClass(key, bindingTargetType)
-            if (!bindingType) {
-                throw new IllegalStateException("There must be a binding type in " + bindingTargetType.canonicalName + " for key "
-                                                        + key)
-            }
-            def output = processDataBindingMap(value, bindingType)
-            listValue += output instanceof AbstractDomainDataBindingSource ? output.getDomain() : output
-
-        }
-        else listValue += value
-
-        listValue
-    }
-
-    static Map<String, ?> extractKeyValuePairFromKeyMapping(Map<String, String> keys, Object value) {
-
-        if (!value) return [:]
-        Map<String, ?> result = [:]
-
-        keys.each {key, mapping ->
-
-            if (value[key]) {
-                if (mapping instanceof Map) {
-                    result.putAll(extractKeyValuePairFromKeyMapping(mapping as Map<String, String>, value[key]))
-
-                }
-                else result[mapping] = value[key]
-            }
-
-        }
-
-        result
-    }
-
-    static Map<String, ?> preProcessDataBindingMap(Map<String, ?> map) {
-        if (map == null) throw new IllegalArgumentException('null map is not permitted for pre processing')
-        map.collectEntries {k, v ->
-            [(createValidKey(k, [:])): (preProcessDataBindingValue(v))]
-        } as Map<String, ?>
-    }
-
-    Object checkProcessDataBindingMap(Map<String, ?> processDataBindingMap, Class bindingTargetType) {
-
-        if (!initialised) initialise()
-
-        for (XmlDataBindingSourceCreatorHelper postProcessor : postProcessors) {
-            def obj = postProcessor.checkDataBindingSourceMap(processDataBindingMap, bindingTargetType)
-            if (obj) return obj
-        }
-        processDataBindingMap
-    }
-
-    static Object preProcessDataBindingValue(Object obj) {
-        obj instanceof Map ?
-        preProcessDataBindingMap(obj) :
-        obj instanceof Collection ?
-        obj.collect {preProcessDataBindingValue(it)} :
-        obj
-    }
-
-    static Object createValidKey(String k, Map keyMappings) {
-        String key = (k.contains('-') ? CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_CAMEL, k) :
-                      CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, k)).replaceAll(/\./, '')
-        keyMappings ? (key in keyMappings.keySet() ? keyMappings[key] : key) : key
-    }
-
-    static Class<?> getReferencedTypeForCollectionInClass(String propertyName, Class clazz) {
+    Class<?> getReferencedTypeForCollectionInClass(String propertyName, Class clazz) {
         def field = getField(clazz, propertyName)
         if (field) {
             def genericType = field.genericType
@@ -349,7 +246,7 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
         null
     }
 
-    static Field getField(Class clazz, String fieldName) {
+    Field getField(Class clazz, String fieldName) {
         try {
             return clazz.getDeclaredField(fieldName)
         } catch (NoSuchFieldException ignored) {
@@ -358,11 +255,6 @@ class CaseAdjustingXmlDataBindingSourceCreator extends DefaultDataBindingSourceC
     }
 
     DataBindingSourceCreationException createBindingSourceCreationException(Exception e) {
-
-        if (e instanceof SAXParseException) {
-            logger.error "Exception while creating databinding source: {}", e.message
-            return new InvalidRequestBodyException(e)
-        }
         if (e instanceof ValidationException) {
             StringBuilder sb = new StringBuilder()
             e.errors.allErrors.each {error ->
