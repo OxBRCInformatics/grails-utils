@@ -1,5 +1,6 @@
 package uk.ac.ox.ndm.grails.utils.databinding;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -7,5 +8,11 @@ import java.util.Map;
  */
 public interface DataBindingSourceCreatorHelper {
 
-    Object checkDataBindingSourceMap(Map<String, ?> dataBindingSourceMap, Class bindingTargetType);
+    Map convertBindingTargetTypeListToMap(List<Object> dataList, Class bindingTargetType);
+
+    Boolean convertsBindingTargetTypeListsToMap(Class bindingTargetType);
+
+    Object handleDataBindingSourceMap(Map<String, ?> dataBindingSourceMap, Class bindingTargetType);
+
+    Boolean handlesBindingTargetTypeMaps(Class bindingTargetType);
 }
