@@ -42,13 +42,13 @@ abstract class AdvancedDataBindingSourceCreator extends DefaultDataBindingSource
     @Autowired
     ApplicationContext applicationContext
 
-    Collection<DataBindingSourceCreatorHelper> postProcessors
+    Collection<DataBindingSourceCreatorHelper> dataBindingSourceCreatorHelpers
 
     boolean initialised
 
     AdvancedDataBindingSourceCreator() {
         initialised = false
-        postProcessors = []
+        dataBindingSourceCreatorHelpers = []
     }
 
     AdvancedDataBindingSourceCreator(ApplicationContext applicationContext) {
@@ -57,9 +57,9 @@ abstract class AdvancedDataBindingSourceCreator extends DefaultDataBindingSource
         initialise()
     }
 
-    AdvancedDataBindingSourceCreator(Collection<DataBindingSourceCreatorHelper> postProcessors) {
+    AdvancedDataBindingSourceCreator(Collection<DataBindingSourceCreatorHelper> dataBindingSourceCreatorHelpers) {
         this()
-        initialise postProcessors
+        initialise dataBindingSourceCreatorHelpers
     }
 
     void initialise() {
@@ -72,7 +72,7 @@ abstract class AdvancedDataBindingSourceCreator extends DefaultDataBindingSource
     }
 
     void initialise(Collection<DataBindingSourceCreatorHelper> postProcessors) {
-        this.postProcessors = postProcessors
+        this.dataBindingSourceCreatorHelpers = postProcessors
         initialised = true
     }
 
@@ -126,11 +126,8 @@ abstract class AdvancedDataBindingSourceCreator extends DefaultDataBindingSource
 
         if (!initialised) initialise()
 
-        for (DataBindingSourceCreatorHelper postProcessor : postProcessors) {
-            def obj = postProcessor.checkDataBindingSourceMap(processDataBindingMap, bindingTargetType)
-            if (obj) return obj
-        }
-        processDataBindingMap
+        DataBindingSourceCreatorHelper postProcessor = dataBindingSourceCreatorHelpers.find {it.handlesBindingTargetTypeMaps(bindingTargetType)}
+        postProcessor ? postProcessor.handleDataBindingSourceMap(processDataBindingMap, bindingTargetType) : processDataBindingMap
     }
 
     Object convertValue(Object v, String key, Class bindingTargetType, Map<String, ?> converted) {
@@ -202,11 +199,7 @@ abstract class AdvancedDataBindingSourceCreator extends DefaultDataBindingSource
     }
 
     Object preProcessDataBindingValue(Object obj) {
-        obj instanceof Map ?
-        preProcessDataBindingMap(obj) :
-        obj instanceof Collection ?
-        obj.collect {preProcessDataBindingValue(it)} :
-        obj
+        obj instanceof Map ? preProcessDataBindingMap(obj) : obj instanceof Collection ? obj.collect {preProcessDataBindingValue(it)} : obj
     }
 
     Object createValidKey(String k, Map keyMappings) {

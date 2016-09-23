@@ -45,7 +45,17 @@ class AdvancedJsonDataBindingSourceCreator extends AdvancedDataBindingSourceCrea
     @Override
     DataBindingSource createDataBindingSource(Reader reader, Class bindingTargetType) {
         final def jsonElement = jsonSlurper.parse(reader)
-        createDataBindingSource(jsonElement as JSONObject, bindingTargetType)
+        if (jsonElement instanceof Map || jsonElement instanceof JSONObject) {
+            return createDataBindingSource(jsonElement as Map, bindingTargetType)
+        }
+
+        DataBindingSourceCreatorHelper helper = dataBindingSourceCreatorHelpers.find {it.convertsBindingTargetTypeListsToMap(bindingTargetType)}
+
+        if (helper) return
+        createDataBindingSource(helper.convertBindingTargetTypeListToMap(jsonElement as List, bindingTargetType), bindingTargetType)
+
+        throw createBindingSourceCreationException(new InvalidRequestBodyException(
+                new Exception("Cannot bind ${bindingTargetType.canonicalName} submitted in ${jsonElement.class.simpleName} format")))
     }
 
     @Override
