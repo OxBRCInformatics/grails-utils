@@ -13,7 +13,10 @@ class DataTypeDataBindingSource extends AbstractDomainDataBindingSource<DataType
 
     @Override
     DataType createDomain(Map map) {
-        def domain = bindingTargetType.findById(map.key)
+        def domain = bindingTargetType.findById(map.key) ?:
+                     bindingTargetType.findByIdIlike(map.key) ?:
+                     bindingTargetType.findByLabel(map.key)
+        bindingTargetType.findByLabelIlike(map.key)
         if (!domain) {
             domain = bindingTargetType.newInstance()
             domain.id = map.key

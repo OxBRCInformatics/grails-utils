@@ -49,10 +49,17 @@ class AdvancedJsonDataBindingSourceCreator extends AdvancedDataBindingSourceCrea
             return createDataBindingSource(jsonElement as Map, bindingTargetType)
         }
 
-        DataBindingSourceCreatorHelper helper = dataBindingSourceCreatorHelpers.find {it.convertsBindingTargetTypeListsToMap(bindingTargetType)}
+        try {
+            DataBindingSourceCreatorHelper helper = dataBindingSourceCreatorHelpers.find {it.convertsBindingTargetTypeListsToMap(bindingTargetType)}
 
-        if (helper) return
-        createDataBindingSource(helper.convertBindingTargetTypeListToMap(jsonElement as List, bindingTargetType), bindingTargetType)
+            if (helper) {
+                Map converted = helper.convertBindingTargetTypeListToMap(jsonElement as List, bindingTargetType)
+                return createDataBindingSource(converted, bindingTargetType)
+            }
+
+        } catch (Exception ex) {
+            throw createBindingSourceCreationException(new InvalidRequestBodyException(ex))
+        }
 
         throw createBindingSourceCreationException(new InvalidRequestBodyException(
                 new Exception("Cannot bind ${bindingTargetType.canonicalName} submitted in ${jsonElement.class.simpleName} format")))
