@@ -11,12 +11,16 @@ import java.time.format.DateTimeFormatter
 class JavaLocalDateConverter implements ValueConverter {
     @Override
     boolean canConvert(Object value) {
-        value instanceof String
+        value instanceof String || value instanceof Map
     }
 
     @Override
     Object convert(Object value) {
-        value ? LocalDate.parse(value, DateTimeFormatter.ISO_DATE) : null
+        if (!value) return null
+        if (value instanceof String)
+            return LocalDate.parse(value, DateTimeFormatter.ISO_DATE)
+        Map map = value as Map
+        map.year ? LocalDate.of(map.year, map.month ?: 1, map.day ?: 1) : null
     }
 
     @Override
