@@ -2,6 +2,8 @@ package uk.ac.ox.ndm.grails.utils.xml.resource
 
 import asset.pipeline.AssetPipelineConfigHolder
 import asset.pipeline.fs.AssetResolver
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.w3c.dom.ls.LSInput
 import org.w3c.dom.ls.LSResourceResolver
 
@@ -10,13 +12,23 @@ import org.w3c.dom.ls.LSResourceResolver
  */
 class ResourceResolver implements LSResourceResolver {
 
+    Logger logger = LoggerFactory.getLogger(ResourceResolver)
+
     final Map<String, String> schemaCache
 
     ResourceResolver(String assetFilename) {
         AssetResolver resolver = AssetPipelineConfigHolder.resolvers.find {it.getAsset(assetFilename)}
-        schemaCache = resolver.scanForFiles(['.*'],
-                                            ['*.xsd', '*.xml']).collectEntries {
-            [it.name, new String(it.inputStream.bytes)]
+        if (!resolver) {
+            schemaCache = [:]
+            logger.warn("No asset resolvers could be found for the asset {}. {} resolvers were available", assetFilename,
+                        AssetPipelineConfigHolder.resolvers.size())
+
+        }
+        else {
+            schemaCache = resolver.scanForFiles(['.*'],
+                                                ['*.xsd', '*.xml']).collectEntries {
+                [it.name, new String(it.inputStream.bytes)]
+            }
         }
     }
 
