@@ -4,7 +4,7 @@ dependencies {
     compile "org.grails:grails-databinding:$grailsVersion"
     compile "org.grails:grails-web-databinding:$grailsVersion"
     compile "org.grails:grails-plugin-rest:$grailsVersion"
-    compile "org.grails.plugins:asset-pipeline:$assetPipelineVersion"
+    compile "com.bertramlabs.plugins:asset-pipeline-grails:$assetPipelineVersion"
 
     /**
      * GORM and Hibernate
