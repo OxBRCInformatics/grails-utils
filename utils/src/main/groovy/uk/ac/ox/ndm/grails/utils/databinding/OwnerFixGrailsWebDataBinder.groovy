@@ -8,6 +8,7 @@ import grails.databinding.converters.ValueConverter
 import grails.databinding.events.DataBindingListener
 import grails.web.databinding.GrailsWebDataBinder
 import groovy.transform.CompileStatic
+import uk.ac.ox.ndm.grails.utils.databinding.bindingsource.AbstractMapDomainDataBindingSource
 
 /**
  * @since 02/10/2015
@@ -24,7 +25,7 @@ class OwnerFixGrailsWebDataBinder extends GrailsWebDataBinder {
                                      DataBindingListener listener,
                                      Object errors) {
 
-        if (source.dataSourceAware && val instanceof Map) {
+        if (source.dataSourceAware && (val instanceof Map || val instanceof AbstractMapDomainDataBindingSource)) {
             if (grailsApplication != null) {
                 def domainClass = (GrailsDomainClass) grailsApplication.getArtefact('Domain', obj.getClass().name)
                 if (domainClass != null) {
