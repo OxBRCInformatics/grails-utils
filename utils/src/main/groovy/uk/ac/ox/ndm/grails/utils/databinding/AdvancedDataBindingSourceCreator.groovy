@@ -21,7 +21,6 @@ import uk.ac.ox.ndm.grails.utils.databinding.bindingsource.DataTypeDataBindingSo
 import uk.ac.ox.ndm.grails.utils.domain.DataType
 import uk.ac.ox.ndm.grails.utils.serializer.SerializeMappings
 
-import java.lang.annotation.Annotation
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import java.lang.reflect.ParameterizedType
@@ -85,7 +84,7 @@ abstract class AdvancedDataBindingSourceCreator extends DefaultDataBindingSource
     DataBindingSource createDataBindingSource(Map<String, ?> input, Class bindingTargetType) {
         Map<String, ?> preprocessed = preProcessDataBindingMap(input)
         Object processed = processDataBindingMap(preprocessed, bindingTargetType)
-        if (processed instanceof Map) return new SimpleMapDataBindingSource(processed)
+        if (processed instanceof Map) return new SimpleMapDataBindingSource(processed as Map)
         if (processed instanceof DataBindingSource) return processed as DataBindingSource
 
         throw new InvalidClassException('Processed value class ' + processed.class.canonicalName +
@@ -94,8 +93,8 @@ abstract class AdvancedDataBindingSourceCreator extends DefaultDataBindingSource
 
     Object processDataBindingMap(Map<String, ?> input, Class bindingTargetType) {
 
-        Annotation mappings = bindingTargetType.getAnnotation(SerializeMappings) ?:
-                              bindingTargetType.superclass?.getAnnotation(SerializeMappings)
+        SerializeMappings mappings = bindingTargetType.getAnnotation(SerializeMappings) ?:
+                                     bindingTargetType.superclass?.getAnnotation(SerializeMappings)
 
         Map<String, Object> keyMappings = extractNameMappings(mappings?.nameMappings())
 
