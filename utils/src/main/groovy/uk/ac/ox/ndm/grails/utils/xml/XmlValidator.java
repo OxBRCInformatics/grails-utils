@@ -11,6 +11,7 @@ public interface XmlValidator {
      * Does this helper validate the provided XML
      *
      * @param xml XML to validate
+     * @param referenceId the reference id
      *
      * @return schema name of XSD xml validates against or null
      */
@@ -20,6 +21,7 @@ public interface XmlValidator {
      * Does this helper validate the provided XML
      *
      * @param xml XML to validate
+     * @param referenceId the reference id
      *
      * @return schema name of XSD xml validates against or null
      */
