@@ -6,7 +6,10 @@ import org.springframework.validation.FieldError
 
 /**
  * Taken from http://asoftwareguy.com/2013/07/01/grails-cascade-validation-for-pogos/
+ *
+ *
  */
+@Deprecated
 class CascadeValidationConstraint extends AbstractVetoingConstraint {
 
     public static final String NAME = "cascadeValidation"
