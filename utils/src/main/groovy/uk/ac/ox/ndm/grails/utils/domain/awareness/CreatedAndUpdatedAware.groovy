@@ -6,4 +6,12 @@ package uk.ac.ox.ndm.grails.utils.domain.awareness
 trait CreatedAndUpdatedAware {
     Date dateCreated
     Date lastUpdated
+
+    Date getDateCreated() {
+        dateCreated ?: new Date()
+    }
+
+    Date getLastUpdated() {
+        lastUpdated ?: new Date()
+    }
 }
