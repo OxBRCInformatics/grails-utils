@@ -9,7 +9,7 @@ dependencies {
     /**
      * GORM and Hibernate
      */
-    compile "org.grails.plugins:hibernate4:$gormVersion"
+    compile "org.grails.plugins:hibernate5:$gormVersion"
     compile "org.hibernate:hibernate-ehcache:$hibernateVersion"
     compile "org.hibernate:hibernate-core:$hibernateVersion"
 
