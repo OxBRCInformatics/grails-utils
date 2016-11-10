@@ -9,9 +9,23 @@ dependencies {
     /**
      * GORM and Hibernate
      */
-    compile "org.grails.plugins:hibernate5:$gormVersion"
+    compile "org.grails.plugins:hibernate4:$gormVersion"
     compile "org.hibernate:hibernate-ehcache:$hibernateVersion"
     compile "org.hibernate:hibernate-core:$hibernateVersion"
+
+    /*
+    Jadira provides the ability to support java8 time until grails uses hibernate 5
+    It should also be possible to extend some of the spi in jadira to support local types if necessary
+    It is very important to have the hibernate entitymanager otherwise jadia won't work
+    */
+    compile group: 'org.jadira.usertype', name: 'usertype.extended', version: jadiraVersion, transitive: false
+    // Secondary dependencies for extended usertype
+    compile group: 'org.jadira.cdt', name: 'cdt', version: jadiraVersion, transitive: false
+    compile group: 'org.jadira.bindings', name: 'bindings', version: jadiraVersion, transitive: false
+    compile group: 'org.jadira.usertype', name: 'usertype.spi', version: jadiraVersion, transitive: false
+    compile group: 'org.jadira.usertype', name: 'usertype.core', version: jadiraVersion, transitive: false
+    compile group: 'com.googlecode.libphonenumber', name: 'libphonenumber', version: '7.0.4'
+    compile group: 'net.sf.oval', name: 'oval', version: '1.85'
 
     compile 'javax.servlet:javax.servlet-api:3.1.0'
 
