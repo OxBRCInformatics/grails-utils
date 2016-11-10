@@ -9,6 +9,12 @@
 ## Contributors
 * [Ollie Freeman](https://github.com/olliefreeman)
 
+## Branches
+
+* The `develop` branch is the main branch and runs with Grails `3.2.x`.
+* The `3.1.x` branch should have everything relevant merged from `develop` but runs using Grails `3.1.x`
+* The `master` branch should be build from releases to the `develop` branch
+
 ## Usage
 
 This is designed to be used inside a Grails application/plugin adding extra support for redefining different aspects of default
