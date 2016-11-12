@@ -11,38 +11,49 @@ trait Utils {
     Map<String, Object> extractNameMappings(String[] nameMappings) {
         def mappings = [:]
         nameMappings?.each {content ->
-            String[] split = content.split(/\./)
-            buildMap(mappings, split)
+            String[] keyValues = content.split(':')
+            List<String> keys = keyValues[0].split(/\./).toList()
+            List<String> values = keyValues[1].split(/\./).toList()
+            mappings = buildMapping(mappings, keys, values)
         }
         mappings
     }
 
-    def buildMap(Map<String, Object> map, String[] contents) {
-        if (contents) {
-            String entry = contents[0]
-            String[] remainder = contents - entry
+    def buildMapping(def mapping, List<String> keys, List<String> values) {
 
-            if (entry.contains(':')) {
-                if (remainder)
-                    throw new IllegalStateException('Cannot have key:value and contents')
+        if (keys) {
+            def key = keys.remove(0)
+            mapping = mapping ?: [:]
+            if (mapping instanceof String) {
+                mapping = ['-': mapping]
+            }
 
-                def kv = entry.split(':')
+            mapping[key] = buildMapping(mapping[key], keys, values)
+        }
+        else {
+            if (!values) throw new IllegalStateException("Must have a value to assign")
+            def value = values.remove(0)
 
-                if (map."${kv[0]}" instanceof Map) map."${kv[0]}".'-' = kv[1]
-                else map."${kv[0]}" = kv[1]
+            if (values) {
+                if (values.size() == 1) {
+                    def valMap = [:]
+                    valMap[value] = values.first()
+                    value = valMap
+                }
+                else throw new IllegalStateException("Cannot handle a double nested value mapping")
+            }
+            if (mapping) {
+                if (mapping instanceof Map) {
+                    mapping.'-' = value
+                }
             }
             else {
-
-                def submap = map."$entry" ?: [:]
-                if (submap instanceof String)
-                    submap = ['-': submap]
-                submap = buildMap(submap, remainder)
-                map."$entry" = submap
-
+                mapping = value
             }
         }
 
-        map
+
+        mapping
     }
 
     String convertByteArrayToBase64EncodedString(Byte[] bytes) {

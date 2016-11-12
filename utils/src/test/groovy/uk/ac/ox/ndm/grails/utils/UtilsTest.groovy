@@ -29,9 +29,8 @@ class UtilsTest extends Specification {
         mappings = ['a:1.more'] as String[]
         utils.extractNameMappings(mappings)
 
-        then: 'Exception is thrown'
-        IllegalStateException e = thrown()
-        e.message == 'Cannot have key:value and contents'
+        then: 'Exception is not thrown'
+        notThrown(IllegalStateException)
 
         when: 'mappings is valid as already defined map'
         mappings = ['a.b:1', 'a:1'] as String[]
@@ -46,6 +45,38 @@ class UtilsTest extends Specification {
 
         then: 'Exception is thrown'
         notThrown(IllegalStateException)
+    }
+
+    void "test submapping"() {
+        when: 'mappings is a sub map on value'
+        mappings = ['a:a.more'] as String[]
+        def result = utils.extractNameMappings(mappings)
+
+        then: 'non empty map is returned'
+        !result.isEmpty()
+
+        and: 'it is a single map with a sub map'
+        def valueMap = result.a
+        valueMap.a == 'more'
+
+        when: 'mappings is 2 sub maps on value'
+        mappings = ['a:a.more', 'b:a.more'] as String[]
+        result = utils.extractNameMappings(mappings)
+
+        then: 'non empty map is returned'
+        !result.isEmpty()
+
+        when:
+        valueMap = result.a
+
+        then:
+        valueMap.a == 'more'
+
+        when:
+        valueMap = result.b
+
+        then:
+        valueMap.a == 'more'
     }
 
     void "test single string entry with 1 level"() {
