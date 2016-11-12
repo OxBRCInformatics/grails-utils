@@ -180,12 +180,19 @@ abstract class AdvancedDataBindingSourceCreator extends DefaultDataBindingSource
         Map<String, ?> result = [:]
 
         keys.each {key, mapping ->
-            if (value[key]) {
+            // Pushing down
+            if (!(value instanceof Map)) {
+                Map valueMap = [:]
+                valueMap[mapping] = value
+                result[key] = valueMap
+            }
+            else if (value[key]) {
                 if (mapping instanceof Map) {
                     result.putAll(extractKeyValuePairFromKeyMapping(mapping as Map<String, String>, value[key]))
                 }
                 else result[mapping] = value[key]
             }
+
         }
         result
     }
