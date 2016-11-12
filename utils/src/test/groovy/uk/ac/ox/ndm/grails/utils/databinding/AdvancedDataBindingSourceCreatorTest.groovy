@@ -1,45 +1,46 @@
 package uk.ac.ox.ndm.grails.utils.databinding
 
+import grails.databinding.DataBindingSource
 import spock.lang.Shared
 import spock.lang.Specification
 
 /**
  * @since 02/02/2016
  */
-class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
+class AdvancedDataBindingSourceCreatorTest extends Specification {
 
     @Shared
-    CaseAdjustingXmlDataBindingSourceCreator creator
+    AdvancedDataBindingSourceCreator creator
 
     void setup() {
-        creator = new CaseAdjustingXmlDataBindingSourceCreator()
+        creator = new TestAdvancedDataBindingSourceCreator()
         creator.initialised = true
     }
 
     def 'test preprocessing of value map keys'() {
 
         when: 'empty map chosen'
-        CaseAdjustingXmlDataBindingSourceCreator.preProcessDataBindingMap([:])
+        creator.preProcessDataBindingMap([:])
 
         then: 'no exception is thrown'
         noExceptionThrown()
 
         when: 'null map chosen'
-        CaseAdjustingXmlDataBindingSourceCreator.preProcessDataBindingMap(null)
+        creator.preProcessDataBindingMap(null)
 
         then: 'exception thrown'
         thrown(IllegalArgumentException)
 
         expect: 'simple map with hypenated keys has camel case keys'
-        CaseAdjustingXmlDataBindingSourceCreator.preProcessDataBindingMap(['test-key': 'pass']) == [testKey: 'pass']
+        creator.preProcessDataBindingMap(['test-key': 'pass']) == [testKey: 'pass']
 
         and: 'map with hypenated keys and camel case has camel case keys'
-        CaseAdjustingXmlDataBindingSourceCreator.preProcessDataBindingMap([
+        creator.preProcessDataBindingMap([
                 'test-key': 'pass', another: 'more pass', andAnother: 'yay'
         ]) == [testKey: 'pass', another: 'more pass', andAnother: 'yay']
 
         and: 'nested map with hypenated keys has camel case keys all sorted'
-        CaseAdjustingXmlDataBindingSourceCreator.preProcessDataBindingMap([
+        creator.preProcessDataBindingMap([
                 'test-key': 'pass', 'going-in': [
                 'sub-key': 'more', hello: [
                 'another': 'bye', 'and-another': 'passing'],
@@ -64,7 +65,7 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
         ]
 
         then:
-        CaseAdjustingXmlDataBindingSourceCreator.preProcessDataBindingMap(unprocessed) ==
+        creator.preProcessDataBindingMap(unprocessed) ==
         [
                 a: ['aA': 'a', 'aB': 'b'],
                 b: ['bA': 'c', 'bB': ['bBB': 'd'], 'bC': [
@@ -78,45 +79,45 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
     def 'test create valid key no mappings'() {
 
         expect: 'no mapping exists key is unchanged'
-        CaseAdjustingXmlDataBindingSourceCreator.createValidKey('test', [:]) == 'test'
+        creator.createValidKey('test', [:]) == 'test'
 
         and: 'null mapping exists key is unchanged'
-        CaseAdjustingXmlDataBindingSourceCreator.createValidKey('test', null) == 'test'
+        creator.createValidKey('test', null) == 'test'
 
         and: 'no mapping with hypenated key fixes hypenation'
-        CaseAdjustingXmlDataBindingSourceCreator.createValidKey('testKey', [:]) == 'testKey'
+        creator.createValidKey('testKey', [:]) == 'testKey'
 
         and: 'no mapping with camel case key stays the same'
-        CaseAdjustingXmlDataBindingSourceCreator.createValidKey('testKey', null) == 'testKey'
+        creator.createValidKey('testKey', null) == 'testKey'
 
         and: 'no mapping with TitleCase camel fixes key'
-        CaseAdjustingXmlDataBindingSourceCreator.createValidKey('TestKey', null) == 'testKey'
+        creator.createValidKey('TestKey', null) == 'testKey'
     }
 
     def 'test create valid key simple mapping'() {
 
         expect: 'mapping is 1 to 1'
-        CaseAdjustingXmlDataBindingSourceCreator.createValidKey('test', [test: 'passTest']) == 'passTest'
+        creator.createValidKey('test', [test: 'passTest']) == 'passTest'
 
         and: 'more than 1 mapping'
-        CaseAdjustingXmlDataBindingSourceCreator.createValidKey('test', [test: 'passTest', fail: 'failTest']) == 'passTest'
+        creator.createValidKey('test', [test: 'passTest', fail: 'failTest']) == 'passTest'
 
         and: 'mapping but not relevant'
-        CaseAdjustingXmlDataBindingSourceCreator.createValidKey('test', [fail: 'failTest']) == 'test'
+        creator.createValidKey('test', [fail: 'failTest']) == 'test'
     }
 
     def 'test create valid key mapping from mapping'() {
 
         expect: 'simple mapping is contained'
-        CaseAdjustingXmlDataBindingSourceCreator.createValidKey('test', [test: [subkey: 'passTest', another: 'failTest']]) ==
+        creator.createValidKey('test', [test: [subkey: 'passTest', another: 'failTest']]) ==
         [subkey: 'passTest', another: 'failTest']
 
         and: 'complex mapping is contained'
-        CaseAdjustingXmlDataBindingSourceCreator.createValidKey('test',
-                                                                [test: [complex: [
-                                                                        subkey : 'passTest',
-                                                                        another: 'failTest']]
-                                                                ]
+        creator.createValidKey('test',
+                               [test: [complex: [
+                                       subkey : 'passTest',
+                                       another: 'failTest']]
+                               ]
         ) == [complex: [subkey: 'passTest', another: 'failTest']]
     }
 
@@ -125,7 +126,7 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
 
         given: 'correctly extracted simple name mapping key and valid key'
         Map<String, Object> keyMappings = creator.extractNameMappings(['test.subKey:subKey'] as String[])
-        def keys = CaseAdjustingXmlDataBindingSourceCreator.createValidKey('test', keyMappings)
+        def keys = creator.createValidKey('test', keyMappings)
 
         expect: 'keys to be map'
         keys == ['subKey': 'subKey']
@@ -135,11 +136,11 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
 
         given: 'correctly extracted simple name mapping key and valid key and single entry value map'
         Map<String, Object> keyMappings = creator.extractNameMappings(['test.subKey:subKey'] as String[])
-        def keys = CaseAdjustingXmlDataBindingSourceCreator.createValidKey('test', keyMappings)
-        def value = CaseAdjustingXmlDataBindingSourceCreator.preProcessDataBindingMap(['sub-key': 'passTest'])
+        def keys = creator.createValidKey('test', keyMappings)
+        def value = creator.preProcessDataBindingMap(['sub-key': 'passTest'])
 
         when: 'extracting key value pair'
-        Map keyValue = CaseAdjustingXmlDataBindingSourceCreator.extractKeyValuePairFromKeyMapping(keys, value)
+        Map keyValue = creator.extractKeyValuePairFromKeyMapping(keys, value)
 
         then: 'the key and value are correct'
         keyValue.subKey == 'passTest'
@@ -149,11 +150,11 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
 
         given: 'correctly extracted simple name mapping key and valid key and single entry value map'
         Map<String, Object> keyMappings = creator.extractNameMappings(['test.subKey:subKey'] as String[])
-        def keys = CaseAdjustingXmlDataBindingSourceCreator.createValidKey('test', keyMappings)
-        def value = CaseAdjustingXmlDataBindingSourceCreator.preProcessDataBindingMap(['sub-key': null])
+        def keys = creator.createValidKey('test', keyMappings)
+        def value = creator.preProcessDataBindingMap(['sub-key': null])
 
         when: 'extracting key value pair'
-        Map<String, Object> keyValue = CaseAdjustingXmlDataBindingSourceCreator.extractKeyValuePairFromKeyMapping(keys, value)
+        Map<String, Object> keyValue = creator.extractKeyValuePairFromKeyMapping(keys, value)
 
         then: 'the key and value are correct'
         keyValue.subKey == null
@@ -163,11 +164,11 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
 
         given: 'correctly extracted simple name mapping key and valid key and single entry value map'
         Map<String, Object> keyMappings = creator.extractNameMappings(['test.subKey:subKey'] as String[])
-        def keys = CaseAdjustingXmlDataBindingSourceCreator.createValidKey('test', keyMappings)
-        def value = CaseAdjustingXmlDataBindingSourceCreator.preProcessDataBindingMap(['bad-key': 'failTest'])
+        def keys = creator.createValidKey('test', keyMappings)
+        def value = creator.preProcessDataBindingMap(['bad-key': 'failTest'])
 
         when: 'extracting key value pair'
-        Map<String, Object> keyValue = CaseAdjustingXmlDataBindingSourceCreator.extractKeyValuePairFromKeyMapping(keys, value)
+        Map<String, Object> keyValue = creator.extractKeyValuePairFromKeyMapping(keys, value)
 
         then: 'the key and value are correct'
         keyValue.subKey == null
@@ -177,11 +178,11 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
 
         given: 'correctly extracted simple name mapping key and valid key and single entry value map'
         Map<String, Object> keyMappings = creator.extractNameMappings(['test.subKey:subKey'] as String[])
-        def keys = CaseAdjustingXmlDataBindingSourceCreator.createValidKey('test', keyMappings)
+        def keys = creator.createValidKey('test', keyMappings)
         def value = [:]
 
         when: 'extracting key value pair'
-        Map<String, Object> keyValue = CaseAdjustingXmlDataBindingSourceCreator.extractKeyValuePairFromKeyMapping(keys, value)
+        Map<String, Object> keyValue = creator.extractKeyValuePairFromKeyMapping(keys, value)
 
         then: 'the key and value are correct'
         keyValue.subKey == null
@@ -191,11 +192,11 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
 
         given: 'correctly extracted simple name mapping key and valid key and single entry value map'
         Map<String, Object> keyMappings = creator.extractNameMappings(['test.subKey:subKey'] as String[])
-        def keys = CaseAdjustingXmlDataBindingSourceCreator.createValidKey('test', keyMappings)
+        def keys = creator.createValidKey('test', keyMappings)
         def value = null
 
         when: 'extracting key value pair'
-        Map<String, Object> keyValue = CaseAdjustingXmlDataBindingSourceCreator.extractKeyValuePairFromKeyMapping(keys, value)
+        Map<String, Object> keyValue = creator.extractKeyValuePairFromKeyMapping(keys, value)
 
         then: 'the key and value are correct'
         keyValue.subKey == null
@@ -207,11 +208,11 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
 
         given: 'correctly extracted simple name mapping key and valid key and single entry value map'
         Map<String, Object> keyMappings = creator.extractNameMappings(nameMappings)
-        def keys = CaseAdjustingXmlDataBindingSourceCreator.createValidKey('test', keyMappings)
-        def value = CaseAdjustingXmlDataBindingSourceCreator.preProcessDataBindingMap(['sub-key': 'passTest'])
+        def keys = creator.createValidKey('test', keyMappings)
+        def value = creator.preProcessDataBindingMap(['sub-key': 'passTest'])
 
         when: 'extracting key value pair'
-        Map<String, Object> keyValue = CaseAdjustingXmlDataBindingSourceCreator.extractKeyValuePairFromKeyMapping(keys, value)
+        Map<String, Object> keyValue = creator.extractKeyValuePairFromKeyMapping(keys, value)
 
         then: 'the key and value are correct'
         keyValue.subKey == 'passTest'
@@ -224,11 +225,11 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
 
         given: 'correctly extracted name mapping keys and valid key and single entry value map'
         Map<String, Object> keyMappings = creator.extractNameMappings(nameMappings)
-        def keys = CaseAdjustingXmlDataBindingSourceCreator.createValidKey('test', keyMappings)
-        def value = CaseAdjustingXmlDataBindingSourceCreator.preProcessDataBindingMap(['sub-key1': ['entry1': 'passTest']])
+        def keys = creator.createValidKey('test', keyMappings)
+        def value = creator.preProcessDataBindingMap(['sub-key1': ['entry1': 'passTest']])
 
         when: 'extracting key value pair'
-        Map<String, Object> keyValue = CaseAdjustingXmlDataBindingSourceCreator.extractKeyValuePairFromKeyMapping(keys, value)
+        Map<String, Object> keyValue = creator.extractKeyValuePairFromKeyMapping(keys, value)
 
         then: 'the key and value are correct'
         keyValue.subKey1Entry1 == 'passTest'
@@ -242,11 +243,11 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
 
         given: 'correctly extracted name mapping keys and valid key and single entry value map'
         Map<String, Object> keyMappings = creator.extractNameMappings(nameMappings)
-        def keys = CaseAdjustingXmlDataBindingSourceCreator.createValidKey('test', keyMappings)
-        def value = CaseAdjustingXmlDataBindingSourceCreator.preProcessDataBindingMap(['sub-key1': ['entry1': 'passTest']])
+        def keys = creator.createValidKey('test', keyMappings)
+        def value = creator.preProcessDataBindingMap(['sub-key1': ['entry1': 'passTest']])
 
         when: 'extracting key value pair'
-        Map<String, Object> keyValue = CaseAdjustingXmlDataBindingSourceCreator.extractKeyValuePairFromKeyMapping(keys, value)
+        Map<String, Object> keyValue = creator.extractKeyValuePairFromKeyMapping(keys, value)
 
         then: 'the key and value are correct'
         keyValue.subKey1Entry1 == 'passTest'
@@ -260,13 +261,13 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
 
         given: 'correctly extracted name mapping keys and valid key and single entry value map'
         Map<String, Object> keyMappings = creator.extractNameMappings(nameMappings)
-        def keys = CaseAdjustingXmlDataBindingSourceCreator.createValidKey('test', keyMappings)
-        def value = CaseAdjustingXmlDataBindingSourceCreator.
+        def keys = creator.createValidKey('test', keyMappings)
+        def value = creator.
                 preProcessDataBindingMap(['sub-key1': ['entry1': [subEntry: 'passTest',
                                                                   another : 'passTest']]])
 
         when: 'extracting key value pair'
-        Map<String, Object> keyValue = CaseAdjustingXmlDataBindingSourceCreator.extractKeyValuePairFromKeyMapping(keys, value)
+        Map<String, Object> keyValue = creator.extractKeyValuePairFromKeyMapping(keys, value)
 
         then: 'the key and value are correct'
         keyValue.subKey1Entry1 == [subEntry: 'passTest', another: 'passTest']
@@ -279,11 +280,11 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
 
         given: 'correctly extracted name mapping keys and valid key and single entry value map'
         Map<String, Object> keyMappings = creator.extractNameMappings(nameMappings)
-        def keys = CaseAdjustingXmlDataBindingSourceCreator.createValidKey('test', keyMappings)
-        def value = CaseAdjustingXmlDataBindingSourceCreator.preProcessDataBindingMap(['sub-key2': ['entry2': 'passTest']])
+        def keys = creator.createValidKey('test', keyMappings)
+        def value = creator.preProcessDataBindingMap(['sub-key2': ['entry2': 'passTest']])
 
         when: 'extracting key value pair'
-        Map<String, Object> keyValue = CaseAdjustingXmlDataBindingSourceCreator.extractKeyValuePairFromKeyMapping(keys, value)
+        def keyValue = creator.extractKeyValuePairFromKeyMapping(keys, value)
 
         then: 'the key and value are correct'
         keyValue.subKey2Entry2 == 'passTest'
@@ -297,7 +298,7 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
 
 
         when:
-        Map<String, Object> processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
+        def processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
 
         then:
         processed.pass == 'value'
@@ -311,7 +312,7 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
 
 
         when:
-        Map<String, Object> processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
+        def processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
 
         then:
         processed.pass == 'value'
@@ -326,7 +327,7 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
 
 
         when:
-        Map<String, Object> processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
+        def processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
 
         then:
         processed.pass == 'value'
@@ -341,7 +342,7 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
 
 
         when:
-        Map<String, Object> processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
+        def processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
 
         then:
         processed.pass == 'value'
@@ -358,7 +359,7 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
 
 
         when:
-        Map<String, Object> processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
+        def processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
 
         then:
         processed.pass == 'value'
@@ -376,7 +377,7 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
 
 
         when:
-        Map<String, Object> processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
+        def processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
 
         then:
         processed.pass == 'value'
@@ -391,7 +392,7 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
 
 
         when:
-        Map<String, Object> processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
+        def processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
 
         then:
         processed.pass == 'value'
@@ -408,7 +409,7 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
 
 
         when:
-        Map<String, Object> processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
+        def processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
 
         then:
         processed.pass == 'value'
@@ -426,7 +427,7 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
 
 
         when:
-        Map<String, Object> processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
+        def processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
 
         then:
         processed.pass == 'value'
@@ -435,28 +436,65 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
         !processed.another
     }
 
+    def 'test processing of map using class with push down mapping'() {
+
+        given:
+        Map<String, Object> preprocessed = [fail: 'value', another: 'wobble', colour: 'black']
+        Class bindingTargetType = SinglePushDownProcessTest
+
+
+        when:
+        def processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
+
+        then:
+        processed.nest.pass == 'value'
+        !processed.fail
+        processed.wibble == 'wobble'
+        !processed.another
+        processed.colour == 'black'
+    }
+
+    def 'test processing of map using class with multiple push down mapping'() {
+
+        given:
+        Map<String, Object> preprocessed = [fail: 'value', other_fail: 'hello', another: 'wobble',]
+        Class bindingTargetType = MultiplePushDownProcessTest
+
+
+        when:
+        def processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
+
+        then:
+        processed.nest.pass == 'value'
+        !processed.fail
+        processed.other_nest.pass == 'hello'
+        !processed.other_fail
+        processed.wibble == 'wobble'
+        !processed.another
+    }
+
     def 'test extracting key value pair'() {
 
         when:
-        Map res = CaseAdjustingXmlDataBindingSourceCreator.extractKeyValuePairFromKeyMapping([fail: 'pass'], [fail: 'value'])
+        Map res = creator.extractKeyValuePairFromKeyMapping([fail: 'pass'], [fail: 'value'])
 
         then:
         res.pass == 'value'
 
         when:
-        res = CaseAdjustingXmlDataBindingSourceCreator.extractKeyValuePairFromKeyMapping([fail: 'pass', diff: 'fail'], [fail: 'value'])
+        res = creator.extractKeyValuePairFromKeyMapping([fail: 'pass', diff: 'fail'], [fail: 'value'])
 
         then:
         res.pass == 'value'
 
         when:
-        res = CaseAdjustingXmlDataBindingSourceCreator.extractKeyValuePairFromKeyMapping([fail: 'pass', diff: 'fail'], [fail: 'value'])
+        res = creator.extractKeyValuePairFromKeyMapping([fail: 'pass', diff: 'fail'], [fail: 'value'])
 
         then:
         res.pass == 'value'
 
         when:
-        res = CaseAdjustingXmlDataBindingSourceCreator.
+        res = creator.
                 extractKeyValuePairFromKeyMapping([fail: 'pass', diff: 'another'], [fail: 'value', diff: 'value2'])
 
         then:
@@ -464,5 +502,14 @@ class CaseAdjustingXmlDataBindingSourceCreatorTest extends Specification {
         res.another == 'value2'
 
 
+    }
+}
+
+
+class TestAdvancedDataBindingSourceCreator extends AdvancedDataBindingSourceCreator {
+
+    @Override
+    DataBindingSource createDataBindingSource(Reader reader, Class bindingTargetType) {
+        return null
     }
 }

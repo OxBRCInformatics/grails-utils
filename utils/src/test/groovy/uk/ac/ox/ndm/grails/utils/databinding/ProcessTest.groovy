@@ -50,3 +50,21 @@ class TwoMultipleDifferentProcessTest {
     String pass
     String wibble
 }
+
+@SerializeMappings(nameMappings = ['fail:nest.pass', 'another:wibble'])
+class SinglePushDownProcessTest {
+    PushDown nest
+    String wibble
+    String colour
+}
+
+@SerializeMappings(nameMappings = ['fail:nest.pass', 'other_fail:other_nest.pass', 'another:wibble'])
+class MultiplePushDownProcessTest {
+    PushDown nest
+    PushDown other_nest
+    String wibble
+}
+
+class PushDown {
+    String pass
+}
