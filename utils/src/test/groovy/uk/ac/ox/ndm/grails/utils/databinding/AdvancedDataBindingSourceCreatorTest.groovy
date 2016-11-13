@@ -473,6 +473,92 @@ class AdvancedDataBindingSourceCreatorTest extends Specification {
         !processed.another
     }
 
+    def 'test processing of map using class with single list values'() {
+
+        given:
+        Map<String, Object> preprocessed = [pass: ['value', 'value2']]
+        Class bindingTargetType = SingleListProcessTest
+
+
+        when:
+        def processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
+
+        then:
+        processed.passes == ['value', 'value2']
+    }
+
+    def 'test processing of map using class with map list values'() {
+
+        given:
+        Map<String, Object> preprocessed = [pass: [[fail: 'value'], [fail: 'value2']]]
+        Class bindingTargetType = MapListProcessTest
+
+
+        when:
+        def processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
+
+        then:
+        processed.passes.size() == 2
+
+        when:
+        def e1 = processed.passes[0]
+        def e2 = processed.passes[1]
+
+
+        then:
+        e1.pass == 'value'
+        e2.pass == 'value2'
+    }
+
+    def 'test processing of map using class with multi map list values'() {
+
+        given:
+        Map<String, Object> preprocessed = [pass: [[fail: 'value'], [fail: 'value2']], otherPass: [[fail: 'value3'], [fail: 'value4']]]
+        Class bindingTargetType = MultiMapListProcessTest
+
+
+        when:
+        def processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
+
+        then:
+        processed.passes.size() == 2
+        processed.otherPasses.size() == 2
+
+        when:
+        def e1 = processed.passes[0]
+        def e2 = processed.passes[1]
+        def e3 = processed.otherPasses[0]
+        def e4 = processed.otherPasses[1]
+
+        then:
+        e1.pass == 'value'
+        e2.pass == 'value2'
+        e3.pass == 'value3'
+        e4.pass == 'value4'
+    }
+
+    def 'test processing of map using class with push down list values'() {
+
+        given:
+        Map<String, Object> preprocessed = [pass: ['value', 'value2']]
+        Class bindingTargetType = PushDownListProcessTest
+
+
+        when:
+        def processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
+
+        then:
+        processed.passes.size() == 2
+
+        when:
+        def e1 = processed.passes[0]
+        def e2 = processed.passes[1]
+
+        then:
+        e1.pass == 'value'
+        e2.pass == 'value2'
+    }
+
     def 'test extracting key value pair'() {
 
         when:
