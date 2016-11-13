@@ -65,6 +65,27 @@ class MultiplePushDownProcessTest {
     String wibble
 }
 
+@SerializeMappings(nameMappings = ['pass:passes'])
+class SingleListProcessTest {
+    List<String> passes
+}
+
+@SerializeMappings(nameMappings = ['pass:passes'])
+class MapListProcessTest {
+    List<SingleProcessTest> passes
+}
+
+@SerializeMappings(nameMappings = ['pass:passes', 'otherPass:otherPasses'])
+class MultiMapListProcessTest {
+    List<SingleProcessTest> passes
+    List<SingleProcessTest> otherPasses
+}
+
+@SerializeMappings(nameMappings = ['pass:passes.pass'])
+class PushDownListProcessTest {
+    List<PushDown> passes
+}
+
 class PushDown {
     String pass
 }

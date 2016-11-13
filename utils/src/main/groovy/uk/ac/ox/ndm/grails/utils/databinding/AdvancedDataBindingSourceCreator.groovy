@@ -126,7 +126,20 @@ abstract class AdvancedDataBindingSourceCreator extends DefaultDataBindingSource
         if (!initialised) initialise()
 
         DataBindingSourceCreatorHelper postProcessor = dataBindingSourceCreatorHelpers.find {it.handlesBindingTargetTypeMaps(bindingTargetType)}
-        postProcessor ? postProcessor.handleDataBindingSourceMap(processDataBindingMap, bindingTargetType) : processDataBindingMap
+        def checkedBinding = postProcessor ?
+                             postProcessor.handleDataBindingSourceMap(processDataBindingMap, bindingTargetType) :
+                             processDataBindingMap
+
+        // Handle the pushdown list and pull everything out.
+        // Only handle single key pushdowns (theres a potential for issues later on here for multiple key pushdown
+        if (checkedBinding instanceof Map && checkedBinding.size() == 1) {
+            Collection<PushedDownObject> collection = ((Map) checkedBinding).find {k, v ->
+                v instanceof Collection && v.every {it instanceof PushedDownObject}
+            }?.value as Collection
+            checkedBinding = collection ? collection.collect {it.contents} : checkedBinding
+
+        }
+        checkedBinding
     }
 
     Object convertValue(Object v, String key, Class bindingTargetType, Map<String, ?> converted) {
@@ -159,17 +172,29 @@ abstract class AdvancedDataBindingSourceCreator extends DefaultDataBindingSource
 
     Object convertAndAddToList(String key, Object value, Class bindingTargetType, List listValue) {
 
-        if (value instanceof Map) {
-            def bindingType = getReferencedTypeForCollectionInClass(key, bindingTargetType)
-            if (!bindingType) {
-                throw new IllegalStateException("There must be a binding type in " + bindingTargetType.canonicalName + " for key "
-                                                        + key)
-            }
-            def output = processDataBindingMap(value, bindingType)
-            listValue += output instanceof AbstractDomainDataBindingSource ? output.getDomain() : output
+        def bindingType = getReferencedTypeForCollectionInClass(key, bindingTargetType)
+        if (bindingType) {
+            if (value instanceof Map) {
+                if (!bindingType) {
+                    throw new IllegalStateException(
+                            "There must be a binding type in " + bindingTargetType.canonicalName + " for key " + key)
+                }
+                def output = processDataBindingMap(value, bindingType)
 
+                if (output instanceof Collection) {
+                    listValue.addAll(output)
+                }
+                else
+                    listValue += output instanceof AbstractDomainDataBindingSource ? output.getDomain() : output
+            }
+            else listValue += value
         }
-        else listValue += value
+        else {
+            def remap = [:]
+            remap[key] = value
+            def output = processDataBindingMap(remap, bindingTargetType)
+            listValue += new PushedDownObject(output instanceof AbstractDomainDataBindingSource ? output.getDomain() : output)
+        }
 
         listValue
     }
