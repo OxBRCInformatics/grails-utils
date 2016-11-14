@@ -109,6 +109,13 @@ abstract class AdvancedDataBindingSourceCreator extends DefaultDataBindingSource
 
                 keyValue.each {mappedKey, mappedValue ->
                     Object value = convertValue(mappedValue, mappedKey, bindingTargetType, processedDataBindingMap)
+                    if(processedDataBindingMap[mappedKey]){
+                        // Handle multi map pushdowns
+                        def existing = processedDataBindingMap[mappedKey]
+                        if(existing instanceof Map && value instanceof Map){
+                            value = (existing as Map) + (value as Map)
+                        }else throw new IllegalStateException('Push down mappings can only be done on maps')
+                    }
                     processedDataBindingMap.put(mappedKey, value)
                 }
             }
