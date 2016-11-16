@@ -210,7 +210,7 @@ abstract class AdvancedDataBindingSourceCreator extends DefaultDataBindingSource
     Map<String, ?> extractKeyValuePairFromKeyMapping(Map<String, String> keys, Object value) {
 
         if (!value) return [:]
-        Map<String, ?> result = [:]
+        Map<String, Object> result = [:]
 
         keys.each {key, mapping ->
             // Pushing down
@@ -221,11 +221,16 @@ abstract class AdvancedDataBindingSourceCreator extends DefaultDataBindingSource
             }
             else if (value[key]) {
                 if (mapping instanceof Map) {
-                    result.putAll(extractKeyValuePairFromKeyMapping(mapping as Map<String, String>, value[key]))
+                    def extracted = extractKeyValuePairFromKeyMapping(mapping as Map<String, String>, value[key])
+                    extracted.each {k, v ->
+                        if (result[k] && result[k] instanceof Map && v instanceof Map) {
+                            (result[k] as Map).putAll(v as Map)
+                        }
+                        else result.put(k, v)
+                    }
                 }
                 else result[mapping] = value[key]
             }
-
         }
         result
     }
