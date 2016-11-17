@@ -86,6 +86,18 @@ class PushDownListProcessTest {
     List<PushDown> passes
 }
 
+
+@SerializeMappings(nameMappings = ['fail:nest.pass', 'anotherFail:nest.otherPass'])
+class MapPushDownProcessTest {
+    MapPushDown nest
+    String colour
+}
+
 class PushDown {
     String pass
+}
+
+class MapPushDown {
+    String pass
+    String otherPass
 }

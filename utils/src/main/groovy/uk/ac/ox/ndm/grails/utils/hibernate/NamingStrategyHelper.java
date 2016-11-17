@@ -18,6 +18,8 @@ public interface NamingStrategyHelper {
 
     List<String> getDataSources(String canonicalName);
 
+    List<String> getDataSources();
+
     Set<Class> getKnownEmbeddedDomains();
 
     boolean handlesClass(Class clazz);
