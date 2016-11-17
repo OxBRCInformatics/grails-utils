@@ -92,16 +92,6 @@ trait XmlMarshallAware {
         }
     }
 
-    @Deprecated
-    void childList(String childName, Set collection) {
-        childCollection(childName, collection)
-    }
-
-    @Deprecated
-    void childList(Set collection) {
-        childCollection(collection)
-    }
-
     void choice(Map<String, Object> optionObjects) {
         def childObject = optionObjects.find {k, v -> v}
         child childObject.key, childObject.value

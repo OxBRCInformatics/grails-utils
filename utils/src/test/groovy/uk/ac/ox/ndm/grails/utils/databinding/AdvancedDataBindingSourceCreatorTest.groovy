@@ -559,6 +559,22 @@ class AdvancedDataBindingSourceCreatorTest extends Specification {
         e2.pass == 'value2'
     }
 
+    def 'test processing of map using class with map of push down mapping'() {
+
+        given:
+        Map<String, Object> preprocessed = [fail: 'value', anotherFail: 'wobble', colour: 'black']
+        Class bindingTargetType = MapPushDownProcessTest
+
+
+        when:
+        def processed = creator.processDataBindingMap(preprocessed, bindingTargetType)
+
+        then:
+        processed.nest.pass == 'value'
+        processed.nest.otherPass == 'wobble'
+        processed.colour == 'black'
+    }
+
     def 'test extracting key value pair'() {
 
         when:
