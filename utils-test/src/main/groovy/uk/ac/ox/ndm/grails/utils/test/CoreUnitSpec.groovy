@@ -3,6 +3,10 @@ package uk.ac.ox.ndm.grails.utils.test
 import grails.util.Holders
 import org.grails.config.PropertySourcesConfig
 
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
+
 /**
  * @since 15/09/2015
  */
@@ -10,11 +14,10 @@ abstract class CoreUnitSpec extends CoreSpec {
 
     static doWithConfig(PropertySourcesConfig config) {
 
-        File appFile = new File(config."user.dir" as String, (config.'grails.project.base.dir' as String) +
-                                                             '/grails-app/conf/application.groovy')
-        if (!appFile.exists()) return
+        Path appFile = getGrailsDirectory(config).resolve('grails-app/conf/application.groovy')
+        if (!Files.exists(appFile)) return
 
-        URL applicationGroovyUrl = appFile.toURI().toURL()
+        URL applicationGroovyUrl = appFile.toUri().toURL()
         if (!applicationGroovyUrl) throw new IllegalStateException('We need the application groovy config to be able to test')
         config.merge(new ConfigSlurper().parse(applicationGroovyUrl))
     }
@@ -22,14 +25,24 @@ abstract class CoreUnitSpec extends CoreSpec {
     static doWithSpring = {
         def config = Holders.findApplication().config
 
-        File resourcesFile = new File(config."user.dir" as String, (config.'grails.project.base.dir' as String) +
-                                                                   '/grails-app/conf/spring/resources.groovy')
-        if (!resourcesFile.exists()) return
+        Path resourcesFile = getGrailsDirectory(config).resolve('grails-app/conf/spring/resources.groovy')
+        if (!Files.exists(resourcesFile)) return
 
-        URL resourcesGroovyUrl = resourcesFile.toURI().toURL()
+        URL resourcesGroovyUrl = resourcesFile.toUri().toURL()
         if (!resourcesGroovyUrl) throw new IllegalStateException('We need the spring resources groovy config to be able to test')
         def spring = new ConfigSlurper().parse(resourcesGroovyUrl)
         spring.beans.dehydrate().rehydrate(delegate, owner, thisObject).run()
+    }
+
+    static Path getGrailsDirectory(def config){
+        Path userDir = Paths.get(config.'user.dir' as String)
+        if(config.'grails.project.base.dir' as String) {
+            Path projectDir = Paths.get(config.'grails.project.base.dir' as String)
+            if (projectDir) {
+                userDir = (projectDir.fileName == userDir.fileName) ? userDir : userDir.resolve(projectDir)
+            }
+        }
+        userDir
     }
 
     def setup() {
@@ -39,15 +52,20 @@ abstract class CoreUnitSpec extends CoreSpec {
 
         mockDomains(getKnownDataTypes().core)
 
-        addMessageCode('validation.choice.onlyone', 'Property {0} with value {2} is invalid, only one {3} may be set')
-        addMessageCode('validation.choice.atleastone', 'Property {0} with value {2} is invalid, at least one {3} must be set')
-        addMessageCode('validation.nhsnumber.wronglength',
-                       'Property {0} with value {2} is invalid, it must be at least 10 digits for a valid NHS ' +
-                       'number')
-        addMessageCode('validation.empty', 'Property {0} is invalid, it cannot be empty')
-        addMessageCode('validation.hasmany.size.atleast', 'Set must have at least {3} element(s)')
-        addMessageCode('validation.hasmany.size.atmost', 'Set cannot have more than {3} element(s)')
-        addMessageCode('validation.schema.version', "Schema {3} with version value {2} must be one of {4}")
-        addMessageCode('default.not.unique', 'Property [{0}] of class [{1}] with value [{2}] must be unique')
+        loadI18nMessages()
+    }
+
+    def loadI18nMessages() {
+
+        def config = Holders.findApplication().config
+
+        Path messagesFile = getGrailsDirectory(config).resolve('grails-app/i18n/messages.properties')
+        if (!Files.exists(messagesFile)) return
+
+        Properties messages = new Properties()
+        messages.load(new FileReader(messagesFile.toFile()))
+        messages.stringPropertyNames().each {k ->
+            addMessageCode(k, messages.getProperty(k))
+        }
     }
 }
