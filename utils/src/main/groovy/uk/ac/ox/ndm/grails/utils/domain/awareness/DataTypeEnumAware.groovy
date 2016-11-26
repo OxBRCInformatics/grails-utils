@@ -1,11 +1,12 @@
 package uk.ac.ox.ndm.grails.utils.domain.awareness
 
+import uk.ac.ox.ndm.grails.utils.domain.DataTypeEnum
 import uk.ac.ox.ndm.grails.utils.marshalling.XmlMarshallAware
 
 /**
  * @since 24/08/2015
  */
-trait DataTypeEnumAware<K, E extends Enum> implements XmlMarshallAware {
+trait DataTypeEnumAware<K, E extends DataTypeEnum> implements XmlMarshallAware {
 
     E findEnumValue() {
         getDataTypeEnum().values().find {it.id == id}
@@ -23,11 +24,11 @@ trait DataTypeEnumAware<K, E extends Enum> implements XmlMarshallAware {
 
     abstract static Class<E> getDataTypeEnum()
 
-    abstract String getLabel()
+    public abstract String getLabel()
 
-    abstract void setLabel(String label)
+    public abstract void setLabel(String label)
 
-    abstract K getId()
+    public abstract K getId()
 
-    abstract void setId(K id)
+    public abstract void setId(K id)
 }

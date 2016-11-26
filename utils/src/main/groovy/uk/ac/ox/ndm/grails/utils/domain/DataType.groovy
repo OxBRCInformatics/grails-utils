@@ -5,12 +5,8 @@ import groovy.transform.EqualsAndHashCode
 import uk.ac.ox.ndm.grails.utils.domain.awareness.DataTypeEnumAware
 
 @EqualsAndHashCode
-abstract class DataType<K, E extends Enum> implements DataTypeEnumAware<K, E>, Validateable {
-    /*
-        DataType() {
-            this('??', 'Not Supplied')
-        }
-    */
+abstract class DataType<K, E extends DataTypeEnum> implements DataTypeEnumAware<K, E>, Validateable {
+
     String label
     K id
 
