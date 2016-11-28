@@ -12,6 +12,8 @@ import java.nio.file.Paths
  */
 abstract class CoreUnitSpec extends CoreSpec {
 
+    static Path workingDirectory
+
     static doWithConfig(PropertySourcesConfig config) {
 
         Path appFile = getGrailsDirectory(config).resolve('grails-app/conf/application.groovy')
@@ -35,14 +37,14 @@ abstract class CoreUnitSpec extends CoreSpec {
     }
 
     static Path getGrailsDirectory(def config){
-        Path userDir = Paths.get(config.'user.dir' as String)
+        workingDirectory = Paths.get(config.'user.dir' as String)
         if(config.'grails.project.base.dir' as String) {
             Path projectDir = Paths.get(config.'grails.project.base.dir' as String)
             if (projectDir) {
-                userDir = (projectDir.fileName == userDir.fileName) ? userDir : userDir.resolve(projectDir)
+                workingDirectory = (projectDir.fileName == workingDirectory.fileName) ? workingDirectory : workingDirectory.resolve(projectDir)
             }
         }
-        userDir
+        workingDirectory
     }
 
     def setup() {
