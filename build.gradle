@@ -6,7 +6,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
-
+        classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
     }
 }
 
@@ -138,6 +138,12 @@ build {
 clean {
     delete 'logs', 'reports', 'deploy'
 }
+
+task reportOnLicenses {
+    group 'license'
+}
+
+check.dependsOn 'reportOnLicenses'
 
 apply from: 'gradle/allprojects.gradle'
 apply from: 'gradle/subprojects.gradle'
