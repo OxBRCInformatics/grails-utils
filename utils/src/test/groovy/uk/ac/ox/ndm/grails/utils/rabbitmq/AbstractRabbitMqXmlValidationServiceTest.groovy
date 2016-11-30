@@ -96,9 +96,104 @@ class AbstractRabbitMqXmlValidationServiceTest extends Specification {
 
     }
 
+    void 'check basic rabbit exchange configuration'() {
+
+        given:
+        service = new BasicTestService()
+        service.initialise()
+
+        when: 'getting a non-overridden exchange configuration'
+        List<Exchange> exchanges = service.getExchanges()
+
+        then: 'should be 1 exchange'
+        exchanges.size() == 1
+        def exchange = exchanges[0]
+
+        and:
+        exchange.name == 'gel-cancer-v2-0'
+        exchange.type == 'topic'
+        exchange.durable
+        exchange.autoDelete
+    }
+
+    void 'check basic rabbit queues configuration'() {
+
+        given:
+        service = new BasicTestService()
+        service.initialise()
+
+        when: 'getting a non-overridden queues configuration'
+        List<Queue> queues = service.getQueues()
+
+        then: 'should be queues for each schema'
+        queues.size() == 1
+        def queue = queues[0]
+
+        and:
+        queue.name == 'gel-cancer-v2-0-careplanscancer'
+        queue.exchange == 'gel-cancer-v2-0'
+        queue.durable
+        queue.autoDelete
+        queue.binding == '#.gel.cancer.v2_0.careplanscancer'
+    }
+
+    void 'check more complicated rabbit exchange configuration'() {
+
+        when: 'getting a non-overridden exchange configuration'
+        List<Exchange> exchanges = service.getExchanges()
+
+        then: 'should be 3 exchanges'
+        exchanges.size() == 3
+        def exchange = exchanges[0]
+        def exchangeGel = exchanges[1]
+        def exchangeGelCancer = exchanges[2]
+
+        and:
+        exchange.name == 'gel-cancer-v2-0'
+        exchange.type == 'topic'
+        exchange.durable
+        exchange.autoDelete
+
+        and:
+        exchangeGel.name == 'gel'
+        exchangeGel.type == 'topic'
+        exchangeGel.durable
+        exchangeGel.autoDelete
+
+        and:
+        exchangeGelCancer.name == 'gel-cancer'
+        exchangeGelCancer.type == 'topic'
+        exchangeGelCancer.durable
+        exchangeGelCancer.autoDelete
+        exchangeGelCancer.exchangeBindings.size() == 1
+        ExchangeBinding bindings = exchangeGelCancer.exchangeBindings[0]
+
+        and:
+        bindings.origin == Origin.SOURCE
+        bindings.exchange == 'gel-cancer-v2-0'
+        bindings.binding == '#.gel.cancer.v2_0.#'
+    }
+
+    void 'check more complicated rabbit queues configuration'() {
+
+        when: 'getting a non-overridden queues configuration'
+        List<Queue> queues = service.getQueues()
+
+        then: 'should be queues for each schema'
+        queues.size() == 11
+        def queue = queues[0]
+
+        and:
+        queue.name == 'gel-cancer-v2-0-careplanscancer'
+        queue.exchange == 'gel-cancer-v2-0'
+        queue.durable
+        queue.autoDelete
+        queue.binding == '#.gel.cancer.v2_0.careplanscancer'
+    }
+
     byte[] readFileAsBytes(String filename) {
         Path p = Paths.get('src/test/resources/xml', filename).toAbsolutePath()
-        if(!Files.exists(p)) p = Paths.get('utils/src/test/resources/xml', filename).toAbsolutePath()
+        if (!Files.exists(p)) p = Paths.get('utils/src/test/resources/xml', filename).toAbsolutePath()
         Files.readAllBytes(p)
     }
 
@@ -135,7 +230,7 @@ class TestService extends AbstractRabbitMqXmlValidationService {
         '#.gel.cancer.v2_0'
     }
 
-    String getDefaultExchange() {
+    String getDefaultExchangeName() {
         'gel-cancer-v2-0'
     }
 
@@ -149,23 +244,61 @@ class TestService extends AbstractRabbitMqXmlValidationService {
     }
 
     @Override
-    Map<String, Map> getExchangeConfiguration() {
-        Map<String, Map> config = super.getExchangeConfiguration()
-        config.'exchange_gel' = [
-                durable   : true,
-                autoDelete: true,
-                type      : 'topic'
+    List<Exchange> getExchanges() {
+        List<Exchange> exchanges = super.getExchanges()
+        exchanges + [
+                new Exchange(
+                        name      : 'gel',
+                        durable   : true,
+                        autoDelete: true,
+                        type      : 'topic'
+                ),
+                new Exchange(
+                        name            : 'gel-cancer',
+                        durable         : true,
+                        autoDelete      : true,
+                        type            : 'topic',
+                        exchangeBindings: [
+                                new ExchangeBinding(
+                                        origin      : Origin.SOURCE,
+                                        exchange: getExchangeName(),
+                                        binding : getRoutingKey() + '.#'
+                                )
+                        ]
+                )
         ]
-        config.'exchange_gel-cancer' = [
-                durable                : true,
-                autoDelete             : true,
-                type                   : 'topic',
-                'bind-to_gel'          : '#.gel.cancer.#',
-                ('bind-to_' + exchange): [
-                        binding: routingKey + '.#',
-                        as     : 'source'
-                ]
-        ] as Map<String, Object>
-        config
+    }
+}
+
+class BasicTestService extends AbstractRabbitMqXmlValidationService {
+
+    BasicTestService() {
+        super('CarePlansCancer-v2.0.0.xsd', ['DataTypesCancer-v2.0.0.xsd'])
+    }
+
+    String getDefaultApplicationName() {
+        'gel-cancer-v2_0'
+    }
+
+    @Override
+    boolean handleValidationFailure(String referenceId, String name, Schema schema, SAXException exception) {
+        false
+    }
+
+    String getDefaultRoutingKey() {
+        '#.gel.cancer.v2_0'
+    }
+
+    String getDefaultExchangeName() {
+        'gel-cancer-v2-0'
+    }
+
+    Pattern getSchemaPattern() {
+        ~/CarePlansCancer-v2\.0\.0\.xsd/
+    }
+
+    @Override
+    Pattern getSchemaSuffix() {
+        ~/-v2\.0\.\d\.xsd/
     }
 }
