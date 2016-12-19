@@ -10,6 +10,8 @@ buildscript {
     }
 }
 
+import org.gradle.logging.ConsoleRenderer
+
 plugins {
     id 'base'
 //    id 'build-dashboard'
@@ -130,6 +132,7 @@ build {
         if (unitTestFailures) {
             String grammer = unitTestFailures == 1 ? 'was 1 unit test failure' : "were $unitTestFailures unit test failures"
             File indexFile = file("$tasks.unitTest.destinationDir/index.html")
+            String reportUrl = new ConsoleRenderer().asClickableFileUrl(indexFile)
             logger.quiet("There $grammer. See the report at $reportUrl. (Ctrl+click the URL to open)")
         }
     }

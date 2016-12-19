@@ -203,22 +203,14 @@
  */
 package uk.ac.ox.ndm.grails.utils.rabbitmq;
 
-import java.util.Map;
-
 /**
  * @since 02/03/2016
  */
-public interface RabbitMqRoutingInfomationProvider {
+public interface RabbitMqRoutingInfomationProvider extends BasicRabbitMqRoutingInfomationProvider {
 
     String getApplicationName();
 
     void setApplicationName(String pluginName);
-
-    String getExchange();
-
-    void setExchange(String exchange);
-
-    Map<String, Map> getExchangeConfiguration();
 
     String getRoutingKey();
 

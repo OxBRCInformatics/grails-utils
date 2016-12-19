@@ -258,7 +258,7 @@ trait XmlMarshallAware {
     }
 
     void optionalChild(String name, Object childObject) {
-        optionalChild name, childObject, childObject
+        optionalChild name, childObject, childObject != null
     }
 
     void optionalChild(String name, Object childObject, def exists) {

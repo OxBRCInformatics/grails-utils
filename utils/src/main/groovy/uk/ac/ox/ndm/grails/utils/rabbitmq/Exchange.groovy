@@ -201,71 +201,37 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package uk.ac.ox.ndm.grails.utils.validator
-
-import grails.validation.AbstractVetoingConstraint
-import org.springframework.validation.Errors
-import org.springframework.validation.FieldError
+package uk.ac.ox.ndm.grails.utils.rabbitmq
 
 /**
- * Taken from http://asoftwareguy.com/2013/07/01/grails-cascade-validation-for-pogos/
- *
- *
+ * @since 30/11/2016
  */
-@Deprecated
-class CascadeValidationConstraint extends AbstractVetoingConstraint {
+class Exchange {
 
-    public static final String NAME = "cascadeValidation"
+    String name
+    String type
+    Boolean durable
+    Boolean autoDelete
 
-    @Override
-    String getName() {
-        NAME
+    List<ExchangeBinding> exchangeBindings
+
+    Exchange addToBindings(ExchangeBinding binding){
+        if(!exchangeBindings) exchangeBindings = []
+        exchangeBindings += binding
+        this
     }
 
-    @Override
-    boolean supports(Class type) {
-        true
+    Exchange addToBindings(Map binding){
+        addToBindings(new ExchangeBinding(binding))
     }
 
-    @Override
-    public void setParameter(Object constraintParameter) {
-        if (!(constraintParameter instanceof Boolean)) {
-            throw new IllegalArgumentException(
-                    """Parameter for constraint [$name] of
-                   property [$constraintPropertyName]
-                   of class [$constraintOwningClass]
-                   must be a Boolean
-                """
-            )
-        }
-        super.setParameter(constraintParameter)
-    }
-
-    @Override
-    protected boolean skipNullValues() {
-        return true
-    }
-
-    @Override
-    protected boolean processValidateWithVetoing(
-            Object target, Object propertyValue,
-            Errors errors) {
-        if (!propertyValue.validate()) {
-            propertyValue.errors.fieldErrors.each {
-                String field = "${propertyName}.${it.field}"
-                def fieldError = new FieldError(
-                        target.errors.objectName,
-                        field,
-                        it.rejectedValue,
-                        it.bindingFailure,
-                        it.codes,
-                        it.arguments,
-                        it.defaultMessage
-                )
-                errors.addError(fieldError)
-            }
-            return false
-        }
-        return true
+    Map asMap() {
+        [
+                name            : name,
+                type            : type,
+                durable         : durable,
+                autoDelete      : autoDelete,
+                exchangeBindings: exchangeBindings?.collect {it.asMap()} ?: []
+        ]
     }
 }

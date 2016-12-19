@@ -204,8 +204,6 @@
 package uk.ac.ox.ndm.grails.utils.rabbitmq
 
 import groovy.transform.CompileStatic
-import groovy.transform.TypeChecked
-import groovy.transform.TypeCheckingMode
 import groovy.util.slurpersupport.GPathResult
 import groovy.xml.XmlUtil
 import org.slf4j.Logger
@@ -225,7 +223,7 @@ import java.util.regex.Pattern
  * @since 01/03/2016
  */
 @CompileStatic
-abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, RabbitMqRoutingInfomationProvider {
+abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, RabbitMqRoutingConfigurationUpdater, RabbitMqRoutingInfomationProvider {
 
     Logger getLogger() {
         LoggerFactory.getLogger(getClass())
@@ -235,7 +233,7 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
 
     abstract Pattern getSchemaSuffix()
 
-    abstract String getDefaultExchange()
+    abstract String getDefaultExchangeName()
 
     abstract String getDefaultRoutingKey()
 
@@ -246,7 +244,7 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
     String applicationName
 
     String routingKey
-    String exchange
+    String exchangeName
 
     Integer priority
 
@@ -302,14 +300,17 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
         filename.replaceFirst(getSchemaSuffix(), '')
     }
 
-    String getExchange() {
-        exchange ?: defaultExchange
+    @Override
+    String getExchangeName() {
+        exchangeName ?: defaultExchangeName
     }
 
+    @Override
     String getApplicationName() {
         applicationName ?: defaultApplicationName
     }
 
+    @Override
     String getRoutingKey() {
         routingKey ?: defaultRoutingKey
     }
@@ -345,57 +346,28 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
     }
 
     @Override
-    Map<String, Map> getExchangeConfiguration() {
+    List<Exchange> getExchanges() {
         [
-                ('exchange_' + getExchange()):
-                        [
-                                type      : 'topic',
-                                durable   : true,
-                                autoDelete: true,
-                                queues    : schemas.collectEntries {name, schema ->
-                                    [('queue_' + getExchange().toLowerCase() + '-' + name.toLowerCase().replaceAll(/\./, '-')),
-                                     [
-                                             durable   : true,
-                                             autoDelete: true,
-                                             binding   : getRoutingKey() + '.' + name.toLowerCase(),
-                                     ]
-                                    ]
-                                }
-                        ]
-        ] as Map<String, Map>
+                new Exchange(
+                        name: getExchangeName(),
+                        type: 'topic',
+                        durable: true,
+                        autoDelete: true
+                )
+        ]
     }
 
-    @TypeChecked(value = TypeCheckingMode.SKIP)
-    Map updateRabbitConfig(Map rabbitConfig) {
-
-        if (!rabbitConfig || !rabbitConfig instanceof Map) throw new IllegalStateException('There must be a defined RabbitMq Map configuration')
-        if (!(rabbitConfig.connection || rabbitConfig.connections))
-            throw new IllegalStateException('There must be a defined RabbitMq connection or connections configuration')
-
-        Map<String, Map> queuesConfig = rabbitConfig.queues ?: [:]
-        Map<String, Map> addExcConfig = exchangeConfiguration
-
-        addExcConfig.each {exchange, config ->
-            if (queuesConfig[exchange]) {
-                Map existingExchange = queuesConfig[exchange] as Map
-                if (existingExchange.queues) {
-                    config.queues.each {k, v ->
-                        existingExchange.queues[k] = v
-                    }
-                }
-                else existingExchange.queues = config.queues
-
-                config.findAll {((String) it.key).startsWith('bind-to_')}.each {
-                    existingExchange[it.key] = it.value
-                }
-
-                queuesConfig[exchange] = existingExchange
-            }
-            else queuesConfig[exchange] = config
-
+    @Override
+    List<Queue> getQueues() {
+        schemas.keySet().collect {name ->
+            new Queue(
+                    name: getExchangeName().toLowerCase() + '-' + name.toLowerCase().replaceAll(/\./, '-'),
+                    exchange: getExchangeName(),
+                    durable: true,
+                    autoDelete: true,
+                    binding: getRoutingKey() + '.' + name.toLowerCase()
+            )
         }
-        rabbitConfig.queues = queuesConfig
-        rabbitConfig
     }
 
     String saxParseExceptionToString(SAXParseException ex) {

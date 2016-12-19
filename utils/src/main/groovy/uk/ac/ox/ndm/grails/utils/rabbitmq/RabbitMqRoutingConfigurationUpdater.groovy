@@ -201,71 +201,43 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package uk.ac.ox.ndm.grails.utils.validator
-
-import grails.validation.AbstractVetoingConstraint
-import org.springframework.validation.Errors
-import org.springframework.validation.FieldError
+package uk.ac.ox.ndm.grails.utils.rabbitmq
 
 /**
- * Taken from http://asoftwareguy.com/2013/07/01/grails-cascade-validation-for-pogos/
- *
- *
+ * @since 08/12/2016
  */
-@Deprecated
-class CascadeValidationConstraint extends AbstractVetoingConstraint {
+trait RabbitMqRoutingConfigurationUpdater implements BasicRabbitMqRoutingInfomationProvider{
 
-    public static final String NAME = "cascadeValidation"
+    Map updateRabbitConfig(Map rabbitConfig) {
 
-    @Override
-    String getName() {
-        NAME
-    }
+        if (!rabbitConfig || !rabbitConfig instanceof Map) throw new IllegalStateException('There must be a defined RabbitMq Map configuration')
+        if (!(rabbitConfig.connection || rabbitConfig.connections))
+            throw new IllegalStateException('There must be a defined RabbitMq connection or connections configuration')
 
-    @Override
-    boolean supports(Class type) {
-        true
-    }
+        Set<Map> queuesConfig = rabbitConfig.queues ?: [] as HashSet
+        Set<Map> exchangeConfig = rabbitConfig.exchanges ?: [] as HashSet
 
-    @Override
-    public void setParameter(Object constraintParameter) {
-        if (!(constraintParameter instanceof Boolean)) {
-            throw new IllegalArgumentException(
-                    """Parameter for constraint [$name] of
-                   property [$constraintPropertyName]
-                   of class [$constraintOwningClass]
-                   must be a Boolean
-                """
-            )
-        }
-        super.setParameter(constraintParameter)
-    }
+        getExchanges().each {exchange ->
 
-    @Override
-    protected boolean skipNullValues() {
-        return true
-    }
-
-    @Override
-    protected boolean processValidateWithVetoing(
-            Object target, Object propertyValue,
-            Errors errors) {
-        if (!propertyValue.validate()) {
-            propertyValue.errors.fieldErrors.each {
-                String field = "${propertyName}.${it.field}"
-                def fieldError = new FieldError(
-                        target.errors.objectName,
-                        field,
-                        it.rejectedValue,
-                        it.bindingFailure,
-                        it.codes,
-                        it.arguments,
-                        it.defaultMessage
-                )
-                errors.addError(fieldError)
+            Map existing = exchangeConfig.find {it.name == exchange.name}
+            if (existing) {
+                if (exchange.exchangeBindings) {
+                    existing.exchangeBindings = exchange.exchangeBindings.collect {it.asMap()}
+                }
             }
-            return false
+            else {
+                exchangeConfig.add exchange.asMap()
+            }
         }
-        return true
+
+        getQueues().each { queue ->
+            if(!queuesConfig.any{it.name == queue.name}) {
+                queuesConfig.add queue.asMap()
+            }
+        }
+
+        rabbitConfig.queues = queuesConfig
+        rabbitConfig.exchanges = exchangeConfig
+        rabbitConfig
     }
 }
