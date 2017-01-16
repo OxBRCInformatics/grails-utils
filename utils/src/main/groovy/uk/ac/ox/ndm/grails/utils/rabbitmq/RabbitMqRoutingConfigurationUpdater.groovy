@@ -203,6 +203,8 @@
  */
 package uk.ac.ox.ndm.grails.utils.rabbitmq
 
+import java.util.function.Predicate
+
 /**
  * @since 08/12/2016
  */
@@ -222,7 +224,12 @@ trait RabbitMqRoutingConfigurationUpdater implements BasicRabbitMqRoutingInfomat
             Map existing = exchangeConfig.find {it.name == exchange.name}
             if (existing) {
                 if (exchange.exchangeBindings) {
-                    existing.exchangeBindings = exchange.exchangeBindings.collect {it.asMap()}
+
+                    List<Map> additiveBindings = exchange.exchangeBindings.collect {it.asMap()}
+
+                    additiveBindings.removeIf(new ExistingExchangeBindingsPredicate(existing.exchangeBindings))
+
+                    existing.exchangeBindings += additiveBindings
                 }
             }
             else {
@@ -239,5 +246,19 @@ trait RabbitMqRoutingConfigurationUpdater implements BasicRabbitMqRoutingInfomat
         rabbitConfig.queues = queuesConfig
         rabbitConfig.exchanges = exchangeConfig
         rabbitConfig
+    }
+}
+
+class ExistingExchangeBindingsPredicate implements Predicate<Map<String, String>> {
+
+    List<String> existingExchangeBindings
+
+    ExistingExchangeBindingsPredicate(List<Map> existingExchangeBindings){
+        this.existingExchangeBindings = existingExchangeBindings.collect {it.binding}
+    }
+
+    @Override
+    boolean test(Map<String, String> additiveExchangeBindings) {
+        existingExchangeBindings.contains(additiveExchangeBindings.binding)
     }
 }
