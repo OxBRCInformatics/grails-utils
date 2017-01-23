@@ -226,4 +226,14 @@ public trait XmlDataBindingSourceCreatorHelper implements DataBindingSourceCreat
     Map convertBindingTargetTypeListToMap(List<Object> dataList, Class bindingTargetType) {
         return null
     }
+
+    @Override
+    Boolean handlesBindingTargetTypeMaps(Class bindingTargetType) {
+        return null
+    }
+
+    @Override
+    Map<String, Object> preemptiveDataBindMapFixing(Map<String, ?> input, Class bindingTargetType) {
+        return null
+    }
 }
