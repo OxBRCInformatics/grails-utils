@@ -219,5 +219,7 @@ public interface DataBindingSourceCreatorHelper {
 
     Boolean handlesBindingTargetTypeMaps(Class bindingTargetType);
 
-    Map<String, Object> preemptiveDataBindMapFixing(Map<String, ?> input, Class bindingTargetType);
+    Map<String, ?> preemptiveBindingTargetTypeMapFix(Map<String, ?> input, Class bindingTargetType);
+
+    Boolean preemptivelyBindingTargetTypeMapFixes(Class bindingTargetType);
 }

@@ -233,7 +233,12 @@ public trait XmlDataBindingSourceCreatorHelper implements DataBindingSourceCreat
     }
 
     @Override
-    Map<String, Object> preemptiveDataBindMapFixing(Map<String, ?> input, Class bindingTargetType) {
+    Map<String, ?> preemptiveBindingTargetTypeMapFix(Map<String, ?> input, Class bindingTargetType) {
+        return null
+    }
+
+    @Override
+    Boolean preemptivelyBindingTargetTypeMapFixes(Class bindingTargetType) {
         return null
     }
 }

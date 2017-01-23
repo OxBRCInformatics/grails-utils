@@ -297,8 +297,8 @@ abstract class AdvancedDataBindingSourceCreator extends DefaultDataBindingSource
     Object processDataBindingMap(Map<String, ?> input, Class bindingTargetType) {
 
         // Perform pre-emptive processing from the helpers, this can only be done when we know the binding type
-        DataBindingSourceCreatorHelper preProcessor = dataBindingSourceCreatorHelpers.find {it.handlesBindingTargetTypeMaps(bindingTargetType)}
-        input = preProcessor ? preProcessor.preemptiveDataBindMapFixing(input, bindingTargetType) : input
+        DataBindingSourceCreatorHelper preProcessor = dataBindingSourceCreatorHelpers.find {it.preemptivelyBindingTargetTypeMapFixes(bindingTargetType)}
+        input = preProcessor ? preProcessor.preemptiveBindingTargetTypeMapFix(input, bindingTargetType) : input
 
         SerializeMappings mappings = bindingTargetType.getAnnotation(SerializeMappings) ?:
                                      bindingTargetType.superclass?.getAnnotation(SerializeMappings)
