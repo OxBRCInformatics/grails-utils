@@ -206,7 +206,7 @@ package uk.ac.ox.ndm.grails.utils.rabbitmq
 /**
  * @since 30/11/2016
  */
-class Queue {
+class Queue{
 
     String name
     String exchange
@@ -223,5 +223,26 @@ class Queue {
                 exchange  : exchange,
                 binding   : binding
         ]
+    }
+
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (getClass() != o.class) return false
+
+        Queue queue = (Queue) o
+
+        if (binding != queue.binding) return false
+        if (exchange != queue.exchange) return false
+        if (name != queue.name) return false
+
+        return true
+    }
+
+    int hashCode() {
+        int result
+        result = (name != null ? name.hashCode() : 0)
+        result = 31 * result + (exchange != null ? exchange.hashCode() : 0)
+        result = 31 * result + (binding != null ? binding.hashCode() : 0)
+        return result
     }
 }

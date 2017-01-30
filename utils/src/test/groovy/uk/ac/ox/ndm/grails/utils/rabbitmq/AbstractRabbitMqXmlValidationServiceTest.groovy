@@ -40,10 +40,10 @@ class AbstractRabbitMqXmlValidationServiceTest extends Specification {
     void 'test empty validating xml'() {
 
         expect: 'null object fails'
-        service.validatesXml(null, null) == null
+        service.validateAndGetSchemaName(null, null as String) == null
 
         and: 'empty string fails'
-        service.validatesXml(null, '') == null
+        service.validateAndGetSchemaName(null, '') == null
 
     }
 
@@ -53,13 +53,13 @@ class AbstractRabbitMqXmlValidationServiceTest extends Specification {
         String xml = readFileAsString('test_valid.xml')
 
         then:
-        service.validatesXml(null, xml) == 'RegistrationAndConsentsCancer'
+        service.validateAndGetSchemaName(null, xml) == 'RegistrationAndConsentsCancer-v2.0.0'
 
         when:
         xml = readFileAsUTF8String('test_valid.xml')
 
         then:
-        service.validatesXml(null, xml) == 'RegistrationAndConsentsCancer'
+        service.validateAndGetSchemaName(null, xml) == 'RegistrationAndConsentsCancer-v2.0.0'
 
     }
 
@@ -69,13 +69,13 @@ class AbstractRabbitMqXmlValidationServiceTest extends Specification {
         String xml = readFileAsString('test_invalid.xml')
 
         then:
-        service.validatesXml(null, xml) == null
+        service.validateAndGetSchemaName(null, xml) == null
 
         when:
         xml = readFileAsUTF8String('test_invalid.xml')
 
         then:
-        service.validatesXml(null, xml) == null
+        service.validateAndGetSchemaName(null, xml) == null
 
     }
 
@@ -86,13 +86,13 @@ class AbstractRabbitMqXmlValidationServiceTest extends Specification {
         String xml = readFileAsUTF16String('test_utf16_valid.xml')
 
         then:
-        service.validatesXml(null, xml) == 'RegistrationAndConsentsCancer'
+        service.validateAndGetSchemaName(null, xml) == 'RegistrationAndConsentsCancer'
 
         when:
         xml = readFileAsString('test_utf16_valid.xml')
 
         then:
-        service.validatesXml(null, xml) == 'RegistrationAndConsentsCancer'
+        service.validateAndGetSchemaName(null, xml) == 'RegistrationAndConsentsCancer'
 
     }
 
@@ -103,7 +103,7 @@ class AbstractRabbitMqXmlValidationServiceTest extends Specification {
         service.initialise()
 
         when: 'getting a non-overridden exchange configuration'
-        List<Exchange> exchanges = service.getExchanges()
+        Collection<Exchange> exchanges = service.getExchanges()
 
         then: 'should be 1 exchange'
         exchanges.size() == 1
@@ -123,7 +123,7 @@ class AbstractRabbitMqXmlValidationServiceTest extends Specification {
         service.initialise()
 
         when: 'getting a non-overridden queues configuration'
-        List<Queue> queues = service.getQueues()
+        Collection<Queue> queues = service.getQueues()
 
         then: 'should be queues for each schema'
         queues.size() == 1
@@ -140,7 +140,7 @@ class AbstractRabbitMqXmlValidationServiceTest extends Specification {
     void 'check more complicated rabbit exchange configuration'() {
 
         when: 'getting a non-overridden exchange configuration'
-        List<Exchange> exchanges = service.getExchanges()
+        Collection<Exchange> exchanges = service.getExchanges()
 
         then: 'should be 3 exchanges'
         exchanges.size() == 3
@@ -177,7 +177,7 @@ class AbstractRabbitMqXmlValidationServiceTest extends Specification {
     void 'check more complicated rabbit queues configuration'() {
 
         when: 'getting a non-overridden queues configuration'
-        List<Queue> queues = service.getQueues()
+        Collection<Queue> queues = service.getQueues()
 
         then: 'should be queues for each schema'
         queues.size() == 11
@@ -240,12 +240,12 @@ class TestService extends AbstractRabbitMqXmlValidationService {
 
     @Override
     Pattern getSchemaSuffix() {
-        ~/-v2\.0\.\d\.xsd/
+        ~/-v2\.0\.\d/
     }
 
     @Override
-    List<Exchange> getExchanges() {
-        List<Exchange> exchanges = super.getExchanges()
+    Collection<Exchange> getExchanges() {
+        Collection<Exchange> exchanges = super.getExchanges()
         exchanges + [
                 new Exchange(
                         name      : 'gel',
@@ -299,6 +299,6 @@ class BasicTestService extends AbstractRabbitMqXmlValidationService {
 
     @Override
     Pattern getSchemaSuffix() {
-        ~/-v2\.0\.\d\.xsd/
+        ~/-v2\.0\.\d/
     }
 }

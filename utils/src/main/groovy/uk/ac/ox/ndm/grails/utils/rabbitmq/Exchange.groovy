@@ -215,6 +215,19 @@ class Exchange {
 
     List<ExchangeBinding> exchangeBindings
 
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (getClass() != o.class) return false
+
+        Exchange exchange = (Exchange) o
+        name = exchange.name
+    }
+
+    int hashCode() {
+        int result
+        name != null ? name.hashCode() : 0
+    }
+
     Exchange addToBindings(ExchangeBinding binding){
         if(!exchangeBindings) exchangeBindings = []
         exchangeBindings += binding
@@ -234,4 +247,6 @@ class Exchange {
                 exchangeBindings: exchangeBindings?.collect {it.asMap()} ?: []
         ]
     }
+
+
 }

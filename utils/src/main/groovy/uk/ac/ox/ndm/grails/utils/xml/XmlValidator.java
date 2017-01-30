@@ -211,24 +211,23 @@ import groovy.util.slurpersupport.GPathResult;
 public interface XmlValidator {
 
     /**
-     * Does this helper validate the provided XML
+     * Does this helper validate the provided XML, and with which schema
      *
      * @param xml XML to validate
      * @param referenceId the reference id
      *
      * @return schema name of XSD xml validates against or null
      */
-    String validatesXml(String referenceId, String xml);
+    String validateAndGetSchemaName(String referenceId, String xml);
 
     /**
-     * Does this helper validate the provided XML
+     * Does this helper validate the provided XML, and with which schema
      *
      * @param xml XML to validate
      * @param referenceId the reference id
      *
      * @return schema name of XSD xml validates against or null
      */
-    String validatesXml(String referenceId, GPathResult xml);
-
+    String validateAndGetSchemaName(String referenceId, GPathResult xml);
 
 }

@@ -248,7 +248,7 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
 
     Integer priority
 
-    Map<String, Schema> schemas
+    List<SchemaValidator> schemas
 
     protected List<String> mainXsdFilenames
     protected List<String> ignoredSchemas
@@ -266,7 +266,7 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
                                          boolean deferred = true) {
         this.mainXsdFilenames = mainXsdFilenames
         this.ignoredSchemas = ignoredSchemas
-        this.schemas = [:]
+        this.schemas = []
         this.priority = priority
         initialised = false
         if (!deferred) initialise()
@@ -282,10 +282,10 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
 
             schemas = resourceResolver.schemaCache.findAll {
                 !(it.key in ignoredSchemas) && it.key ==~ getSchemaPattern()
-            }.collectEntries {filename, contents ->
+            }.collect { filename, contents ->
                 def schema = factory.newSchema(new StreamSource(new StringReader(contents), filename))
-                [convertFilenameToSchemaKeyName(filename), schema]
-            } as Map<String, Schema>
+                new SchemaValidator(convertFilenameToSchemaName(filename), schema)
+            }
         }
         initialised = true
     }
@@ -296,8 +296,24 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
      *
      * If overriding then call this super method then alter the returned string.
      */
-    String convertFilenameToSchemaKeyName(String filename) {
-        filename.replaceFirst(getSchemaSuffix(), '')
+    String convertFilenameToSchemaName(String filename) {
+        filename.replaceFirst(/\.xsd/, '')
+    }
+
+    String convertSchemaNameToBindingSuffix(String schema){
+        getSchemaSuffix() ? schema.replaceFirst(getSchemaSuffix(),'').toLowerCase() : schema.toLowerCase()
+    }
+
+    String convertSchemaNameToQueueSuffix(String schema){
+        convertSchemaNameToBindingSuffix(schema).replaceAll(/\./,'-')
+    }
+
+    String getRoutingKeyForSchemaName(String schema){
+        getRoutingKey() + '.' + convertSchemaNameToBindingSuffix(schema)
+    }
+
+    String getQueueNameForSchemaName(String schema){
+        getExchangeName().toLowerCase() + '-' + convertSchemaNameToQueueSuffix(schema)
     }
 
     @Override
@@ -316,37 +332,41 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
     }
 
     @Override
-    String validatesXml(String referenceId, String xml) {
+    String validateAndGetSchemaName(String referenceId, String xml) {
         if (!xml) return null
 
-        schemas.find {name, schema ->
-            try {
-                schema.newValidator().validate(new StreamSource(new ByteArrayInputStream(xml.bytes)))
-            } catch (SAXException ex) {
-                if (ex.message.contains('cvc-elt.1')) {
-                    logger.trace("{} does not describe submitted XML", name)
-                    return false
-                }
-                if (ex instanceof SAXParseException) {
-                    logger.warn('{} does not validate because of {}', name, saxParseExceptionToString(ex as SAXParseException))
-                }
-                else {
-                    logger.debug('{} does not validate because {}', name, ex.toString())
-                }
-                return handleValidationFailure(referenceId, name, schema, ex)
+        // Find any schemas which can validate the XML
+        List<ValidationResult> possibleSchemas = schemas.collect {schemaValidator ->
+            schemaValidator.validate(xml)
+        }
+
+        // If one of the schemas thinks the XML is valid then return that schema
+        List<ValidationResult> results = possibleSchemas.findAll {it.valid}
+        if(results.size() > 1) logger.warn("More than 1 schema validates XML, returning first found")
+        if (results) return results[0].name
+
+        // Otherwise check each schema which has a match and log the reason for failing
+        possibleSchemas.findAll {it.match}.each {
+            if (it.exception instanceof SAXParseException) {
+                logger.warn('{} does not validate because of {}', it.name, saxParseExceptionToString(it.exception as SAXParseException))
             }
-            true
-        }?.key
+            else {
+                logger.debug('{} does not validate because {}', it.name, it.exception.toString())
+            }
+            handleValidationFailure(referenceId, it.name, it.schema, it.exception)
+        }
+
+        // Return no valid schema
+        null
     }
 
     @Override
-    String validatesXml(String referenceId, GPathResult xml) {
-        if (!xml) return null
-        validatesXml(referenceId, XmlUtil.serialize(xml))
+    String validateAndGetSchemaName(String referenceId, GPathResult xml) {
+        validateAndGetSchemaName(referenceId, XmlUtil.serialize(xml))
     }
 
     @Override
-    List<Exchange> getExchanges() {
+    Collection<Exchange> getExchanges() {
         [
                 new Exchange(
                         name: getExchangeName(),
@@ -354,20 +374,20 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
                         durable: true,
                         autoDelete: true
                 )
-        ]
+        ] as Set
     }
 
     @Override
-    List<Queue> getQueues() {
-        schemas.keySet().collect {name ->
+    Collection<Queue> getQueues() {
+        schemas.collect {schemaValidator ->
             new Queue(
-                    name: getExchangeName().toLowerCase() + '-' + name.toLowerCase().replaceAll(/\./, '-'),
+                    name: getQueueNameForSchemaName(schemaValidator.name),
                     exchange: getExchangeName(),
                     durable: true,
                     autoDelete: true,
-                    binding: getRoutingKey() + '.' + name.toLowerCase()
+                    binding: getRoutingKeyForSchemaName(schemaValidator.name)
             )
-        }
+        } as Set
     }
 
     String saxParseExceptionToString(SAXParseException ex) {

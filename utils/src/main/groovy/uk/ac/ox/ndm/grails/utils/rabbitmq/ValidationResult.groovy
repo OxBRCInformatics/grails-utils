@@ -1,4 +1,4 @@
-/**
+/*
  *                                  Apache License
  *                            Version 2.0, January 2004
  *                         http://www.apache.org/licenses/
@@ -201,24 +201,26 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package uk.ac.ox.ndm.grails.utils.rabbitmq;
+package uk.ac.ox.ndm.grails.utils.rabbitmq
 
-import java.util.Collection;
+import org.xml.sax.SAXException
+
+import javax.xml.validation.Schema
 
 /**
- * @since 02/03/2016
+ * @since 30/01/2017
  */
-public interface BasicRabbitMqRoutingInfomationProvider {
+class ValidationResult {
 
-    String getExchangeName();
+    String name
+    Schema schema
+    SAXException exception
+    boolean match = false
+    boolean valid = false
 
-    void setExchangeName(String exchange);
+    ValidationResult(SchemaValidator schemaValidator){
+        this.name = schemaValidator.name
+        this.schema = schemaValidator.schema
+    }
 
-    Collection<Exchange> getExchanges();
-
-    Collection<Queue> getQueues();
-
-    String getRoutingKey();
-
-    void setRoutingKey(String routingKey);
 }

@@ -1,4 +1,4 @@
-/**
+/*
  *                                  Apache License
  *                            Version 2.0, January 2004
  *                         http://www.apache.org/licenses/
@@ -201,24 +201,60 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package uk.ac.ox.ndm.grails.utils.rabbitmq;
+package uk.ac.ox.ndm.grails.utils.rabbitmq
 
-import java.util.Collection;
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.xml.sax.SAXException
+
+import javax.xml.transform.Source
+import javax.xml.transform.stream.StreamSource
+import javax.xml.validation.Schema
+import javax.xml.validation.Validator
 
 /**
- * @since 02/03/2016
+ * @since 30/01/2017
  */
-public interface BasicRabbitMqRoutingInfomationProvider {
+class SchemaValidator {
 
-    String getExchangeName();
+    public static final Logger logger = LoggerFactory.getLogger(SchemaValidator)
 
-    void setExchangeName(String exchange);
+    String name
+    Schema schema
 
-    Collection<Exchange> getExchanges();
+    SchemaValidator(String name, Schema schema){
+        this.name = name
+        this.schema = schema
+    }
 
-    Collection<Queue> getQueues();
+    Validator getValidator(){
+        schema.newValidator()
+    }
 
-    String getRoutingKey();
+    ValidationResult validate(Source source){
+        ValidationResult result = new ValidationResult(this)
+        try {
+            getValidator().validate(source)
+            result.valid = true
+            logger.trace("{} is valid", name)
+        } catch (SAXException ex) {
+            if (ex.message.contains('cvc-elt.1')) {
+                logger.trace("{} does not describe submitted XML", name)
+                return result
+            }
+            logger.trace("{} possibly describes submitted XML", name)
+            result.match = true
+            result.exception = ex
+        }
+        result
+    }
 
-    void setRoutingKey(String routingKey);
+    ValidationResult validate(byte[] bytes){
+        validate(new StreamSource(new ByteArrayInputStream(bytes)))
+    }
+
+    ValidationResult validate(String xml){
+        validate(xml.bytes)
+    }
+
 }
