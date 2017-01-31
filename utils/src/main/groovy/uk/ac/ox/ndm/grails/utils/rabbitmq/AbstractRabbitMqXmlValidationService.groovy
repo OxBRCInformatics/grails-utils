@@ -346,7 +346,7 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
         if (results) return results[0].name
 
         // Otherwise check each schema which has a match and log the reason for failing
-        possibleSchemas.findAll {it.match}.each {
+        results = possibleSchemas.findAll {it.match}.findAll {
             if (it.exception instanceof SAXParseException) {
                 logger.warn('{} does not validate because of {}', it.name, saxParseExceptionToString(it.exception as SAXParseException))
             }
@@ -356,8 +356,8 @@ abstract class AbstractRabbitMqXmlValidationService implements XmlValidator, Rab
             handleValidationFailure(referenceId, it.name, it.schema, it.exception)
         }
 
-        // Return no valid schema
-        null
+        if(results.size() > 1) logger.warn("More than 1 schema matches XML, returning first found")
+        results ? results[0].name :null
     }
 
     @Override
