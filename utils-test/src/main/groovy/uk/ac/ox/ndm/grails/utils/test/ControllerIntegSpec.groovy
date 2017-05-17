@@ -19,7 +19,7 @@ abstract class ControllerIntegSpec extends CoreSpec {
 
     RestBuilder rest
 
-    RestResponse response
+    public RestResponse response
 
     @Value('${server.host:localhost}')
     String host
@@ -91,11 +91,12 @@ abstract class ControllerIntegSpec extends CoreSpec {
     def cleanup() {
         if (response?.text) {
             try {
-                dump(response.xml?.errors?.size() ? 'error' : 'warn', true)
+                if(response.xml?.errors?.size()) dump( 'error', true)
             } catch (Exception ignored) {
                 dump('error')
             }
         }
+        response = null
     }
 
     def dump(String level, boolean format = false) {
