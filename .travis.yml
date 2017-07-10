@@ -1,10 +1,14 @@
 sudo: false
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
 language: groovy
 jdk:
-- oraclejdk8
+  - oraclejdk8
 script: ./gradlew check -i
 before_cache:
-- rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 cache:
   directories:
   - "$HOME/.gradle/caches/"
@@ -14,7 +18,7 @@ notifications:
     secure: LCzltjUL2wo41vy5dHm0WGL2AIIvcShBUfaeOIfFe69zhGaWG0UpSBr+Zkiop0DMN6PH/JuDzZP2QhuEueJ3lC52zwrevhT8Nm2OrRGt+sAwBmSNg13wu1b7cbO3szckSDfaYbk69Bo4HAf5VpAFWYiRjRNMQn48o9vSgayLq/eseHa6NrRvzHMDigqINgyoQenBlndFQs6zlxQdN5rPFBq8SK0MI/zK++L/33Oyeqx0e2cup9QcRVt7ePZ7lX9DlFUT208zLD3PH9bR/3arXRiC7VPd3V0ycr7rQCgjyOFRqbmA7b02giPwMCHQgqvv+wG9VE0st5RXgL7FxaIrtvlS4GUPQEFElsST3gbfuAMWwYMXwvtFhmQQXuMNZj3p+BtdB7DWbd0sORBDAQJDGzC1xFeoHAwMDq1CKwTuhkLd72fZkxe+bPMvdsjP03iNY9EknYMV+EOaMmASeb29tfI0AL1aPfRV5U1O44uCXTjFpbxSTY8cJYEpLTnOidRVMffdeNX8KgTKLYtxMJ5Uis8UQp+yO2aBHhsBVvwiEyoKjSDqhuhDC0drnfuR57SY/JnmUDPwwopu5Kv+hW/nv9fbn+LiJunM9C/aOv/KA5tjRwP0S3zbAUh4yOGocqjUIBAJQk+kzR8Dak2+FJhA1S4jPDnAO+0yqENlRqnqwoc=
   email: false
 after_success:
-- ([ "$TRAVIS_BRANCH" == "master" ] || [ ! -z "$TRAVIS_TAG" ]) && [ "$TRAVIS_PULL_REQUEST" == "false" ] && ./gradlew bintrayUpload --info
+  - ([ "$TRAVIS_BRANCH" == "master" ] || [ ! -z "$TRAVIS_TAG" ]) && [ "$TRAVIS_PULL_REQUEST" == "false" ] && ./gradlew bintrayUpload --info
 env:
   global:
     - secure: Bcw9615rj3PAtbDRrzOEz5ofxFVWMaUFMr+DztNJ/xmyD90r6NlqHQgTlexcy7J6gq71XXdxIR6n7YWfYxZN6z4KUBK4W1lQM0+Qt3QIf4bw/6pYVl1f0FFhZr2yN9q5KlrZALb4ZNkWwJFdGBRQU3FxQDu/zG3bCTq+vLDSAqdoMq8/mw60I6oyIjvdJkGIaTgelIf+YcZD8cL6ciP3tu46QYHrhlwHBQ0+yg21j/ZQ6+ibNUEAFUgXAJeeJ6p5QMeosUXKTunqvEMOSXLOxMEVie2Ip+yF28h+suG2QwaRsHKLPBUENn/clSfFzhRW86rhYfs2u45Wca3j9UadyJIop/UlFGUFiz5zok3cu2aTRHrG4bSSxQ4h2Q3+98WYH4ffU63BwWzF2nB4yAbviOoex155QloDdWL2zdc4q+aCTo+liCt66z3RCIdS0HkPChFo6jaZ+tNqsrk95l/n0Dq7ymtpIVb2EpX9OE1UpcAjwkC4iHrStQyxZYYgkioyFcP5RR1oN7DDYvJN6YgPmiZvl9NziOeZVxEvCY2rXrp3u1M5MOynHMHLTj16BQboQ0DZDIIbgGBut6jNl/bNxY3TaPvEFMR19LsQ4ZCmWxYF5BSWjfDJxl6J1LnLwaciMGuohVZ6WNB3Y+huZz5vEDKkJc4FeCdxBQvtp0lADL0=
