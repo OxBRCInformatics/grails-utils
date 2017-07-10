@@ -219,7 +219,7 @@ import java.text.DecimalFormatSymbols
  */
 trait XmlMarshallAware {
 
-    protected XML xml
+    XML xml
     private final ConverterConfiguration<XML> config = ConvertersConfigurationHolder.getConverterConfiguration(XML.class)
 
     String xmlElementName() {

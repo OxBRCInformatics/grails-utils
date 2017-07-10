@@ -146,14 +146,6 @@ subprojects {
         configurations.all {
             // check for updates every build
             resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-            resolutionStrategy.eachDependency {DependencyResolveDetails details ->
-                if (details.requested.group == 'org.springframework') {
-                    details.useVersion springframeworkVersion
-                }
-                if (details.requested.group == 'org.grails' && !details.requested.name.contains('datastore')) {
-                    details.useVersion grailsVersion
-                }
-            }
         }
 
         /*
