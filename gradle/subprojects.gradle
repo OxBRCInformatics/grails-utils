@@ -16,10 +16,25 @@ subprojects {
     apply plugin: 'jacoco'
     apply plugin: 'maven'
     apply plugin: 'com.jfrog.bintray'
+    apply plugin: "com.github.hierynomus.license"
 
     jacoco {
         toolVersion = '0.7.6.201602180812'
     }
+
+    downloadLicenses {
+        xml = false
+        report.xml.enabled = false
+        report.html.destination = file('license-report')
+    }
+
+    license {
+        header rootProject.file('LICENSE')
+        includes(["**/*.java","**/*.groovy"])
+        excludes(['**/*Test*.java', '**/*Test*.groovy', '**/*Spec.groovy','**/*logback*.groovy', '**/resources.groovy'])
+    }
+
+    rootProject.tasks.reportOnLicenses.dependsOn tasks.downloadLicenses
 
     apply from: "$rootDir/dependencies.gradle"
     apply from: "dependencies.gradle"
@@ -131,14 +146,6 @@ subprojects {
         configurations.all {
             // check for updates every build
             resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-            resolutionStrategy.eachDependency {DependencyResolveDetails details ->
-                if (details.requested.group == 'org.springframework') {
-                    details.useVersion springframeworkVersion
-                }
-                if (details.requested.group == 'org.grails' && !details.requested.name.contains('datastore')) {
-                    details.useVersion grailsVersion
-                }
-            }
         }
 
         /*

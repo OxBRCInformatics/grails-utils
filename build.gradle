@@ -6,13 +6,14 @@ buildscript {
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
-
+        classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
     }
 }
 
+import org.gradle.internal.logging.ConsoleRenderer
+
 plugins {
     id 'base'
-//    id 'build-dashboard'
     id 'idea'
     id 'project-report'
 }
@@ -112,8 +113,10 @@ task wrapper(type: Wrapper) {
     gradleVersion = project.gradleVersion
 }
 
-task show() << {
-    logger.quiet "All seems to be working"
+task show() {
+    doLast {
+        logger.quiet "All seems to be working"
+    }
 }
 
 task test() {
@@ -130,6 +133,7 @@ build {
         if (unitTestFailures) {
             String grammer = unitTestFailures == 1 ? 'was 1 unit test failure' : "were $unitTestFailures unit test failures"
             File indexFile = file("$tasks.unitTest.destinationDir/index.html")
+            String reportUrl = new ConsoleRenderer().asClickableFileUrl(indexFile)
             logger.quiet("There $grammer. See the report at $reportUrl. (Ctrl+click the URL to open)")
         }
     }
@@ -138,6 +142,12 @@ build {
 clean {
     delete 'logs', 'reports', 'deploy'
 }
+
+task reportOnLicenses {
+    group 'license'
+}
+
+check.dependsOn 'reportOnLicenses'
 
 apply from: 'gradle/allprojects.gradle'
 apply from: 'gradle/subprojects.gradle'
