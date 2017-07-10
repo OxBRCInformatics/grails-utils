@@ -1,4 +1,4 @@
-/*
+/**
  *                                  Apache License
  *                            Version 2.0, January 2004
  *                         http://www.apache.org/licenses/
@@ -201,44 +201,18 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package uk.ac.ox.ndm.grails.utils.databinding
+package uk.ac.ox.ndm.grails.utils.databinding.exception;
 
 /**
- * @since 19/01/2016
- * @deprecated use {@link DataBindingSourceCreatorHelper} instead
+ * @since 27/01/2017
  */
-@Deprecated
-public trait XmlDataBindingSourceCreatorHelper implements DataBindingSourceCreatorHelper {
+public class IllegalBindingActionException extends IllegalStateException {
 
-    abstract Object checkDataBindingSourceMap(Map<String, ?> dataBindingSourceMap, Class bindingTargetType);
-
-    @Override
-    Object handleDataBindingSourceMap(Map<String, ?> dataBindingSourceMap, Class bindingTargetType) {
-        checkDataBindingSourceMap(dataBindingSourceMap, bindingTargetType)
+    public IllegalBindingActionException(String bindingKey, String message) {
+        super("For binding key '"+bindingKey+"': "+message);
     }
 
-    @Override
-    Boolean convertsBindingTargetTypeListsToMap(Class bindingTargetType) {
-        return false
-    }
-
-    @Override
-    Map convertBindingTargetTypeListToMap(List<Object> dataList, Class bindingTargetType) {
-        return null
-    }
-
-    @Override
-    Boolean handlesBindingTargetTypeMaps(Class bindingTargetType) {
-        return null
-    }
-
-    @Override
-    Map<String, ?> preemptiveBindingTargetTypeMapFix(Map<String, ?> input, Class bindingTargetType) {
-        return null
-    }
-
-    @Override
-    Boolean preemptivelyBindingTargetTypeMapFixes(Class bindingTargetType) {
-        return null
+    public IllegalBindingActionException(String s) {
+        super(s);
     }
 }

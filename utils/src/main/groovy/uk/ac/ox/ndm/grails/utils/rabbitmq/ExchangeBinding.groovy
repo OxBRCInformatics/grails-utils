@@ -223,5 +223,26 @@ class ExchangeBinding {
                 binding : binding
         ]
     }
+
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (getClass() != o.class) return false
+
+        ExchangeBinding that = (ExchangeBinding) o
+
+        if (binding != that.binding) return false
+        if (exchange != that.exchange) return false
+        if (origin != that.origin) return false
+
+        return true
+    }
+
+    int hashCode() {
+        int result
+        result = (exchange != null ? exchange.hashCode() : 0)
+        result = 31 * result + (binding != null ? binding.hashCode() : 0)
+        result = 31 * result + (origin != null ? origin.hashCode() : 0)
+        return result
+    }
 }
 

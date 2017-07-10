@@ -230,4 +230,8 @@ abstract class DataType<K, E extends DataTypeEnum> implements DataTypeEnumAware<
         label nullable: false
         id nullable: false
     }
+
+    static mapping = {
+        cache 'nonstrict-read-write'
+    }
 }

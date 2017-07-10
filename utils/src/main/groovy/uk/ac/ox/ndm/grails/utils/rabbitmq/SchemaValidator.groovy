@@ -201,44 +201,60 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package uk.ac.ox.ndm.grails.utils.databinding
+package uk.ac.ox.ndm.grails.utils.rabbitmq
+
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.xml.sax.SAXException
+
+import javax.xml.transform.Source
+import javax.xml.transform.stream.StreamSource
+import javax.xml.validation.Schema
+import javax.xml.validation.Validator
 
 /**
- * @since 19/01/2016
- * @deprecated use {@link DataBindingSourceCreatorHelper} instead
+ * @since 30/01/2017
  */
-@Deprecated
-public trait XmlDataBindingSourceCreatorHelper implements DataBindingSourceCreatorHelper {
+class SchemaValidator {
 
-    abstract Object checkDataBindingSourceMap(Map<String, ?> dataBindingSourceMap, Class bindingTargetType);
+    public static final Logger logger = LoggerFactory.getLogger(SchemaValidator)
 
-    @Override
-    Object handleDataBindingSourceMap(Map<String, ?> dataBindingSourceMap, Class bindingTargetType) {
-        checkDataBindingSourceMap(dataBindingSourceMap, bindingTargetType)
+    String name
+    Schema schema
+
+    SchemaValidator(String name, Schema schema){
+        this.name = name
+        this.schema = schema
     }
 
-    @Override
-    Boolean convertsBindingTargetTypeListsToMap(Class bindingTargetType) {
-        return false
+    Validator getValidator(){
+        schema.newValidator()
     }
 
-    @Override
-    Map convertBindingTargetTypeListToMap(List<Object> dataList, Class bindingTargetType) {
-        return null
+    ValidationResult validate(Source source){
+        ValidationResult result = new ValidationResult(this)
+        try {
+            getValidator().validate(source)
+            result.valid = true
+            logger.trace("{} is valid", name)
+        } catch (SAXException ex) {
+            if (ex.message.contains('cvc-elt.1')) {
+                logger.trace("{} does not describe submitted XML", name)
+                return result
+            }
+            logger.trace("{} possibly describes submitted XML", name)
+            result.match = true
+            result.exception = ex
+        }
+        result
     }
 
-    @Override
-    Boolean handlesBindingTargetTypeMaps(Class bindingTargetType) {
-        return null
+    ValidationResult validate(byte[] bytes){
+        validate(new StreamSource(new ByteArrayInputStream(bytes)))
     }
 
-    @Override
-    Map<String, ?> preemptiveBindingTargetTypeMapFix(Map<String, ?> input, Class bindingTargetType) {
-        return null
+    ValidationResult validate(String xml){
+        validate(xml.bytes)
     }
 
-    @Override
-    Boolean preemptivelyBindingTargetTypeMapFixes(Class bindingTargetType) {
-        return null
-    }
 }

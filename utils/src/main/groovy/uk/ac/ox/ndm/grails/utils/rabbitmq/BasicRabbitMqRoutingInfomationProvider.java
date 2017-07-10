@@ -203,20 +203,20 @@
  */
 package uk.ac.ox.ndm.grails.utils.rabbitmq;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @since 02/03/2016
  */
-public interface BasicRabbitMqRoutingInfomationProvider{
+public interface BasicRabbitMqRoutingInfomationProvider {
 
     String getExchangeName();
 
     void setExchangeName(String exchange);
 
-    List<Exchange> getExchanges();
+    Collection<Exchange> getExchanges();
 
-    List<Queue> getQueues();
+    Collection<Queue> getQueues();
 
     String getRoutingKey();
 

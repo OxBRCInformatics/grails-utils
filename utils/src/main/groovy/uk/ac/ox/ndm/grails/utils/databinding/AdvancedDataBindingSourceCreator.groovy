@@ -221,6 +221,9 @@ import org.springframework.context.MessageSource
 import uk.ac.ox.ndm.grails.utils.Utils
 import uk.ac.ox.ndm.grails.utils.databinding.bindingsource.AbstractDomainDataBindingSource
 import uk.ac.ox.ndm.grails.utils.databinding.bindingsource.DataTypeDataBindingSource
+import uk.ac.ox.ndm.grails.utils.databinding.exception.IllegalBindingActionException
+import uk.ac.ox.ndm.grails.utils.databinding.exception.MissingBindingPropertyException
+import uk.ac.ox.ndm.grails.utils.databinding.exception.MissingBindingTypeException
 import uk.ac.ox.ndm.grails.utils.domain.DataType
 import uk.ac.ox.ndm.grails.utils.serializer.SerializeMappings
 
@@ -296,6 +299,11 @@ abstract class AdvancedDataBindingSourceCreator extends DefaultDataBindingSource
 
     Object processDataBindingMap(Map<String, ?> input, Class bindingTargetType) {
 
+        // Perform pre-emptive processing from the helpers, this can only be done when we know the binding type
+        DataBindingSourceCreatorHelper preProcessor = dataBindingSourceCreatorHelpers.
+                find {it.preemptivelyBindingTargetTypeMapFixes(bindingTargetType)}
+        input = preProcessor ? preProcessor.preemptiveBindingTargetTypeMapFix(input, bindingTargetType) : input
+
         SerializeMappings mappings = bindingTargetType.getAnnotation(SerializeMappings) ?:
                                      bindingTargetType.superclass?.getAnnotation(SerializeMappings)
 
@@ -311,12 +319,14 @@ abstract class AdvancedDataBindingSourceCreator extends DefaultDataBindingSource
 
                 keyValue.each {mappedKey, mappedValue ->
                     Object value = convertValue(mappedValue, mappedKey, bindingTargetType, processedDataBindingMap)
-                    if(processedDataBindingMap[mappedKey]){
+                    if (processedDataBindingMap[mappedKey]) {
                         // Handle multi map pushdowns
                         def existing = processedDataBindingMap[mappedKey]
-                        if(existing instanceof Map && value instanceof Map){
+                        if (existing instanceof Map && value instanceof Map) {
                             value = (existing as Map) + (value as Map)
-                        }else throw new IllegalStateException('Push down mappings can only be done on maps')
+                        }
+                        else throw new IllegalBindingActionException(mappedKey,'Push down mappings can only be done on maps, not on ' + existing.class +
+                                                                     'and ' + value.class )
                     }
                     processedDataBindingMap.put(mappedKey, value)
                 }
@@ -364,8 +374,7 @@ abstract class AdvancedDataBindingSourceCreator extends DefaultDataBindingSource
             Class bindingType = determineBindingType(bindingTargetType, key)
             if (v instanceof Map) {
                 if (!bindingType) {
-                    throw new IllegalStateException(
-                            "There must be a property in " + bindingTargetType.canonicalName + " for key " + key)
+                    throw new MissingBindingPropertyException(bindingTargetType.canonicalName, key)
                 }
 
                 if (Collection.isAssignableFrom(bindingType)) {
@@ -386,8 +395,7 @@ abstract class AdvancedDataBindingSourceCreator extends DefaultDataBindingSource
         if (bindingType) {
             if (value instanceof Map) {
                 if (!bindingType) {
-                    throw new IllegalStateException(
-                            "There must be a binding type in " + bindingTargetType.canonicalName + " for key " + key)
+                    throw new MissingBindingTypeException(bindingTargetType.canonicalName, key)
                 }
                 def output = processDataBindingMap(value, bindingType)
 
@@ -500,6 +508,8 @@ abstract class AdvancedDataBindingSourceCreator extends DefaultDataBindingSource
                 sb.append(messageSource.getMessage(error, Locale.default)).append('\n')
             }
             logger.error "Exception while creating databinding source: {}", sb.toString()
+        }else if(e instanceof IllegalBindingActionException){
+            logger.error "Exception while creating databinding source: {}", e.message
         }
         else logger.error "Exception while creating databinding source: " + e.message, e
         return new DataBindingSourceCreationException(e)

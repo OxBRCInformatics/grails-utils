@@ -222,10 +222,11 @@ class JavaOffsetDateTimeConverter implements ValueConverter {
 
     @Override
     Object convert(Object value) {
+        if(!value || !(value instanceof String)) return null
         try {
-            return OffsetDateTime.parse(value, DateTimeFormatter.ISO_OFFSET_DATE_TIME).withOffsetSameInstant(ZoneOffset.UTC)
+            return OffsetDateTime.parse(value as String, DateTimeFormatter.ISO_OFFSET_DATE_TIME).withOffsetSameInstant(ZoneOffset.UTC)
         } catch (DateTimeParseException ignored) {
-            return LocalDateTime.parse(value, DateTimeFormatter.ISO_LOCAL_DATE_TIME).atOffset(ZoneOffset.UTC)
+            return LocalDateTime.parse(value as String, DateTimeFormatter.ISO_LOCAL_DATE_TIME).atOffset(ZoneOffset.UTC)
         }
     }
 

@@ -201,44 +201,26 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package uk.ac.ox.ndm.grails.utils.databinding
+package uk.ac.ox.ndm.grails.utils.rabbitmq
+
+import org.xml.sax.SAXException
+
+import javax.xml.validation.Schema
 
 /**
- * @since 19/01/2016
- * @deprecated use {@link DataBindingSourceCreatorHelper} instead
+ * @since 30/01/2017
  */
-@Deprecated
-public trait XmlDataBindingSourceCreatorHelper implements DataBindingSourceCreatorHelper {
+class ValidationResult {
 
-    abstract Object checkDataBindingSourceMap(Map<String, ?> dataBindingSourceMap, Class bindingTargetType);
+    String name
+    Schema schema
+    SAXException exception
+    boolean match = false
+    boolean valid = false
 
-    @Override
-    Object handleDataBindingSourceMap(Map<String, ?> dataBindingSourceMap, Class bindingTargetType) {
-        checkDataBindingSourceMap(dataBindingSourceMap, bindingTargetType)
+    ValidationResult(SchemaValidator schemaValidator){
+        this.name = schemaValidator.name
+        this.schema = schemaValidator.schema
     }
 
-    @Override
-    Boolean convertsBindingTargetTypeListsToMap(Class bindingTargetType) {
-        return false
-    }
-
-    @Override
-    Map convertBindingTargetTypeListToMap(List<Object> dataList, Class bindingTargetType) {
-        return null
-    }
-
-    @Override
-    Boolean handlesBindingTargetTypeMaps(Class bindingTargetType) {
-        return null
-    }
-
-    @Override
-    Map<String, ?> preemptiveBindingTargetTypeMapFix(Map<String, ?> input, Class bindingTargetType) {
-        return null
-    }
-
-    @Override
-    Boolean preemptivelyBindingTargetTypeMapFixes(Class bindingTargetType) {
-        return null
-    }
 }
