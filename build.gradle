@@ -10,11 +10,10 @@ buildscript {
     }
 }
 
-import org.gradle.logging.ConsoleRenderer
+import org.gradle.internal.logging.ConsoleRenderer
 
 plugins {
     id 'base'
-//    id 'build-dashboard'
     id 'idea'
     id 'project-report'
 }
@@ -114,8 +113,10 @@ task wrapper(type: Wrapper) {
     gradleVersion = project.gradleVersion
 }
 
-task show() << {
-    logger.quiet "All seems to be working"
+task show() {
+    doLast {
+        logger.quiet "All seems to be working"
+    }
 }
 
 task test() {
