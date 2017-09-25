@@ -132,10 +132,12 @@
  */
 package uk.ac.ox.ndm.grails.utils.domain.awareness
 
+import java.time.OffsetDateTime
+
 /**
  * @since 09/10/2015
  */
 trait CreatedAndUpdatedAware {
-    Date dateCreated
-    Date lastUpdated
+    OffsetDateTime dateCreated
+    OffsetDateTime lastUpdated
 }
