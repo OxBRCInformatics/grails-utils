@@ -3,5 +3,7 @@ dependencies {
     compile project(':utils')
 
     compile "org.grails:grails-datastore-rest-client:$gormVersion"
-    compile "org.grails:grails-plugin-testing:$grailsVersion"
+    //compile "org.grails:grails-test-mixins:$grailsVersion"
+    compile "org.grails:grails-gorm-testing-support:1.1.1"
+    compile "org.grails:grails-web-testing-support:1.1.1"
 }

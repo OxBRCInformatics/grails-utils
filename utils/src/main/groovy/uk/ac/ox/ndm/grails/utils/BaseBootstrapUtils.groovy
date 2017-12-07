@@ -133,8 +133,6 @@
 package uk.ac.ox.ndm.grails.utils
 
 import grails.validation.ConstrainedProperty
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.context.MessageSource
 import uk.ac.ox.ndm.grails.utils.domain.DataType
 import uk.ac.ox.ndm.grails.utils.validator.CascadeValidationConstraint
@@ -142,11 +140,7 @@ import uk.ac.ox.ndm.grails.utils.validator.CascadeValidationConstraint
 /**
  * @since 10/09/2015
  */
-trait BaseBootstrapUtils {
-
-    Logger getLogger() {
-        LoggerFactory.getLogger(getClass())
-    }
+trait BaseBootstrapUtils extends BaseUtils {
 
     abstract Map<String, Class<DataType>[]> getKnownDataTypes()
 
@@ -159,39 +153,6 @@ trait BaseBootstrapUtils {
                 CascadeValidationConstraint.NAME,
                 CascadeValidationConstraint.class
         )
-    }
-
-    def outputDomainErrors(def domainObj, MessageSource messageSource) {
-        logger.error 'Errors validating domain: {}', domainObj.class.simpleName
-        System.err.println 'Errors validating domain: ' + domainObj.class.simpleName
-        domainObj.errors.allErrors.each {error ->
-            if (messageSource) {
-                logger.error messageSource.getMessage(error, Locale.default)
-                System.err.println messageSource.getMessage(error, Locale.default)
-            }
-            else {
-                logger.error error.defaultMessage
-                logger.error "${Arrays.asList(error.arguments)}"
-            }
-        }
-    }
-
-    boolean check(def domainObj, MessageSource messageSource) {
-        if (!domainObj) return true
-
-        boolean valid = domainObj.validate()
-
-        if (!valid) {
-            outputDomainErrors(domainObj, messageSource)
-            return false
-        }
-        true
-    }
-
-    boolean checkAndSave(def domainObj, MessageSource messageSource) {
-        if (!domainObj) return false
-        if (!check(domainObj, messageSource)) return false
-        domainObj.save(failOnError: true) ? true : false
     }
 
     void bootstrapDataTypes(Collection<String> types) {
