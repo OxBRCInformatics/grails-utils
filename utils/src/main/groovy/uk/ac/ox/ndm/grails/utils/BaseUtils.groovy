@@ -22,7 +22,7 @@ trait BaseUtils {
             String msg = messageSource ? messageSource.getMessage(error, Locale.default) :
                          "${error.defaultMessage} :: ${Arrays.asList(error.arguments)}"
 
-            if (error instanceof FieldError) msg += " [${error.field}]"
+            if (error instanceof FieldError) msg += " :: [${error.field}]"
 
             logger.error msg
             System.err.println msg
