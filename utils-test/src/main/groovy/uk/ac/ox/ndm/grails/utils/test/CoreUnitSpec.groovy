@@ -1,5 +1,6 @@
 package uk.ac.ox.ndm.grails.utils.test
 
+import grails.testing.gorm.DataTest
 import grails.util.Holders
 import org.grails.config.PropertySourcesConfig
 
@@ -10,7 +11,7 @@ import java.nio.file.Paths
 /**
  * @since 15/09/2015
  */
-abstract class CoreUnitSpec extends CoreSpec {
+abstract class CoreUnitSpec extends CoreSpec implements DataTest {
 
     static Path workingDirectory
 
