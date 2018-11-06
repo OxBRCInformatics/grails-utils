@@ -12,7 +12,7 @@ import javax.annotation.Resource
 /**
  * @since 15/09/2015
  */
-abstract class ControllerIntegSpec extends CoreSpec {
+abstract class ControllerIntegSpec extends DomainSpec {
 
     @Resource
     MessageSource messageSource

@@ -7,6 +7,7 @@ import uk.ac.ox.ndm.grails.utils.domain.DataType
 /**
  * @since 15/09/2015
  */
+@Deprecated
 abstract class CoreSpec extends DomainSpec implements BaseBootstrapUtils {
 
     @Override
