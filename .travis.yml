@@ -6,6 +6,11 @@ addons:
 language: groovy
 jdk:
   - oraclejdk8
+  - openjdk8
+#  - oraclejdk10
+#  - oraclejdk-ea
+#  - openjdk10
+#  - openjdk11
 script: ./gradlew check -i
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock

@@ -65,7 +65,7 @@ subprojects {
         reports {
             xml.enabled false
             csv.enabled false
-            html.destination "$rootProject.reporting.baseDir/jacoco/${project.name}"
+            html.destination file("$rootProject.reporting.baseDir/jacoco/${project.name}")
         }
         tasks.check.dependsOn it
     }
