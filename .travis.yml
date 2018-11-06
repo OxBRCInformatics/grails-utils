@@ -6,6 +6,7 @@ addons:
 language: groovy
 jdk:
   - oraclejdk8
+  - openjdk8
 #  - oraclejdk10
 #  - oraclejdk-ea
 #  - openjdk10
