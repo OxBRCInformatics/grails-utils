@@ -140,7 +140,6 @@ import uk.ac.ox.ndm.grails.utils.domain.awareness.DataTypeEnumAware
 abstract class DataType<K, E extends DataTypeEnum> implements DataTypeEnumAware<K, E>, Validateable {
 
     String label
-    K id
 
     DataType(K id) {
         this(id, 'Not Supplied')
