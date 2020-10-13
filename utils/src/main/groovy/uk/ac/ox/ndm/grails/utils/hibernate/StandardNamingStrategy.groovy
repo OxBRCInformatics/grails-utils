@@ -152,10 +152,10 @@ class StandardNamingStrategy extends ImprovedNamingStrategy {
     private static final Logger logger = LoggerFactory.getLogger(StandardNamingStrategy)
 
     static final Pattern STANDARD_DOMAIN_VERSION_PATTERN =
-            Pattern.compile(/(uk\.ac\.ox\.ndm)(\.\w+)*(\.endpoint)?\.(?<endpoint>\w+)\.(?<version>v\d+(_\d+){0,2})\.*/);
+        Pattern.compile(/(uk\.ac\.ox\.ndm)(\.\w+)*(\.endpoint)?\.(?<endpoint>\w+)\.(?<version>v\d+(_\d+){0,2})\.*/);
 
     static final Pattern STANDARD_PACKAGE_PATTERN =
-            Pattern.compile(/(uk\.ac\.ox\.ndm)(\.\w+)*(\.endpoint)?\.(?<endpoint>\w+)\.(?<package>\w+)\.*/)
+        Pattern.compile(/(uk\.ac\.ox\.ndm)(\.\w+)*(\.endpoint)?\.(?<endpoint>\w+)\.(?<package>\w+)\.*/)
 
     private Collection<NamingStrategyHelper> namingStrategyHelpers;
 
@@ -195,7 +195,7 @@ class StandardNamingStrategy extends ImprovedNamingStrategy {
 
     @Override
     String classToTableName(String className) {
-        Collection<GrailsClass> artefacts = getDomainArtefacts(className)
+        Collection<GrailsClass> artefacts = getDomainArtefacts().findAll {it.shortName == className}
 
         if (artefacts) {
             Class clazz = artefacts.first().clazz
@@ -210,7 +210,7 @@ class StandardNamingStrategy extends ImprovedNamingStrategy {
     }
 
     String canonicalNameToTableName(String className) {
-        Collection<GrailsClass> artefacts = getDomainArtefacts(className)
+        Collection<GrailsClass> artefacts = getDomainArtefacts().findAll {it.fullName == className}
 
         if (artefacts) {
             Class clazz = artefacts.first().clazz
@@ -285,8 +285,8 @@ class StandardNamingStrategy extends ImprovedNamingStrategy {
         ['DEFAULT']
     }
 
-    static Collection<GrailsClass> getDomainArtefacts(String className) {
-        Holders.grailsApplication.getArtefacts(DomainClassArtefactHandler.TYPE).findAll {it.fullName == className}
+    static Collection<GrailsClass> getDomainArtefacts() {
+        Holders.grailsApplication.getArtefacts(DomainClassArtefactHandler.TYPE) as Collection<GrailsClass>
     }
 
 
